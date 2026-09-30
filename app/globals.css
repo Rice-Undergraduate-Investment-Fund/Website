@@ -1,0 +1,81 @@
+@import "tailwindcss";
+
+/*
+ * RUIF design tokens: the single source of truth for colors and type.
+ * Colors are official Rice University brand values (brand.rice.edu).
+ * Editors cannot change these through the CMS by design.
+ */
+@theme {
+  /* Brand */
+  --color-rice-blue: #00205b; /* Rice University Blue, PMS 280 */
+  --color-rice-blue-deep: #13133e; /* Rice Midnight Blue: overlays and footer depth */
+  --color-rich-blue: #0a509e; /* Rice Rich Blue: hover and link accents */
+  --color-rice-gray: #7c7e7f; /* Rice University Gray, PMS 425: large or decorative only */
+
+  /* Neutrals */
+  --color-ink: #0b0c10; /* primary text */
+  --color-slate: #44474f; /* Rice Dark Gray: secondary text (AA on white) */
+  --color-line: #e0e2e6; /* Rice Light Gray: borders and dividers */
+  --color-mist: #f4f5f7; /* tinted section background */
+
+  /* Type */
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Source Serif 4 Variable", ui-serif, Georgia, serif;
+
+  /* Motion */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-white font-sans text-ink antialiased;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-serif tracking-tight text-balance;
+  }
+  ::selection {
+    @apply bg-rice-blue text-white;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-rich-blue;
+  }
+}
+
+/* Modal open: stop the page scrolling behind it */
+html:has(dialog[open]) {
+  overflow: hidden;
+}
+
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+dialog::backdrop {
+  background: rgb(19 19 62 / 0.72);
+  backdrop-filter: blur(2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

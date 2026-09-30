@@ -6,7 +6,7 @@
 
 **Repository:** https://github.com/Rice-Undergraduate-Investment-Fund/Website
 **Production domain:** `financegroup.rice.edu`
-**Last updated:** 2026-09-30
+**Last updated:** 2026-09-30 (initial scaffold)
 
 ---
 
@@ -23,13 +23,14 @@ A new officer with no coding experience must be able to update the Board, sector
 
 | Layer | Technology | Notes |
 |---|---|---|
-| Framework | Next.js (App Router) | Server components; static generation + on-demand revalidation |
+| Framework | Next.js 16 (App Router, Turbopack) | Server components; static generation + on-demand revalidation |
 | Language | TypeScript (strict) | |
-| Styling | Tailwind CSS | Design tokens defined once in theme config (§6) |
+| Styling | Tailwind CSS v4 | Design tokens defined once in `app/globals.css` (`@theme`), see §6 |
 | CMS | Sanity | Studio embedded at `/studio` in the same repo |
 | Hosting | Vercel | Preview deploy per PR, production on merge to `main` |
 | Source control | GitHub org `Rice-Undergraduate-Investment-Fund` | Club-owned, not personal |
-| Images | Sanity image CDN + `next/image` | Crop/hotspot set in Studio |
+| Images | `next/image` (Sanity image CDN once connected) | Crop/hotspot set in Studio |
+| Fonts | Source Serif 4 + Inter via Fontsource | Self-hosted, no external font requests |
 | Contact form | Serverless route (`/api/contact`) + email service | Provider TBD (§10) |
 | Analytics | Vercel Analytics | Optional; GA only if needed |
 | Database | **None** | Add (e.g. Supabase) only for auth, voting, attendance, etc. |
@@ -66,41 +67,47 @@ All services are owned by the **club**, not an individual. Each should have **at
 
 ---
 
-## 4. Repository structure (planned)
+## 4. Repository structure
 
 ```text
 /
-├── app/                      Next.js routes
-│   ├── (site)/
-│   │   ├── page.tsx          Home
-│   │   ├── about/
-│   │   ├── sectors/          Grid + modal
-│   │   ├── portfolio/
-│   │   ├── training/
-│   │   ├── people/
-│   │   │   ├── board/
-│   │   │   └── alumni/
-│   │   └── contact/
-│   ├── studio/[[...tool]]/   Embedded Sanity Studio
-│   └── api/
-│       ├── contact/          Contact form handler
-│       └── revalidate/       Sanity webhook target
+├── app/
+│   ├── layout.tsx            Root HTML shell, fonts, global metadata
+│   ├── globals.css           Design tokens (@theme) + base styles
+│   ├── icon.png              Favicon (RUIF logo)
+│   ├── not-found.tsx         404 page
+│   └── (site)/               Public website (shared header + footer)
+│       ├── layout.tsx
+│       ├── page.tsx          Home
+│       ├── about/
+│       ├── sectors/          Grid + modal
+│       ├── portfolio/
+│       ├── training/
+│       ├── people/board/
+│       ├── people/alumni/
+│       └── contact/
+│   (planned: app/studio/ for embedded Sanity Studio, app/api/ for contact + revalidate)
 ├── components/
-│   ├── ui/                   Primitives (Button, Container, Section, Heading…)
-│   ├── people/               PersonCard, DirectorCard, PersonGrid
-│   ├── sectors/              SectorGrid, SectorModal
-│   └── portfolio/            StatRow, AllocationChart, HoldingCard
-├── sanity/
-│   ├── schemaTypes/          person, sector, portfolio, trainingProgram, siteSettings…
-│   ├── lib/                  client, queries (GROQ), image helper
-│   └── structure.ts          Studio sidebar layout for officers
-├── public/                   Static assets (logo, favicon)
-├── docs/
-│   ├── ARCHITECTURE.md       This file
-│   ├── SPEC.md               Product specification
-│   └── HANDOFF.md            Annual transition checklist
-└── tailwind.config.ts        Design tokens
+│   ├── ui/                   Primitives: Container, Section, SectionHeading, Button, PhotoHero, StatRow, ProcessSteps…
+│   ├── layout/               Header (responsive nav, Apply button), Footer
+│   ├── people/               PersonPhoto (square photo or placeholder), PersonCard
+│   ├── sectors/              SectorDirectory (grid), SectorModal
+│   ├── portfolio/            AllocationChart
+│   └── contact/              ContactForm
+├── lib/
+│   ├── content/
+│   │   ├── types.ts          Content types (mirror the Sanity schemas in §5)
+│   │   ├── data.ts           TEMPORARY mock content, replaced by Sanity
+│   │   └── index.ts          getSectors(), getBoard()… (the only thing pages call)
+│   ├── images.ts             Site photography used in layouts
+│   └── navigation.ts         Primary navigation (code-owned)
+├── public/images/            Optimized photos + logo
+├── docs/                     ARCHITECTURE.md, SPEC.md
+└── AGENTS.md / CLAUDE.md     Instructions for AI coding assistants
 ```
+
+### Content access layer
+Pages never import data directly. They call async functions in `lib/content/index.ts` (e.g. `getSectors()` returns sectors with director and members resolved). Today these read `data.ts`; when Sanity is connected, only their bodies change to GROQ queries.
 
 ---
 
@@ -170,8 +177,25 @@ All services are owned by the **club**, not an individual. Each should have **at
 
 Additional Rice secondary colors exist; add them only with a clear reason (the spec asks to avoid excessive color).
 
-### Typography, spacing, components
-_To be decided in the first design pass._ Record chosen fonts, type scale, spacing scale, breakpoints and core components here.
+Implementation: `app/globals.css` → `@theme` tokens `rice-blue`, `rice-blue-deep` (Midnight Blue, overlays/footer), `rich-blue`, `rice-gray`, `ink`, `slate` (Rice Dark Gray `#44474F`, secondary text, since Rice Gray is too light for small text), `line`, `mist` (`#F4F5F7` section tint).
+
+### Typography
+| Role | Font | Notes |
+|---|---|---|
+| Headings | Source Serif 4 (variable) | Institutional, finance feel |
+| Body / UI | Inter (variable) | |
+| Eyebrow labels | Inter, 12px, semibold, uppercase, 0.2em tracking | With a short rule before |
+
+Rice's official typefaces are licensed; these are free, close-in-spirit substitutes. Swap in `globals.css` if licensed fonts become available.
+
+### Layout conventions
+- Container: max width 80rem, 20px/32px side padding.
+- Section rhythm: 80px (mobile) / 112px (desktop) vertical padding; tones `white`, `mist`, `blue`.
+- Square corners, 1px `line` borders, no drop shadows except the modal.
+- Grids of cards use border-collapse style (`border-t border-l` container, `border-r border-b` cells) so any item count renders cleanly.
+
+### Sector modal (spec §6.2)
+Native `<dialog>` (focus trap, Esc, backdrop). Director photo and member grid share one column, so the director is exactly as wide as three members plus gaps. Members: 3 columns (2 below 360px). Open sector is mirrored in the URL (`/sectors#energy`) for direct links; Previous/Next moves between sectors.
 
 ---
 
@@ -229,15 +253,20 @@ branch → commit → pull request → Vercel preview URL → review → merge t
 | 2026-09-30 | GitHub org `Rice-Undergraduate-Investment-Fund` created, repo `Website` | Done |
 | 2026-09-30 | Colors: official Rice Blue `#00205B` / white / black | Decided |
 | 2026-09-30 | Sanity Studio embedded at `/studio` in the same repo | Proposed |
+| 2026-09-30 | Tailwind v4: tokens in `globals.css`, no `tailwind.config.ts` | Done |
+| 2026-09-30 | Fonts: Source Serif 4 + Inter, self-hosted | Done (revisable) |
+| 2026-09-30 | Typed mock content layer until Sanity exists | Done |
 | 2026-09-30 | Sector membership stored on `sector`, not `person` | Proposed |
 | — | Contact form provider (Resend / Formspree / other) | Open |
 | 2026-09-30 | Repo goes public if Vercel's plan requires it for org repos | Decided |
 | 2026-09-30 | Workflow: Claude edits local clone; officer commits/pushes via GitHub Desktop | Decided |
-| — | Fonts and type scale | Open |
 
 ---
 
 ## 11. Open questions
+- Name of the 11th sector (mock data lists 10 from the spec).
+- Real portfolio figures, allocations and holdings to publish.
+- Names for the Vice President and Training Director placeholders on the Board.
 - Who are the named admins for each service (§3)?
 - Rice IT contact for the DNS change?
 - Which emails receive contact-form submissions?
