@@ -7,7 +7,7 @@ Source code for [financegroup.rice.edu](https://financegroup.rice.edu), the webs
 | I want to… | Where |
 |---|---|
 | Update people, sectors, photos, portfolio numbers, recruiting dates, contact info | **Sanity Studio** at `/studio` (no code needed) |
-| Change design, layout, pages, or functionality | **This repository** → pull request → Vercel |
+| Change design, layout, pages, or functionality | **This repository** → pull request → Netlify |
 
 Published Studio changes appear on the live site within about a minute.
 
@@ -25,7 +25,7 @@ Then open http://localhost:3000. Pages reload automatically as files change.
 Other commands:
 
 ```bash
-npm run build      # production build (what Vercel runs)
+npm run build      # production build (what Netlify runs)
 npm run lint       # code style checks
 npm run typecheck  # TypeScript checks
 ```
@@ -47,11 +47,26 @@ Project ID `237x8krw`, dataset `production` (set in `sanity/env.ts`).
 
 Until the dataset is seeded (or if Sanity can't be reached), the site automatically shows the starter content from `lib/content/data.ts`.
 
+## Troubleshooting
+
+**`npm run dev` hangs on a Mac with iCloud Desktop & Documents sync.** iCloud tries to sync the tens of thousands of files in `node_modules` and `.next`, and Next.js stalls waiting for them. Folders ending in `.nosync` are skipped by iCloud, so keep the real folders there and link to them:
+
+```bash
+rm -rf .next node_modules
+mkdir node_modules.nosync .next.nosync
+ln -s node_modules.nosync node_modules
+ln -s .next.nosync .next
+npm install
+```
+
+(All of these are git-ignored.)
+
 ## Documentation
 
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md): technical architecture, ownership, content model, design system, decisions
 - [`docs/SPEC.md`](docs/SPEC.md): product specification for the rebuild
+- [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md): Netlify + Sanity deployment checklist
 
 ## Stack
 
-Next.js 16 · TypeScript · Tailwind CSS v4 · Sanity · Vercel
+Next.js 16 · TypeScript · Tailwind CSS v4 · Sanity · Netlify

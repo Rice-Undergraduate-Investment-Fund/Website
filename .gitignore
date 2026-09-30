@@ -26,3 +26,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .DS_Store
+
+# iCloud: keep heavy generated folders out of iCloud sync (see README → Troubleshooting)
+node_modules
+.next
+*.nosync

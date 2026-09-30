@@ -7,7 +7,7 @@ export const client = createClient({
   projectId,
   dataset,
   apiVersion,
-  useCdn: true,
+  useCdn: false, // Next.js caches responses itself; skipping the CDN keeps edits fresh
   perspective: "published",
 });
 

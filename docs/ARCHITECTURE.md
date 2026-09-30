@@ -13,7 +13,7 @@
 ## 1. Golden rule
 
 > **Content change → Sanity**
-> **Design / functionality change → GitHub → Vercel**
+> **Design / functionality change → GitHub → Netlify**
 
 A new officer with no coding experience must be able to update the Board, sectors, photos, portfolio figures, recruiting dates and contact details **without touching GitHub**.
 
@@ -27,12 +27,12 @@ A new officer with no coding experience must be able to update the Board, sector
 | Language | TypeScript (strict) | |
 | Styling | Tailwind CSS v4 | Design tokens defined once in `app/globals.css` (`@theme`), see §6 |
 | CMS | Sanity (project `237x8krw`, dataset `production`) | Studio embedded at `/studio` in the same repo |
-| Hosting | Vercel | Preview deploy per PR, production on merge to `main` |
+| Hosting | Netlify (Next.js runtime / OpenNext adapter) | Deploy Preview per PR, production on merge to `main`; config in `netlify.toml` |
 | Source control | GitHub org `Rice-Undergraduate-Investment-Fund` | Club-owned, not personal |
 | Images | `next/image` (Sanity image CDN once connected) | Crop/hotspot set in Studio |
 | Fonts | Source Serif 4 + Inter via Fontsource | Self-hosted, no external font requests |
 | Contact form | Serverless route (`/api/contact`) + email service | Provider TBD (§10) |
-| Analytics | Vercel Analytics | Optional; GA only if needed |
+| Analytics | Netlify Analytics or Google Analytics | Optional |
 | Database | **None** | Add (e.g. Supabase) only for auth, voting, attendance, etc. |
 
 ### Data flow
@@ -41,13 +41,13 @@ A new officer with no coding experience must be able to update the Board, sector
 Officer edits in Sanity Studio ──publish──▶ Sanity Content Lake
                                                 │ webhook
                                                 ▼
-Developer ──PR──▶ GitHub ──▶ Vercel build ◀── on-demand revalidation
+Developer ──PR──▶ GitHub ──▶ Netlify build ◀── on-demand revalidation
                                 │
                                 ▼
                      financegroup.rice.edu
 ```
 
-Published content appears on the live site within ~60 seconds (time-based revalidation: `REVALIDATE` in `lib/content/index.ts`). No redeploy needed for content changes. A Sanity webhook → `/api/revalidate` can make this instant later.
+Published content appears on the live site within ~60 seconds (time-based revalidation: `REVALIDATE` in `lib/content/index.ts`). No redeploy needed for content changes. With the Sanity webhook → `/api/revalidate` configured, edits appear immediately (see `docs/DEPLOYMENT.md`).
 
 ---
 
@@ -59,11 +59,11 @@ All services are owned by the **club**, not an individual. Each should have **at
 |---|---|---|---|
 | GitHub org | Club org | _TBD_ | Branch protection on `main` |
 | Sanity project | Club org / shared club login | _TBD_ | Officers get Editor role, not Admin |
-| Vercel team | Club team / shared club login | _TBD_ | See §9 re: plan limits |
-| DNS (`financegroup.rice.edu`) | Rice IT | Rice IT contact _TBD_ | CNAME to Vercel |
+| Netlify team | Club team / shared club login | _TBD_ | Not a personal team |
+| DNS (`financegroup.rice.edu`) | Rice IT | Rice IT contact _TBD_ | CNAME to Netlify |
 | Contact email service | Shared club login | _TBD_ | |
 
-**Recommendation:** register Sanity, Vercel and any email service with a shared club email (not a personal `netID@rice.edu`), with credentials passed on at each leadership transition.
+**Recommendation:** register Sanity, Netlify and any email service with a shared club email (not a personal `netID@rice.edu`), with credentials passed on at each leadership transition.
 
 ---
 
@@ -87,7 +87,8 @@ All services are owned by the **club**, not an individual. Each should have **at
 │       ├── people/alumni/
 │       └── contact/
 │   ├── studio/[[...tool]]/   Embedded Sanity Studio (/studio)
-│   (planned: app/api/ for contact form + webhook revalidation)
+│   ├── api/revalidate/       Sanity webhook → instant content refresh
+│   (planned: app/api/contact)
 ├── components/
 │   ├── ui/                   Primitives: Container, Section, SectionHeading, Button, PhotoHero, StatRow, ProcessSteps…
 │   ├── layout/               Header (responsive nav, Apply button), Footer
@@ -111,7 +112,7 @@ All services are owned by the **club**, not an individual. Each should have **at
 │   ├── seed.ts               npm run seed: fill an empty dataset from lib/content/data.ts
 │   └── clean-placeholders.ts npm run seed:clean: remove "placeholder-*" people
 ├── public/images/            Optimized photos + logo (seed source)
-├── docs/                     ARCHITECTURE.md, SPEC.md
+├── docs/                     ARCHITECTURE.md, SPEC.md, DEPLOYMENT.md
 └── AGENTS.md / CLAUDE.md     Instructions for AI coding assistants
 ```
 
@@ -235,33 +236,36 @@ The navigation structure lives in code. The **Apply** button is shown when `site
 ## 8. Development workflow
 
 ```text
-branch → commit → pull request → Vercel preview URL → review → merge to main → production deploy
+branch → commit → pull request → Netlify Deploy Preview URL → review → merge to main → production deploy
 ```
 
 - `main` is protected: changes arrive via PR only.
 - Every PR gets a preview URL. Check mobile and desktop before merging.
-- Secrets live only in Vercel environment variables and a local `.env.local` (git-ignored).
+- Secrets live only in Netlify environment variables and a local `.env.local` (git-ignored).
 
 ### Environment variables
 | Name | Purpose |
 |---|---|
 | `NEXT_PUBLIC_SANITY_PROJECT_ID` | Optional override (default `237x8krw` in `sanity/env.ts`) |
 | `NEXT_PUBLIC_SANITY_DATASET` | Optional override (default `production`) |
-| `SANITY_API_WRITE_TOKEN` | Local only, for `npm run seed` / `seed:clean`. Never on Vercel, never committed |
-| `SANITY_REVALIDATE_SECRET` | Planned: verifies webhook calls |
+| `SANITY_API_WRITE_TOKEN` | Local only, for `npm run seed` / `seed:clean`. Never on Netlify, never committed |
+| `SANITY_REVALIDATE_SECRET` | Netlify only: verifies Sanity webhook calls to `/api/revalidate` |
 | `CONTACT_*` | Planned: contact form provider keys |
 
 The website itself needs **no secrets**: the dataset is read publicly (published documents only). See `.env.example`.
 
 ### Sanity CORS origins (sanity.io/manage → API)
-`http://localhost:3000` (with credentials) for local Studio; add the Vercel preview/production URLs at deployment.
+`http://localhost:3000` (with credentials) for local Studio; add the Netlify production + Deploy Preview URLs at deployment.
 
 ---
 
 ## 9. Hosting notes
 
-- **Vercel plan:** Vercel's free Hobby plan has historically not supported deploying **private repositories owned by a GitHub organization**. Options: (a) make the repo public, which is fine for a club site if no secrets are committed; (b) Vercel Pro; (c) ask about education/nonprofit credits. Check this against current Vercel docs when connecting.
-- **Domain:** `financegroup.rice.edu` already points to an external host (Wix), so external hosting is established. At launch the DNS record must be switched from Wix to Vercel by whoever manages it (Rice IT or the officer who set up Wix) — identify them before launch.
+Full step-by-step: **`docs/DEPLOYMENT.md`**. One deployment (GitHub → Netlify) ships both the website and the embedded Studio; content stays in Sanity's cloud.
+
+
+- **Host:** Netlify, chosen over Vercel (2026-09-30): officers already know it and it supports Next.js 16 fully. Like Vercel's free plan, Netlify's free plan doesn't deploy private org-owned repos, so the repo is public. That's safe because the site needs no secrets; the only secret (the Sanity write token) lives in each developer's git-ignored `.env.local`.
+- **Domain:** `financegroup.rice.edu` already points to an external host (Wix), so external hosting is established. At launch the DNS record must be switched from Wix to Netlify by whoever manages it (Rice IT or the officer who set up Wix) — identify them before launch.
 
 ---
 
@@ -269,7 +273,8 @@ The website itself needs **no secrets**: the dataset is read publicly (published
 
 | Date | Decision | Status |
 |---|---|---|
-| 2026-09-30 | Stack: Next.js + TS + Tailwind + Sanity + Vercel | Decided (spec) |
+| 2026-09-30 | Stack: Next.js + TS + Tailwind + Sanity (spec) | Decided |
+| 2026-09-30 | Hosting: **Netlify** instead of the spec's Vercel | Decided |
 | 2026-09-30 | GitHub org `Rice-Undergraduate-Investment-Fund` created, repo `Website` | Done |
 | 2026-09-30 | Colors: official Rice Blue `#00205B` / white / black | Decided |
 | 2026-09-30 | Sanity Studio embedded at `/studio` in the same repo | Done |
@@ -281,7 +286,7 @@ The website itself needs **no secrets**: the dataset is read publicly (published
 | 2026-09-30 | Content layer reads Sanity, falls back to seed data | Done |
 | 2026-09-30 | Sector membership stored on `sector`, not `person` | Done |
 | — | Contact form provider (Resend / Formspree / other) | Open |
-| 2026-09-30 | Repo goes public if Vercel's plan requires it for org repos | Decided |
+| 2026-09-30 | Repo is **public** (Netlify's free plan doesn't deploy private org repos). No secrets in code; `.env.local` git-ignored | Decided |
 | 2026-09-30 | Workflow: Claude edits local clone; officer commits/pushes via GitHub Desktop | Decided |
 
 ---

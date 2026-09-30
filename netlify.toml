@@ -1,0 +1,7 @@
+# Netlify build settings. Netlify auto-detects Next.js and applies its
+# Next.js runtime (OpenNext adapter); leave the publish directory to it.
+[build]
+  command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "22"
