@@ -2,19 +2,18 @@ import type { Metadata } from "next";
 import { Arrow, ButtonLink } from "@/components/ui/button";
 import { PhotoHero, ProcessSteps } from "@/components/ui/blocks";
 import { Container, Eyebrow, SampleNote, Section, SectionHeading } from "@/components/ui/layout";
-import { getTrainingProgram } from "@/lib/content";
-import { photos } from "@/lib/images";
+import { getSiteSettings, getTrainingProgram } from "@/lib/content";
 
 export const metadata: Metadata = { title: "Training Program" };
 
 export default async function TrainingPage() {
-  const t = await getTrainingProgram();
+  const [t, s] = await Promise.all([getTrainingProgram(), getSiteSettings()]);
   const applyHref = t.applyUrl ?? "#apply";
 
   return (
     <>
       <PhotoHero
-        image={photos.trainingWide}
+        image={s.photos.trainingHero}
         eyebrow="RUIF Training Program"
         title={
           <>

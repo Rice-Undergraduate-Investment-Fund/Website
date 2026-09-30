@@ -1,7 +1,8 @@
 /**
- * TEMPORARY MOCK CONTENT
+ * SEED / FALLBACK CONTENT
  *
- * Stand-in for Sanity until the CMS project exists. Anything marked
+ * Used (1) by `npm run seed` to fill an empty Sanity dataset, and (2) as a
+ * fallback while the dataset is empty or unreachable. Anything marked
  * "placeholder" or `isSample: true` must be replaced with real content.
  * Real facts here come from the current financegroup.rice.edu site.
  */
@@ -99,6 +100,14 @@ export const siteSettings: SiteSettings = {
     { label: "President" }, // placeholder
   ],
   socials: [],
+  photos: {
+    homeHero: { src: "/images/board-2026-wide.jpg", alt: "The 2026–27 RUIF Board", width: 2400, height: 1500, position: "50% 18%" },
+    homeFeature: { src: "/images/president-vp.jpg", alt: "RUIF President and Vice President", width: 1600, height: 2400, position: "50% 62%" },
+    homeTraining: { src: "/images/training-directors-wide.jpg", alt: "RUIF Training Directors", width: 2400, height: 1500, position: "55% 20%" },
+    aboutHero: { src: "/images/president-vp-wide.jpg", alt: "RUIF President and Vice President", width: 2400, height: 1500, position: "55% 20%" },
+    trainingHero: { src: "/images/training-directors-wide.jpg", alt: "RUIF Training Directors", width: 2400, height: 1500, position: "55% 20%" },
+    boardGroup: { src: "/images/board-2026-wide.jpg", alt: "The 2026–27 RUIF Board", width: 2400, height: 1500, position: "50% 60%" },
+  },
 };
 
 // ---------------------------------------------------------------------------
@@ -124,21 +133,21 @@ const board: Person[] = [
     photo: img("/images/sergio-karam.jpg", "Sergio Karam"),
   },
   {
-    id: "board-vp",
+    id: "placeholder-board-vp",
     name: "Name TBD", // placeholder
     status: "current",
     boardPosition: "Vice President",
     boardOrder: 2,
   },
   {
-    id: "board-training-1",
+    id: "placeholder-board-training-1",
     name: "Name TBD", // placeholder
     status: "current",
     boardPosition: "Training Director",
     boardOrder: 3,
   },
   {
-    id: "board-training-2",
+    id: "placeholder-board-training-2",
     name: "Name TBD", // placeholder
     status: "current",
     boardPosition: "Training Director",
@@ -174,15 +183,15 @@ const slugify = (s: string) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "");
 
-/** Placeholder sector directors and members (no photos yet). */
+/** Placeholder sector directors and members (no photos yet). IDs start with "placeholder-" so `npm run seed:clean` can remove them. */
 const sectorPeople: Person[] = [];
 const sectorsRaw: Sector[] = sectorNames.map((name, i) => {
   const slug = slugify(name);
-  const directorId = `${slug}-director`;
+  const directorId = `placeholder-${slug}-director`;
   sectorPeople.push({ id: directorId, name: "Director Name", status: "current" });
   const memberCount = 6 + ((i * 5) % 7); // 6–12 placeholder members
   const memberIds = Array.from({ length: memberCount }, (_, m) => {
-    const id = `${slug}-member-${m + 1}`;
+    const id = `placeholder-${slug}-member-${m + 1}`;
     sectorPeople.push({ id, name: `Member ${m + 1}`, status: "current" });
     return id;
   });
@@ -199,14 +208,14 @@ const sectorsRaw: Sector[] = sectorNames.map((name, i) => {
 
 /** Sample alumni for the demonstration Alumni page. */
 const alumni: Person[] = [
-  { id: "alum-1", name: "Alumni Name", status: "alumni", graduationYear: 2026, employer: "Morgan Stanley", jobTitle: "Investment Banking Analyst", location: "New York, NY" },
-  { id: "alum-2", name: "Alumni Name", status: "alumni", graduationYear: 2026, employer: "Point72", jobTitle: "Research Associate", location: "Stamford, CT" },
-  { id: "alum-3", name: "Alumni Name", status: "alumni", graduationYear: 2026, employer: "Lazard", jobTitle: "Financial Advisory Analyst", location: "Houston, TX" },
-  { id: "alum-4", name: "Alumni Name", status: "alumni", graduationYear: 2025, employer: "J.P. Morgan", jobTitle: "Investment Banking Analyst", location: "Houston, TX" },
-  { id: "alum-5", name: "Alumni Name", status: "alumni", graduationYear: 2025, employer: "Bank of America", jobTitle: "Global Markets Analyst", location: "New York, NY" },
-  { id: "alum-6", name: "Alumni Name", status: "alumni", graduationYear: 2025, employer: "Consulting Firm", jobTitle: "Business Analyst", location: "Dallas, TX" },
-  { id: "alum-7", name: "Alumni Name", status: "alumni", graduationYear: 2024, employer: "Private Equity Firm", jobTitle: "Associate", location: "New York, NY" },
-  { id: "alum-8", name: "Alumni Name", status: "alumni", graduationYear: 2024, employer: "Morgan Stanley", jobTitle: "Associate", location: "San Francisco, CA" },
+  { id: "placeholder-alum-1", name: "Alumni Name", status: "alumni", graduationYear: 2026, employer: "Morgan Stanley", jobTitle: "Investment Banking Analyst", location: "New York, NY" },
+  { id: "placeholder-alum-2", name: "Alumni Name", status: "alumni", graduationYear: 2026, employer: "Point72", jobTitle: "Research Associate", location: "Stamford, CT" },
+  { id: "placeholder-alum-3", name: "Alumni Name", status: "alumni", graduationYear: 2026, employer: "Lazard", jobTitle: "Financial Advisory Analyst", location: "Houston, TX" },
+  { id: "placeholder-alum-4", name: "Alumni Name", status: "alumni", graduationYear: 2025, employer: "J.P. Morgan", jobTitle: "Investment Banking Analyst", location: "Houston, TX" },
+  { id: "placeholder-alum-5", name: "Alumni Name", status: "alumni", graduationYear: 2025, employer: "Bank of America", jobTitle: "Global Markets Analyst", location: "New York, NY" },
+  { id: "placeholder-alum-6", name: "Alumni Name", status: "alumni", graduationYear: 2025, employer: "Consulting Firm", jobTitle: "Business Analyst", location: "Dallas, TX" },
+  { id: "placeholder-alum-7", name: "Alumni Name", status: "alumni", graduationYear: 2024, employer: "Private Equity Firm", jobTitle: "Associate", location: "New York, NY" },
+  { id: "placeholder-alum-8", name: "Alumni Name", status: "alumni", graduationYear: 2024, employer: "Morgan Stanley", jobTitle: "Associate", location: "San Francisco, CA" },
 ].map((p) => ({ ...p, status: "alumni" as const }));
 
 export const people: Person[] = [...board, ...sectorPeople, ...alumni];

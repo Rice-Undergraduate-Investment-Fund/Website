@@ -1,10 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
 import { Arrow, ButtonLink } from "@/components/ui/button";
-import { PhotoHero, StatRow } from "@/components/ui/blocks";
+import { CoverImage, PhotoHero, StatRow } from "@/components/ui/blocks";
 import { Container, Eyebrow, Section, SectionHeading } from "@/components/ui/layout";
 import { getSiteSettings, getTrainingProgram } from "@/lib/content";
-import { photos } from "@/lib/images";
 
 const explore = [
   {
@@ -35,7 +33,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <PhotoHero image={photos.boardWide} eyebrow={s.orgName} title={s.tagline} tall>
+      <PhotoHero image={s.photos.homeHero} eyebrow={s.orgName} title={s.tagline} tall>
         <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/85 text-pretty">{s.intro}</p>
         <div className="mt-9 flex flex-wrap gap-3">
           <ButtonLink href="/training" variant="light">
@@ -75,14 +73,7 @@ export default async function HomePage() {
             </Link>
           </div>
           <div className="relative aspect-[4/5] overflow-hidden sm:aspect-[4/3] lg:aspect-[4/5]">
-            <Image
-              src={photos.presidentVp.src}
-              alt={photos.presidentVp.alt}
-              fill
-              sizes="(min-width: 1024px) 50vw, 100vw"
-              className="object-cover"
-              style={{ objectPosition: photos.presidentVp.position }}
-            />
+            <CoverImage image={s.photos.homeFeature} sizes="(min-width: 1024px) 50vw, 100vw" />
           </div>
         </Container>
       </Section>
@@ -117,14 +108,7 @@ export default async function HomePage() {
       <section className="bg-rice-blue text-white">
         <div className="grid lg:grid-cols-2">
           <div className="relative aspect-[4/3] lg:aspect-auto lg:min-h-[560px]">
-            <Image
-              src={photos.trainingWide.src}
-              alt={photos.trainingWide.alt}
-              fill
-              sizes="(min-width: 1024px) 50vw, 100vw"
-              className="object-cover"
-              style={{ objectPosition: photos.trainingWide.position }}
-            />
+            <CoverImage image={s.photos.homeTraining} sizes="(min-width: 1024px) 50vw, 100vw" />
           </div>
           <div className="flex items-center px-5 py-16 sm:px-12 sm:py-20 lg:px-16 xl:px-24">
             <div className="max-w-lg">

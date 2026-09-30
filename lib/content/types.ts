@@ -119,4 +119,15 @@ export type SiteSettings = {
   alumniEmployers: string[];
   contacts: ContactEntry[];
   socials: { label: string; url: string }[];
+  photos: PagePhotos;
+};
+
+/** Large layout photos, editable in Site Settings → Page photos. */
+export type PagePhotos = {
+  homeHero?: ImageAsset;
+  homeFeature?: ImageAsset;
+  homeTraining?: ImageAsset;
+  aboutHero?: ImageAsset;
+  trainingHero?: ImageAsset;
+  boardGroup?: ImageAsset;
 };

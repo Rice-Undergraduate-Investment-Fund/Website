@@ -6,7 +6,7 @@
 
 **Repository:** https://github.com/Rice-Undergraduate-Investment-Fund/Website
 **Production domain:** `financegroup.rice.edu`
-**Last updated:** 2026-09-30 (initial scaffold)
+**Last updated:** 2026-09-30 (Sanity connected)
 
 ---
 
@@ -26,7 +26,7 @@ A new officer with no coding experience must be able to update the Board, sector
 | Framework | Next.js 16 (App Router, Turbopack) | Server components; static generation + on-demand revalidation |
 | Language | TypeScript (strict) | |
 | Styling | Tailwind CSS v4 | Design tokens defined once in `app/globals.css` (`@theme`), see §6 |
-| CMS | Sanity | Studio embedded at `/studio` in the same repo |
+| CMS | Sanity (project `237x8krw`, dataset `production`) | Studio embedded at `/studio` in the same repo |
 | Hosting | Vercel | Preview deploy per PR, production on merge to `main` |
 | Source control | GitHub org `Rice-Undergraduate-Investment-Fund` | Club-owned, not personal |
 | Images | `next/image` (Sanity image CDN once connected) | Crop/hotspot set in Studio |
@@ -47,7 +47,7 @@ Developer ──PR──▶ GitHub ──▶ Vercel build ◀── on-demand re
                      financegroup.rice.edu
 ```
 
-Published content appears on the live site within seconds via a Sanity webhook that triggers revalidation. No redeploy needed for content changes.
+Published content appears on the live site within ~60 seconds (time-based revalidation: `REVALIDATE` in `lib/content/index.ts`). No redeploy needed for content changes. A Sanity webhook → `/api/revalidate` can make this instant later.
 
 ---
 
@@ -86,7 +86,8 @@ All services are owned by the **club**, not an individual. Each should have **at
 │       ├── people/board/
 │       ├── people/alumni/
 │       └── contact/
-│   (planned: app/studio/ for embedded Sanity Studio, app/api/ for contact + revalidate)
+│   ├── studio/[[...tool]]/   Embedded Sanity Studio (/studio)
+│   (planned: app/api/ for contact form + webhook revalidation)
 ├── components/
 │   ├── ui/                   Primitives: Container, Section, SectionHeading, Button, PhotoHero, StatRow, ProcessSteps…
 │   ├── layout/               Header (responsive nav, Apply button), Footer
@@ -97,17 +98,31 @@ All services are owned by the **club**, not an individual. Each should have **at
 ├── lib/
 │   ├── content/
 │   │   ├── types.ts          Content types (mirror the Sanity schemas in §5)
-│   │   ├── data.ts           TEMPORARY mock content, replaced by Sanity
-│   │   └── index.ts          getSectors(), getBoard()… (the only thing pages call)
-│   ├── images.ts             Site photography used in layouts
+│   │   ├── data.ts           Seed + fallback content
+│   │   └── index.ts          getSectors(), getBoard()… (GROQ queries; the only thing pages call)
 │   └── navigation.ts         Primary navigation (code-owned)
-├── public/images/            Optimized photos + logo
+├── sanity/
+│   ├── env.ts                Project ID / dataset / API version
+│   ├── lib/client.ts         Read client + image URL builder
+│   ├── schemaTypes/          person, sector, holding, timelineEvent, siteSettings, portfolio, trainingProgram
+│   └── structure.ts          Studio sidebar (Board, Sectors, Current Members, Alumni…)
+├── sanity.config.ts          Studio config (singleton guardrails)
+├── scripts/
+│   ├── seed.ts               npm run seed: fill an empty dataset from lib/content/data.ts
+│   └── clean-placeholders.ts npm run seed:clean: remove "placeholder-*" people
+├── public/images/            Optimized photos + logo (seed source)
 ├── docs/                     ARCHITECTURE.md, SPEC.md
 └── AGENTS.md / CLAUDE.md     Instructions for AI coding assistants
 ```
 
 ### Content access layer
-Pages never import data directly. They call async functions in `lib/content/index.ts` (e.g. `getSectors()` returns sectors with director and members resolved). Today these read `data.ts`; when Sanity is connected, only their bodies change to GROQ queries.
+Pages never import data directly. They call async functions in `lib/content/index.ts` (e.g. `getSectors()` returns sectors with director and members resolved) which run GROQ queries against Sanity.
+
+**Fallback:** if the dataset has no `siteSettings` document (not yet seeded) or Sanity is unreachable, every getter returns the seed content from `data.ts`, so the site always renders.
+
+**Images:** Sanity photos are served from `cdn.sanity.io` (allowed in `next.config.ts`) through `next/image`. The editor-set hotspot becomes the CSS `object-position`, so faces stay in frame at any crop.
+
+**Page photos** (hero banners and feature images) live in Site Settings → Page photos, not in code.
 
 ---
 
@@ -127,7 +142,7 @@ Pages never import data directly. They call async functions in `lib/content/inde
 | linkedin | url | optional |
 | graduationYear | number | |
 | bio | text | optional |
-| status | `current` \| `alumni` | replaces separate Yes/No flags |
+| status | `current` \| `alumni` | radio buttons |
 | boardPosition | string | empty = not on Board |
 | boardOrder | number | display order on /board |
 | employer, jobTitle, location | string | alumni fields |
@@ -148,11 +163,11 @@ Pages never import data directly. They call async functions in `lib/content/inde
 ### Other types
 | Type | Kind | Contents |
 |---|---|---|
-| `portfolio` | singleton | AUM, return since inception, inception year, as-of date, allocations `[{sector, percent}]` |
+| `portfolio` | singleton | AUM, return since inception (entered as %), inception year, as-of date, allocations `[{sector, percent}]` (warns if ≠ 100%), "figures pending" toggle |
 | `holding` | document | company, ticker, logo, sector, featured? |
-| `trainingProgram` | singleton | semester label, applications open?, open date, deadline, apply URL, steps, sessions `[{number, title, description}]` |
-| `timelineEvent` | document | year, title, description (About → history) |
-| `siteSettings` | singleton | org stats (members, sectors, alumni), contact emails, social links, show Apply button? |
+| `trainingProgram` | singleton | semester label, applications open? (drives Apply buttons), open date, deadline, apply URL, steps, sessions (numbered by order) |
+| `timelineEvent` | document | year, title, description, order (About → history) |
+| `siteSettings` | singleton | org name, tagline, intro, stats, mission, operating/investment steps, alumni employers, contacts, socials, page photos |
 
 ### Derived queries
 | Page | Query |
@@ -230,11 +245,16 @@ branch → commit → pull request → Vercel preview URL → review → merge t
 ### Environment variables
 | Name | Purpose |
 |---|---|
-| `NEXT_PUBLIC_SANITY_PROJECT_ID` | Sanity project |
-| `NEXT_PUBLIC_SANITY_DATASET` | `production` |
-| `SANITY_API_READ_TOKEN` | Draft preview (optional) |
-| `SANITY_REVALIDATE_SECRET` | Verifies webhook calls |
-| `CONTACT_*` | Contact form provider keys |
+| `NEXT_PUBLIC_SANITY_PROJECT_ID` | Optional override (default `237x8krw` in `sanity/env.ts`) |
+| `NEXT_PUBLIC_SANITY_DATASET` | Optional override (default `production`) |
+| `SANITY_API_WRITE_TOKEN` | Local only, for `npm run seed` / `seed:clean`. Never on Vercel, never committed |
+| `SANITY_REVALIDATE_SECRET` | Planned: verifies webhook calls |
+| `CONTACT_*` | Planned: contact form provider keys |
+
+The website itself needs **no secrets**: the dataset is read publicly (published documents only). See `.env.example`.
+
+### Sanity CORS origins (sanity.io/manage → API)
+`http://localhost:3000` (with credentials) for local Studio; add the Vercel preview/production URLs at deployment.
 
 ---
 
@@ -252,11 +272,14 @@ branch → commit → pull request → Vercel preview URL → review → merge t
 | 2026-09-30 | Stack: Next.js + TS + Tailwind + Sanity + Vercel | Decided (spec) |
 | 2026-09-30 | GitHub org `Rice-Undergraduate-Investment-Fund` created, repo `Website` | Done |
 | 2026-09-30 | Colors: official Rice Blue `#00205B` / white / black | Decided |
-| 2026-09-30 | Sanity Studio embedded at `/studio` in the same repo | Proposed |
+| 2026-09-30 | Sanity Studio embedded at `/studio` in the same repo | Done |
+| 2026-09-30 | Sanity project `237x8krw` / `production` created | Done |
+| 2026-09-30 | Singletons can't be created/deleted in Studio | Done |
+| 2026-09-30 | Page photos editable in Site Settings | Done |
 | 2026-09-30 | Tailwind v4: tokens in `globals.css`, no `tailwind.config.ts` | Done |
 | 2026-09-30 | Fonts: Source Serif 4 + Inter, self-hosted | Done (revisable) |
-| 2026-09-30 | Typed mock content layer until Sanity exists | Done |
-| 2026-09-30 | Sector membership stored on `sector`, not `person` | Proposed |
+| 2026-09-30 | Content layer reads Sanity, falls back to seed data | Done |
+| 2026-09-30 | Sector membership stored on `sector`, not `person` | Done |
 | — | Contact form provider (Resend / Formspree / other) | Open |
 | 2026-09-30 | Repo goes public if Vercel's plan requires it for org repos | Decided |
 | 2026-09-30 | Workflow: Claude edits local clone; officer commits/pushes via GitHub Desktop | Decided |

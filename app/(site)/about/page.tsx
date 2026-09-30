@@ -3,7 +3,6 @@ import { ButtonLink, Arrow } from "@/components/ui/button";
 import { PhotoHero, PillarGrid, ProcessSteps, StatRow } from "@/components/ui/blocks";
 import { Container, Section, SectionHeading } from "@/components/ui/layout";
 import { getPortfolio, getSiteSettings, getTimeline } from "@/lib/content";
-import { photos } from "@/lib/images";
 
 export const metadata: Metadata = { title: "About" };
 
@@ -19,7 +18,7 @@ export default async function AboutPage() {
 
   return (
     <>
-      <PhotoHero image={photos.presidentVpWide} eyebrow="About Rice Finance" title="Learning finance by managing real capital">
+      <PhotoHero image={s.photos.aboutHero} eyebrow="About Rice Finance" title="Learning finance by managing real capital">
         <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/85 text-pretty">{s.intro}</p>
       </PhotoHero>
 

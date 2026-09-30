@@ -11,7 +11,7 @@ export function PhotoHero({
   children,
   tall = false,
 }: {
-  image: ImageAsset;
+  image?: ImageAsset;
   eyebrow?: string;
   title: ReactNode;
   children?: ReactNode;
@@ -24,15 +24,7 @@ export function PhotoHero({
         tall ? "min-h-[88svh] sm:min-h-[max(640px,80svh)]" : "min-h-[62svh] sm:min-h-[max(520px,64svh)]",
       )}
     >
-      <Image
-        src={image.src}
-        alt={image.alt}
-        fill
-        priority
-        sizes="100vw"
-        className="-z-10 object-cover"
-        style={{ objectPosition: image.position ?? "50% 50%" }}
-      />
+      <CoverImage image={image} priority sizes="100vw" className="-z-10" />
       <div
         aria-hidden
         className="absolute inset-0 -z-10 bg-gradient-to-t from-rice-blue-deep via-rice-blue/70 to-rice-blue/10 sm:bg-gradient-to-r sm:from-rice-blue-deep/95 sm:via-rice-blue/65 sm:to-transparent"
@@ -148,5 +140,31 @@ export function PillarGrid({ pillars }: { pillars: Step[] }) {
         </div>
       ))}
     </div>
+  );
+}
+
+/** Photo that fills its (relatively positioned) parent. Renders nothing if no image is set. */
+export function CoverImage({
+  image,
+  sizes,
+  priority = false,
+  className,
+}: {
+  image?: ImageAsset;
+  sizes: string;
+  priority?: boolean;
+  className?: string;
+}) {
+  if (!image) return null;
+  return (
+    <Image
+      src={image.src}
+      alt={image.alt}
+      fill
+      priority={priority}
+      sizes={sizes}
+      className={cx("object-cover", className)}
+      style={{ objectPosition: image.position ?? "50% 50%" }}
+    />
   );
 }

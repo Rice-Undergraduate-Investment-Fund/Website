@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { PersonCard } from "@/components/people/person";
 import { Container, Eyebrow, Section, SectionHeading } from "@/components/ui/layout";
-import { getBoard } from "@/lib/content";
-import { photos } from "@/lib/images";
+import { getBoard, getSiteSettings } from "@/lib/content";
+import { CoverImage } from "@/components/ui/blocks";
 
 export const metadata: Metadata = { title: "Board" };
 
@@ -12,7 +11,7 @@ export const metadata: Metadata = { title: "Board" };
  * hierarchy. This version will be aligned with the existing Wix page next.
  */
 export default async function BoardPage() {
-  const board = await getBoard();
+  const [board, s] = await Promise.all([getBoard(), getSiteSettings()]);
 
   return (
     <>
@@ -27,15 +26,7 @@ export default async function BoardPage() {
             </p>
           </div>
           <div className="relative aspect-[3/2] overflow-hidden">
-            <Image
-              src={photos.boardWide.src}
-              alt={photos.boardWide.alt}
-              fill
-              priority
-              sizes="(min-width: 1024px) 50vw, 100vw"
-              className="object-cover"
-              style={{ objectPosition: photos.boardWide.position }}
-            />
+            <CoverImage image={s.photos.boardGroup} priority sizes="(min-width: 1024px) 50vw, 100vw" />
           </div>
         </Container>
       </section>
