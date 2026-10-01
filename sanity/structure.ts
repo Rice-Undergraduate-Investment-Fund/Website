@@ -35,7 +35,7 @@ export const structure: StructureResolver = (S) =>
       S.listItem()
         .title("Sectors")
         .schemaType("sector")
-        .child(S.documentTypeList("sector").title("Sectors").defaultOrdering([{ field: "order", direction: "asc" }])),
+        .child(S.documentTypeList("sector").title("Sectors").defaultOrdering([{ field: "name", direction: "asc" }])),
       S.listItem()
         .title("Current Members")
         .icon(UsersIcon)

@@ -140,7 +140,7 @@ export async function getSectors(): Promise<SectorWithPeople[]> {
   if (!(await sanityEnabled())) return mockSectors();
   const rows = await query<
     { id: string; name: string; slug: string; description?: string; order?: number; director?: RawPerson; members?: RawPerson[] }[]
-  >(`*[_type == "sector" && defined(slug.current)] | order(coalesce(order, 999) asc, name asc) {
+  >(`*[_type == "sector" && defined(slug.current)] | order(lower(name) asc) {
     "id": _id, name, "slug": slug.current, description, order,
     director-> ${PERSON},
     "members": members[]-> ${PERSON}
@@ -237,9 +237,9 @@ export async function getHoldingsBySector(): Promise<{ sector: string; holdings:
 /** Newest semester letter (PDF), if any. */
 export async function getLatestLetter(): Promise<Letter | null> {
   if (!(await sanityEnabled())) return mock.letters[0] ?? null;
-  const l = await query<{ id: string; title: string; semester: string; publishedAt?: string; url?: string; originalFilename?: string } | null>(
+  const l = await query<{ id: string; title: string; semester: string; publishedAt?: string; summary?: string; url?: string; originalFilename?: string } | null>(
     `*[_type == "letter" && defined(file.asset)] | order(publishedAt desc)[0]{
-      "id": _id, title, semester, publishedAt, "url": file.asset->url, "originalFilename": file.asset->originalFilename
+      "id": _id, title, semester, publishedAt, summary, "url": file.asset->url, "originalFilename": file.asset->originalFilename
     }`,
   );
   if (!l?.url) return null;
@@ -248,6 +248,7 @@ export async function getLatestLetter(): Promise<Letter | null> {
     title: l.title,
     semester: l.semester,
     publishedAt: l.publishedAt,
+    summary: l.summary ?? undefined,
     url: l.url,
     filename: l.originalFilename || `${l.title}.pdf`,
   };
@@ -284,7 +285,7 @@ export async function getTimeline(): Promise<TimelineEvent[]> {
 function mockSectors(): SectorWithPeople[] {
   const byId = new Map(mock.people.map((p) => [p.id, p]));
   return [...mock.sectors]
-    .sort((a, b) => a.order - b.order)
+    .sort((a, b) => a.name.localeCompare(b.name))
     .map(({ directorId, memberIds, ...s }) => ({
       ...s,
       director: directorId ? byId.get(directorId) : undefined,

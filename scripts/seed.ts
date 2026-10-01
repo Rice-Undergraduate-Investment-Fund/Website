@@ -203,6 +203,7 @@ async function main() {
           title: l.title,
           semester: l.semester,
           publishedAt: l.publishedAt,
+          summary: l.summary,
           file: { _type: "file", asset: { _type: "reference", _ref: asset._id } },
         }),
       );

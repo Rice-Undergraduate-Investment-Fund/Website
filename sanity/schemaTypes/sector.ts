@@ -40,10 +40,10 @@ export const sector = defineType({
       name: "order",
       title: "Display order",
       type: "number",
-      description: "1 appears first on the Sectors page.",
+      hidden: true, // sectors are always listed A–Z on the site
     }),
   ],
-  orderings: [{ title: "Display order", name: "order", by: [{ field: "order", direction: "asc" }] }],
+  orderings: [{ title: "Name", name: "name", by: [{ field: "name", direction: "asc" }] }],
   preview: {
     select: { title: "name", director: "director.name", members: "members" },
     prepare: ({ title, director, members }) => ({

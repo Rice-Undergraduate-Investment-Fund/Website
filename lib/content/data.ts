@@ -283,7 +283,7 @@ export const portfolio: Portfolio = {
   inceptionYear: 2017,
   asOf: "Fall 2026",
   isSample: false,
-  note: "Figures from the Fall 2026 letter. Technology’s weight (~28%) is stated in the letter; other sector weights are estimates pending confirmation.",
+  note: "Figures from the Fall 2026 letter. Allocation from the holdings report of August 26, 2026.",
   benchmarkName: "VTI",
   beta: 1.11, // 5-year beta vs VTI
   performance: [
@@ -292,17 +292,18 @@ export const portfolio: Portfolio = {
     { period: "Last 2 years", fund: 0.61, benchmark: 0.4 },
     { period: "Since inception", fund: 1.305, benchmark: 1.66 },
   ],
+  // From the RUIF Portfolio Holdings report, August 26, 2026 (fund weights by sector, incl. cash).
   allocations: [
-    { sector: "Technology", percent: 28 }, // stated in letter
-    // Estimates (weighted by number of holdings; Communications raised for GOOG/META):
-    { sector: "Communication Services", percent: 12 },
-    { sector: "Natural Resources", percent: 11 },
-    { sector: "Energy", percent: 9 },
-    { sector: "Consumer Goods", percent: 9 },
-    { sector: "Healthcare", percent: 9 },
-    { sector: "Real Estate", percent: 8 },
-    { sector: "Industrials", percent: 8 },
-    { sector: "Financials", percent: 6 },
+    { sector: "Technology", percent: 28.9 },
+    { sector: "Communication Services", percent: 11.6 },
+    { sector: "Consumer Goods", percent: 10.3 },
+    { sector: "Financials", percent: 10.0 },
+    { sector: "Energy", percent: 8.1 },
+    { sector: "Cash", percent: 6.8 },
+    { sector: "Natural Resources", percent: 6.7 },
+    { sector: "Healthcare", percent: 6.7 },
+    { sector: "Industrials", percent: 6.6 },
+    { sector: "Real Estate", percent: 4.3 },
   ],
 };
 
@@ -356,6 +357,8 @@ export const letters: Letter[] = [
     title: "Fall 2026 RUIF Letter",
     semester: "Fall 2026",
     publishedAt: "2026-09-01",
+    summary:
+      "The Rice Undergraduate Investment Fund is excited to introduce our Introductory Letter! The Board is excited to lead the Fund into another great semester.",
     url: "/letters/ruif-letter-fall-2026.pdf",
     filename: "RUIF-Letter-Fall-2026.pdf",
   },

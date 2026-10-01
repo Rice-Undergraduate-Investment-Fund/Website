@@ -75,24 +75,27 @@ export default async function PortfolioPage() {
       <Section tone="mist">
         <Container className="space-y-24">
           {letter && (
-            <div className="grid gap-12 lg:grid-cols-[1fr_1.5fr] lg:gap-20">
+            <div className="grid gap-12 lg:grid-cols-[1fr_2fr] lg:gap-16">
               <div>
                 <SectionHeading
                   eyebrow={`${letter.semester} Letter`}
                   title="Letter to members"
-                  intro="Each semester the Board reports on the fund: a letter from the President, the organization chart, current holdings and the portfolio review."
+                  intro={
+                    letter.summary ||
+                    "Each semester the Board reports on the fund: a letter from the President, the organization chart, current holdings and the portfolio review."
+                  }
                 />
                 <p className="mt-6 text-sm text-slate">
                   Use the arrows to turn pages, or open the full-size view.
                 </p>
               </div>
-              <div className="bg-white p-4 sm:p-8">
+              <div className="bg-white p-3 sm:p-5">
                 <LetterViewer letter={letter} />
               </div>
             </div>
           )}
 
-          <div className="grid gap-12 lg:grid-cols-[1fr_1.5fr] lg:gap-20">
+          <div className="grid gap-12 lg:grid-cols-[1fr_2fr] lg:gap-16">
             <SectionHeading
               eyebrow="Allocation"
               title="Portfolio allocation"

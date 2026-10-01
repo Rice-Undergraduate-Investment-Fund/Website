@@ -42,7 +42,7 @@ export function SectorDirectory({ sectors }: { sectors: SectorWithPeople[] }) {
   return (
     <>
       <ul className="grid border-t border-l border-line sm:grid-cols-2 lg:grid-cols-3">
-        {sectors.map((s, i) => (
+        {sectors.map((s) => (
           <li key={s.slug} className="border-r border-b border-line bg-white">
             <button
               type="button"
@@ -50,10 +50,7 @@ export function SectorDirectory({ sectors }: { sectors: SectorWithPeople[] }) {
               aria-haspopup="dialog"
               className="group flex h-full min-h-44 w-full flex-col items-start p-7 text-left transition-colors duration-300 ease-out-soft hover:bg-rice-blue focus-visible:bg-rice-blue sm:min-h-52 sm:p-9"
             >
-              <span className="font-serif text-sm text-rice-gray tabular-nums transition-colors group-hover:text-white/60 group-focus-visible:text-white/60">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <span className="mt-4 font-serif text-2xl leading-snug text-rice-blue transition-colors group-hover:text-white group-focus-visible:text-white sm:text-[1.7rem]">
+              <span className="font-serif text-2xl leading-snug text-rice-blue transition-colors group-hover:text-white group-focus-visible:text-white sm:text-[1.7rem]">
                 {s.name}
               </span>
               <span className="mt-auto flex w-full items-center justify-between pt-8 text-sm text-slate transition-colors group-hover:text-white/80 group-focus-visible:text-white/80">
@@ -61,7 +58,7 @@ export function SectorDirectory({ sectors }: { sectors: SectorWithPeople[] }) {
                   {s.members.length + (s.director ? 1 : 0)} members
                 </span>
                 <span className="flex items-center gap-2 font-semibold text-rice-blue transition-colors group-hover:text-white group-focus-visible:text-white">
-                  View team <Arrow className="group-hover:translate-x-1" />
+                  View sector <Arrow className="group-hover:translate-x-1" />
                 </span>
               </span>
             </button>

@@ -12,8 +12,8 @@ export default async function SectorsPage() {
     <>
       <PageHeader
         eyebrow="Our Sectors"
-        title="Sector teams covering the public markets"
-        intro="Each sector is led by a Sector Director and staffed by members who research companies and pitch ideas to the fund. Select a sector to meet its team."
+        title={`${sectors.length} Sectors Across Every Industry`}
+        intro="Each sector is led by a Sector Director and staffed by Senior and Junior Analysts, who research companies and pitch ideas to the fund."
       />
       <Section>
         <Container>

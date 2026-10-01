@@ -70,6 +70,13 @@ export const letter = defineType({
       validation: (r) => r.required(),
     }),
     defineField({
+      name: "summary",
+      title: "Intro text",
+      type: "text",
+      rows: 3,
+      description: "Shown next to the letter on the Portfolio page.",
+    }),
+    defineField({
       name: "file",
       title: "PDF",
       type: "file",

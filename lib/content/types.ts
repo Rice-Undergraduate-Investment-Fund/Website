@@ -90,6 +90,8 @@ export type Letter = {
   title: string;
   semester: string;
   publishedAt?: string;
+  /** Short intro shown next to the embedded letter. */
+  summary?: string;
   url: string;
   filename: string;
 };

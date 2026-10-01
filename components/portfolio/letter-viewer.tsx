@@ -78,7 +78,7 @@ export function LetterViewer({ letter }: { letter: Letter }) {
 
   if (error) {
     return (
-      <div className="flex h-[440px] flex-col items-center justify-center gap-4 bg-mist p-8 text-center sm:h-[480px] lg:h-[400px]">
+      <div className="flex aspect-[8.5/11] w-full flex-col items-center justify-center gap-4 bg-mist p-8 text-center">
         <p className="text-slate">The letter couldn&apos;t be displayed here.</p>
         <a href={letter.url} target="_blank" rel="noopener noreferrer" className="font-semibold text-rice-blue underline underline-offset-4">
           Open the PDF
@@ -94,9 +94,9 @@ export function LetterViewer({ letter }: { letter: Letter }) {
         type="button"
         onClick={() => doc && setExpanded(true)}
         aria-label={`${letter.title}, page ${page} of ${pages || "…"}. Open larger view`}
-        className="group relative block h-[440px] w-full cursor-zoom-in overflow-hidden bg-mist sm:h-[480px] lg:h-[400px]"
+        className="group relative block aspect-[8.5/11] w-full cursor-zoom-in overflow-hidden bg-mist"
       >
-        <PdfPage doc={doc} pageNumber={page} className="p-5 sm:p-6" />
+        <PdfPage doc={doc} pageNumber={page} className="p-2 sm:p-3" />
         <span className="pointer-events-none absolute right-3 bottom-3 inline-flex items-center gap-1.5 bg-rice-blue/90 px-3 py-1.5 text-xs font-semibold text-white opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
           <ExpandIcon /> Expand
         </span>

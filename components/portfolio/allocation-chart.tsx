@@ -17,7 +17,7 @@ export function AllocationChart({ allocations }: { allocations: Allocation[] }) 
           <li
             key={r.sector}
             className="group grid grid-cols-[minmax(0,9rem)_1fr_3rem] items-center gap-4 rounded-sm px-2 py-2 transition-colors hover:bg-mist sm:grid-cols-[minmax(0,15rem)_1fr_3.5rem]"
-            title={`${r.sector}: ${r.percent}%`}
+            title={`${r.sector}: ${r.percent.toFixed(1)}%`}
           >
             <span className="truncate text-sm text-ink">{r.sector}</span>
             <span className="relative h-3" aria-hidden>
@@ -28,13 +28,13 @@ export function AllocationChart({ allocations }: { allocations: Allocation[] }) 
               />
             </span>
             <span className="text-right text-sm font-semibold text-ink tabular-nums">
-              {r.percent}%
+              {Number.isInteger(r.percent * 10) ? r.percent.toFixed(1) : r.percent}%
             </span>
           </li>
         ))}
       </ul>
       <figcaption className="mt-4 px-2 text-xs text-slate">
-        Share of portfolio by sector. Total {total}%.
+        Share of portfolio by sector, including cash. Total {Math.round(total * 10) / 10}%.
       </figcaption>
     </figure>
   );
