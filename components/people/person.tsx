@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { PHOTO_QUALITY } from "@/lib/images";
 import type { Person } from "@/lib/content";
 import { cx } from "@/components/ui/layout";
 
@@ -22,6 +23,7 @@ export function PersonPhoto({
           alt={person.photo.alt || person.name}
           fill
           sizes={sizes}
+          quality={PHOTO_QUALITY}
           className="object-cover"
           style={{ objectPosition: person.photo.position ?? "50% 30%" }}
         />

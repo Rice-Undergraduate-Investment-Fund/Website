@@ -66,12 +66,12 @@ export const siteSettings: SiteSettings = {
         "Graduates of the Training Program join one of the fund's sector teams.",
     },
     {
-      title: "Fundamental Analysis",
+      title: "Research",
       description:
         "Each sector conducts fundamental analysis on a company within its industry, developing an investment thesis and presentation.",
     },
     {
-      title: "Pitch Day",
+      title: "Pitch Day 1",
       description:
         "Members present stock ideas to the RUIF Board and investment professionals.",
     },

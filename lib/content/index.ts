@@ -58,7 +58,8 @@ function toImage(img: RawImage | undefined, fallbackAlt = ""): ImageAsset | unde
   if (!img?.asset) return undefined;
   const dims = img.asset.metadata?.dimensions;
   return {
-    src: urlFor(img).auto("format").url(),
+    // Original file, untouched by Sanity: next/image does the single resize + re-encode.
+    src: urlFor(img).url(),
     alt: img.alt || fallbackAlt,
     width: dims?.width ?? 1600,
     height: dims?.height ?? 1600,

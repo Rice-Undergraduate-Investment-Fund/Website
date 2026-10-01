@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { PHOTO_QUALITY } from "@/lib/images";
 import type { ReactNode } from "react";
 import type { ImageAsset, Stat, Step } from "@/lib/content";
 import { Container, Eyebrow, cx } from "./layout";
@@ -169,6 +170,7 @@ export function CoverImage({
       fill
       priority={priority}
       sizes={sizes}
+      quality={PHOTO_QUALITY}
       className={cx("object-cover", className)}
       style={{ objectPosition: image.position ?? "50% 50%" }}
     />

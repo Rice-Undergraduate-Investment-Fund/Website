@@ -38,10 +38,8 @@ export default async function AboutPage() {
     getTimeline(),
   ]);
 
-  // Cumulative outperformance vs. the benchmark: the period with the largest positive alpha.
-  const outperformance = [...portfolio.performance]
-    .filter((r) => r.fund - r.benchmark > 0)
-    .sort((a, b) => b.fund - b.benchmark - (a.fund - a.benchmark))[0];
+  // Trailing 12-month alpha vs. the benchmark (same figure as the Portfolio page table).
+  const outperformance = portfolio.performance.find((r) => /12.?month|LTM|1.?year/i.test(r.period));
 
   const fundStats: Stat[] = [
     s.stats.members,
@@ -54,7 +52,7 @@ export default async function AboutPage() {
       ? [
           {
             value: fmtPct(outperformance.fund - outperformance.benchmark),
-            label: `Outperformance vs. ${portfolio.benchmarkName} (${outperformance.period.toLowerCase()})`,
+            label: `Alpha vs. ${portfolio.benchmarkName} (last 12 months)`,
           },
         ]
       : []),
