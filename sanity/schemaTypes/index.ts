@@ -1,4 +1,4 @@
-import { holding, timelineEvent } from "./misc";
+import { holding, letter, timelineEvent } from "./misc";
 import { photo, stat, step } from "./objects";
 import { person } from "./person";
 import { sector } from "./sector";
@@ -14,6 +14,7 @@ export const schemaTypes = [
   sector,
   holding,
   timelineEvent,
+  letter,
   // singletons
   siteSettings,
   portfolio,

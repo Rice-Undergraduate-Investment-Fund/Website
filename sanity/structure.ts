@@ -59,6 +59,10 @@ export const structure: StructureResolver = (S) =>
       S.documentTypeListItem("person").title("All People"),
       S.divider(),
 
-      S.documentTypeListItem("holding").title("Holdings"),
+      S.documentTypeListItem("letter").title("Letters (PDF)"),
+      S.listItem()
+        .title("Holdings")
+        .schemaType("holding")
+        .child(S.documentTypeList("holding").title("Holdings").defaultOrdering([{ field: "company", direction: "asc" }])),
       S.documentTypeListItem("timelineEvent").title("History"),
     ]);

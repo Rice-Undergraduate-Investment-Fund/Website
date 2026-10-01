@@ -53,16 +53,41 @@ export type SectorWithPeople = Omit<Sector, "directorId" | "memberIds"> & {
 
 export type Allocation = { sector: string; percent: number };
 
+export type PerformanceRow = {
+  /** e.g. "Last 3 months" */
+  period: string;
+  /** Fund return, as a decimal (0.065 = +6.5%). */
+  fund: number;
+  /** Benchmark return, as a decimal. */
+  benchmark: number;
+};
+
 export type Portfolio = {
   /** Assets under management in USD. null = not yet published. */
   aum: number | null;
   /** Return since inception as a decimal (0.25 = +25%). */
   returnSinceInception: number | null;
   inceptionYear: number;
+  /** Free-text date label, e.g. "Fall 2026". */
   asOf?: string;
   allocations: Allocation[];
-  /** Draft flag: true while figures are illustrative placeholders. */
+  /** Note shown above the figures (e.g. which numbers are estimates). */
+  note?: string;
+  /** Draft flag: shows a generic "figures pending" note if no custom note. */
   isSample: boolean;
+  benchmarkName: string;
+  performance: PerformanceRow[];
+  beta?: number;
+};
+
+/** Semester letter to members (PDF), shown on the Portfolio page. */
+export type Letter = {
+  id: string;
+  title: string;
+  semester: string;
+  publishedAt?: string;
+  url: string;
+  filename: string;
 };
 
 export type Holding = {
@@ -71,6 +96,8 @@ export type Holding = {
   ticker: string;
   sector: string;
   featured: boolean;
+  /** Short highlight shown on featured cards, e.g. "+4,052% since purchase". */
+  highlight?: string;
 };
 
 export type Step = { title: string; description: string };

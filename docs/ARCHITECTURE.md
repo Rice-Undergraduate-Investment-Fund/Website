@@ -94,7 +94,7 @@ All services are owned by the **club**, not an individual. Each should have **at
 │   ├── layout/               Header (responsive nav, Apply button), Footer
 │   ├── people/               PersonPhoto (square photo or placeholder), PersonCard
 │   ├── sectors/              SectorDirectory (grid), SectorModal
-│   ├── portfolio/            AllocationChart
+│   ├── portfolio/            AllocationChart, PerformanceTable, LetterViewer (pdf.js)
 │   └── contact/              ContactForm
 ├── lib/
 │   ├── content/
@@ -164,8 +164,9 @@ Pages never import data directly. They call async functions in `lib/content/inde
 ### Other types
 | Type | Kind | Contents |
 |---|---|---|
-| `portfolio` | singleton | AUM, return since inception (entered as %), inception year, as-of date, allocations `[{sector, percent}]` (warns if ≠ 100%), "figures pending" toggle |
-| `holding` | document | company, ticker, logo, sector, featured? |
+| `portfolio` | singleton | AUM, return since inception (%), inception year, as-of label, note, benchmark (VTI), beta, performance rows `[{period, fund %, benchmark %}]` (alpha computed), allocations (warns if ≠ 100%) |
+| `holding` | document | company, ticker, sector, featured? (card in “Selected positions”), highlight, order. All holdings are listed by sector |
+| `letter` | document | title, semester, published date, PDF file. Newest is embedded on /portfolio (pdf.js viewer: page arrows, expand, download) |
 | `trainingProgram` | singleton | semester label, applications open? (drives Apply buttons), open date, deadline, apply URL, steps, sessions (numbered by order) |
 | `timelineEvent` | document | year, title, description, order (About → history) |
 | `siteSettings` | singleton | org name, tagline, intro, stats, mission, operating/investment steps, alumni employers, contacts, socials, page photos |
@@ -281,6 +282,8 @@ Full step-by-step: **`docs/DEPLOYMENT.md`**. One deployment (GitHub → Netlify)
 | 2026-09-30 | Sanity project `237x8krw` / `production` created | Done |
 | 2026-09-30 | Singletons can't be created/deleted in Studio | Done |
 | 2026-09-30 | Page photos editable in Site Settings | Done |
+| 2026-09-30 | Semester letter PDF embedded on Portfolio page; figures from Fall 2026 letter | Done |
+| 2026-09-30 | pdf.js pinned to v4 (v5+/v6 need very new browser APIs) | Done |
 | 2026-09-30 | Tailwind v4: tokens in `globals.css`, no `tailwind.config.ts` | Done |
 | 2026-09-30 | Fonts: Source Serif 4 + Inter, self-hosted | Done (revisable) |
 | 2026-09-30 | Content layer reads Sanity, falls back to seed data | Done |

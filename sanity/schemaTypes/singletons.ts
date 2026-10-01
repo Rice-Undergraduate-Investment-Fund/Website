@@ -139,7 +139,37 @@ export const portfolio = defineType({
       description: "Enter as a percentage, e.g. 24.5 for +24.5%.",
     }),
     defineField({ name: "inceptionYear", title: "Year established", type: "number", initialValue: 2017 }),
-    defineField({ name: "asOf", title: "Figures as of", type: "date" }),
+    defineField({ name: "asOf", title: "Figures as of", type: "string", description: "e.g. “Fall 2026”" }),
+    defineField({
+      name: "note",
+      title: "Note shown with the figures",
+      type: "text",
+      rows: 2,
+      description: "Optional, e.g. which figures are estimates. Leave empty to hide.",
+    }),
+    defineField({ name: "benchmarkName", title: "Benchmark", type: "string", initialValue: "VTI" }),
+    defineField({ name: "beta", title: "Beta (5-year)", type: "number" }),
+    defineField({
+      name: "performance",
+      title: "Performance vs. benchmark",
+      type: "array",
+      description: "Enter returns as percentages, e.g. 25.6 for +25.6%. Alpha is calculated automatically.",
+      of: [
+        defineArrayMember({
+          type: "object",
+          name: "performanceRow",
+          fields: [
+            defineField({ name: "period", type: "string", description: "e.g. “Last 12 months”", validation: (r) => r.required() }),
+            defineField({ name: "fund", title: "Fund return (%)", type: "number", validation: (r) => r.required() }),
+            defineField({ name: "benchmark", title: "Benchmark return (%)", type: "number", validation: (r) => r.required() }),
+          ],
+          preview: {
+            select: { title: "period", fund: "fund", benchmark: "benchmark" },
+            prepare: ({ title, fund, benchmark }) => ({ title, subtitle: `Fund ${fund ?? "–"}% · Benchmark ${benchmark ?? "–"}%` }),
+          },
+        }),
+      ],
+    }),
     defineField({
       name: "allocations",
       title: "Allocation by sector",

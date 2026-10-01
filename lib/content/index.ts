@@ -12,6 +12,7 @@ import * as mock from "./data";
 import type {
   Holding,
   ImageAsset,
+  Letter,
   Person,
   Portfolio,
   SectorWithPeople,
@@ -177,27 +178,70 @@ export async function getAlumniByClass(): Promise<{ year: number; people: Person
 
 export async function getPortfolio(): Promise<Portfolio> {
   if (!(await sanityEnabled())) return mock.portfolio;
-  const p = await query<Partial<Portfolio> | null>(
-    `*[_id == "portfolio"][0]{ aum, returnSinceInception, inceptionYear, asOf, isSample, allocations[]{ sector, percent } }`,
+  const p = await query<
+    (Omit<Partial<Portfolio>, "performance"> & { performance?: { period: string; fund: number; benchmark: number }[] }) | null
+  >(
+    `*[_id == "portfolio"][0]{
+      aum, returnSinceInception, inceptionYear, asOf, note, isSample, benchmarkName, beta,
+      allocations[]{ sector, percent }, performance[]{ period, fund, benchmark }
+    }`,
   );
+  // Percentages are stored as the editor types them (24.5) and used as decimals here (0.245).
+  const pct = (n: number | null | undefined) => (n != null ? n / 100 : null);
   return {
     aum: p?.aum ?? null,
-    // Stored as a percentage in the CMS (24.5), used as a decimal here (0.245).
-    returnSinceInception: p?.returnSinceInception != null ? p.returnSinceInception / 100 : null,
+    returnSinceInception: pct(p?.returnSinceInception),
     inceptionYear: p?.inceptionYear ?? mock.portfolio.inceptionYear,
-    asOf: p?.asOf,
+    // Older documents stored a date here; show only text labels.
+    asOf: typeof p?.asOf === "string" && !/^\d{4}-\d{2}-\d{2}$/.test(p.asOf) ? p.asOf : undefined,
+    note: p?.note ?? undefined,
     isSample: p?.isSample ?? false,
+    benchmarkName: p?.benchmarkName || "VTI",
+    beta: p?.beta ?? undefined,
     allocations: arr(p?.allocations),
+    performance: arr(p?.performance).map((r) => ({ period: r.period, fund: r.fund / 100, benchmark: r.benchmark / 100 })),
   };
 }
 
+const HOLDING = `{ "id": _id, company, ticker, "sector": coalesce(sector, ""), "featured": featured == true, highlight }`;
+const cleanHolding = (h: Holding): Holding => ({ ...h, highlight: h.highlight ?? undefined });
+
 export async function getFeaturedHoldings(): Promise<Holding[]> {
   if (!(await sanityEnabled())) return mock.holdings.filter((h) => h.featured);
-  return query<Holding[]>(
-    `*[_type == "holding" && featured == true] | order(coalesce(order, 999) asc, company asc) {
-      "id": _id, company, ticker, "sector": coalesce(sector, ""), featured
+  return (
+    await query<Holding[]>(`*[_type == "holding" && featured == true] | order(coalesce(order, 999) asc, company asc) ${HOLDING}`)
+  ).map(cleanHolding);
+}
+
+/** All holdings grouped by sector (sectors sorted A–Z, companies A–Z). */
+export async function getHoldingsBySector(): Promise<{ sector: string; holdings: Holding[] }[]> {
+  const all = (await sanityEnabled())
+    ? (await query<Holding[]>(`*[_type == "holding"] | order(company asc) ${HOLDING}`)).map(cleanHolding)
+    : [...mock.holdings].sort((a, b) => a.company.localeCompare(b.company));
+  const groups = new Map<string, Holding[]>();
+  for (const h of all) groups.set(h.sector || "Other", [...(groups.get(h.sector || "Other") ?? []), h]);
+  return [...groups.entries()]
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([sector, holdings]) => ({ sector, holdings }));
+}
+
+/** Newest semester letter (PDF), if any. */
+export async function getLatestLetter(): Promise<Letter | null> {
+  if (!(await sanityEnabled())) return mock.letters[0] ?? null;
+  const l = await query<{ id: string; title: string; semester: string; publishedAt?: string; url?: string; originalFilename?: string } | null>(
+    `*[_type == "letter" && defined(file.asset)] | order(publishedAt desc)[0]{
+      "id": _id, title, semester, publishedAt, "url": file.asset->url, "originalFilename": file.asset->originalFilename
     }`,
   );
+  if (!l?.url) return null;
+  return {
+    id: l.id,
+    title: l.title,
+    semester: l.semester,
+    publishedAt: l.publishedAt,
+    url: l.url,
+    filename: l.originalFilename || `${l.title}.pdf`,
+  };
 }
 
 export async function getTrainingProgram(): Promise<TrainingProgram> {

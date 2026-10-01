@@ -8,6 +8,7 @@
  */
 import type {
   Holding,
+  Letter,
   Person,
   Portfolio,
   Sector,
@@ -222,34 +223,91 @@ export const people: Person[] = [...board, ...sectorPeople, ...alumni];
 export const sectors: Sector[] = sectorsRaw;
 
 // ---------------------------------------------------------------------------
-// Portfolio (ILLUSTRATIVE – replace with real figures)
+// Portfolio: from the Fall 2026 RUIF Letter (public/letters/ruif-letter-fall-2026.pdf)
 // ---------------------------------------------------------------------------
 
 export const portfolio: Portfolio = {
-  aum: null,
-  returnSinceInception: null,
+  aum: 70000, // letter: "approximately $70,000 currently under management"
+  returnSinceInception: 1.305, // performance table, MAX: 130.5%
   inceptionYear: 2017,
-  isSample: true,
+  asOf: "Fall 2026",
+  isSample: false,
+  note: "Figures from the Fall 2026 letter. Technology’s weight (~28%) is stated in the letter; other sector weights are estimates pending confirmation.",
+  benchmarkName: "VTI",
+  beta: 1.11, // 5-year beta vs VTI
+  performance: [
+    { period: "Last 3 months", fund: 0.065, benchmark: 0.024 },
+    { period: "Last 12 months", fund: 0.256, benchmark: 0.189 },
+    { period: "Last 2 years", fund: 0.61, benchmark: 0.4 },
+    { period: "Since inception", fund: 1.305, benchmark: 1.66 },
+  ],
   allocations: [
-    { sector: "Technology", percent: 24 },
-    { sector: "Healthcare", percent: 13 },
-    { sector: "Financials", percent: 12 },
-    { sector: "Energy", percent: 10 },
-    { sector: "Industrials", percent: 9 },
-    { sector: "Consumer", percent: 9 },
-    { sector: "Communications", percent: 8 },
-    { sector: "Real Estate", percent: 5 },
-    { sector: "Power, Utilities & Infrastructure", percent: 5 },
-    { sector: "Natural Resources", percent: 3 },
-    { sector: "Cash", percent: 2 },
+    { sector: "Technology", percent: 28 }, // stated in letter
+    // Estimates (weighted by number of holdings; Communications raised for GOOG/META):
+    { sector: "Communication Services", percent: 12 },
+    { sector: "Natural Resources", percent: 11 },
+    { sector: "Energy", percent: 9 },
+    { sector: "Consumer Goods", percent: 9 },
+    { sector: "Healthcare", percent: 9 },
+    { sector: "Real Estate", percent: 8 },
+    { sector: "Industrials", percent: 8 },
+    { sector: "Financials", percent: 6 },
   ],
 };
 
-export const holdings: Holding[] = [
-  { id: "msft", company: "Microsoft", ticker: "MSFT", sector: "Technology", featured: true },
-  { id: "nvda", company: "NVIDIA", ticker: "NVDA", sector: "Technology", featured: true },
-  { id: "googl", company: "Alphabet", ticker: "GOOGL", sector: "Communications", featured: true },
-  { id: "lng", company: "Cheniere Energy", ticker: "LNG", sector: "Energy", featured: true },
+type H = [ticker: string, company: string];
+const bySector: Record<string, H[]> = {
+  Technology: [["NVDA", "NVIDIA"], ["CRM", "Salesforce"], ["NET", "Cloudflare"], ["DDOG", "Datadog"], ["AMD", "Advanced Micro Devices"], ["MSFT", "Microsoft"], ["SNPS", "Synopsys"]],
+  "Communication Services": [["DIS", "Walt Disney"], ["TMUS", "T-Mobile"], ["TTWO", "Take-Two Interactive"], ["VZ", "Verizon"], ["CMCSA", "Comcast"], ["META", "Meta Platforms"], ["GOOG", "Alphabet"], ["OMC", "Omnicom Group"]],
+  "Consumer Goods": [["PG", "Procter & Gamble"], ["WMT", "Walmart"], ["CASY", "Casey’s General Stores"], ["ULTA", "Ulta Beauty"], ["AMZN", "Amazon"], ["COST", "Costco Wholesale"], ["GAP", "Gap"]],
+  Energy: [["LNG", "Cheniere Energy"], ["SHEL", "Shell"], ["DINO", "HF Sinclair"], ["DVN", "Devon Energy"], ["HAL", "Halliburton"], ["ET", "Energy Transfer"], ["AESI", "Atlas Energy Solutions"]],
+  Financials: [["AXP", "American Express"], ["JPM", "JPMorgan Chase"], ["APO", "Apollo Global Management"], ["V", "Visa"], ["CME", "CME Group"]],
+  Healthcare: [["UNH", "UnitedHealth Group"], ["LLY", "Eli Lilly"], ["TMO", "Thermo Fisher Scientific"], ["BNTX", "BioNTech"], ["SYK", "Stryker"], ["AMGN", "Amgen"], ["ISRG", "Intuitive Surgical"]],
+  Industrials: [["CAT", "Caterpillar"], ["RTX", "RTX"], ["WM", "Waste Management"], ["UFPI", "UFP Industries"], ["AME", "Ametek"], ["RSG", "Republic Services"]],
+  "Natural Resources": [["EOG", "EOG Resources"], ["BHP", "BHP Group"], ["CF", "CF Industries"], ["TTE", "TotalEnergies"], ["MP", "MP Materials"], ["COP", "ConocoPhillips"], ["NEM", "Newmont"], ["CCJ", "Cameco"], ["WDS", "Woodside Energy Group"]],
+  "Real Estate": [["INVH", "Invitation Homes"], ["ACM", "AECOM"], ["ARE", "Alexandria Real Estate Equities"], ["STAG", "STAG Industrial"], ["VICI", "VICI Properties"], ["O", "Realty Income"], ["PK", "Park Hotels & Resorts"]],
+};
+
+/** Featured on the Portfolio page (highlighted in the Fall 2026 letter), in display order. */
+const featured: Record<string, string | undefined> = {
+  NVDA: "≈ +4,052% since purchase: the fund’s largest gain",
+  MSFT: "Triple-digit return since purchase",
+  NET: "Triple-digit return since purchase",
+  GOOG: "Core long-term holding: advertising, cloud and AI",
+  META: "Core long-term holding: advertising and AI",
+  LNG: "Exposure to growing U.S. LNG exports",
+  DVN: "U.S. Lower 48 shale producer",
+  WMT: "Resilient U.S. consumer franchise",
+};
+const featuredOrder = Object.keys(featured);
+
+export const holdings: Holding[] = Object.entries(bySector).flatMap(([sector, list]) =>
+  list.map(([ticker, company]) => ({
+    id: ticker.toLowerCase(),
+    company,
+    ticker,
+    sector,
+    featured: ticker in featured,
+    highlight: featured[ticker],
+  })),
+).sort((a, b) => {
+  const fa = featuredOrder.indexOf(a.ticker), fb = featuredOrder.indexOf(b.ticker);
+  return (fa < 0 ? 99 : fa) - (fb < 0 ? 99 : fb);
+});
+
+// ---------------------------------------------------------------------------
+// Letters
+// ---------------------------------------------------------------------------
+
+export const letters: Letter[] = [
+  {
+    id: "letter-fall-2026",
+    title: "Fall 2026 RUIF Letter",
+    semester: "Fall 2026",
+    publishedAt: "2026-09-01",
+    url: "/letters/ruif-letter-fall-2026.pdf",
+    filename: "RUIF-Letter-Fall-2026.pdf",
+  },
 ];
 
 // ---------------------------------------------------------------------------

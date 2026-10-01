@@ -5,6 +5,10 @@
  *   npm run seed            # refuses if the dataset already has Site Settings
  *   npm run seed -- --force # overwrite starter documents (Studio edits to them are lost!)
  *
+ * Update only some content groups in an existing dataset (replaces those documents):
+ *   npm run seed -- --only=portfolio,holdings,letters      (alias: npm run seed:portfolio)
+ *   groups: settings, people, sectors, holdings, timeline, portfolio, training, letters
+ *
  * Requires SANITY_API_WRITE_TOKEN in .env.local (see README).
  */
 import "./env";
@@ -25,6 +29,9 @@ if (!token) {
 const client: SanityClient = createClient({ projectId, dataset, apiVersion, token, useCdn: false });
 const key = () => randomUUID().slice(0, 12);
 const force = process.argv.includes("--force");
+const onlyArg = process.argv.find((a) => a.startsWith("--only="));
+const only = onlyArg ? new Set(onlyArg.slice(7).split(",").map((x) => x.trim())) : null;
+const want = (group: string) => !only || only.has(group);
 
 // ---- images ---------------------------------------------------------------
 const uploaded = new Map<string, string>();
@@ -60,7 +67,8 @@ async function main() {
   console.log(`Seeding Sanity project ${projectId}, dataset "${dataset}"…`);
 
   const exists = await client.fetch<boolean>(`defined(*[_id == "siteSettings"][0]._id)`);
-  if (exists && !force) {
+  if (only) console.log(`  Only updating: ${[...only].join(", ")} (these documents are replaced)`);
+  if (exists && !force && !only) {
     console.error("✗ This dataset already has content (Site Settings exists). Nothing was changed.");
     console.error("  Run `npm run seed -- --force` only if you want to overwrite the starter documents.");
     process.exit(1);
@@ -69,7 +77,7 @@ async function main() {
   const docs: Record<string, unknown>[] = [];
   const s = data.siteSettings;
 
-  docs.push({
+  if (want("settings")) docs.push({
     _id: "siteSettings",
     _type: "siteSettings",
     orgName: s.orgName,
@@ -93,7 +101,7 @@ async function main() {
     }),
   });
 
-  for (const p of data.people) {
+  if (want("people")) for (const p of data.people) {
     docs.push(
       clean({
         _id: p.id,
@@ -116,7 +124,7 @@ async function main() {
     );
   }
 
-  for (const sec of data.sectors) {
+  if (want("sectors")) for (const sec of data.sectors) {
     docs.push(
       clean({
         _id: `sector-${sec.slug}`,
@@ -131,29 +139,76 @@ async function main() {
     );
   }
 
-  data.holdings.forEach((h, i) =>
-    docs.push({ _id: `holding-${h.id}`, _type: "holding", company: h.company, ticker: h.ticker, sector: h.sector, featured: h.featured, order: i + 1 }),
-  );
+  if (want("holdings")) {
+    data.holdings.forEach((h, i) =>
+      docs.push(
+        clean({
+          _id: `holding-${h.id}`,
+          _type: "holding",
+          company: h.company,
+          ticker: h.ticker,
+          sector: h.sector,
+          featured: h.featured,
+          highlight: h.highlight,
+          order: i + 1,
+        }),
+      ),
+    );
+  }
 
-  data.timeline.forEach((e, i) =>
+  if (want("timeline")) data.timeline.forEach((e, i) =>
     docs.push(clean({ _id: `timeline-${i + 1}`, _type: "timelineEvent", year: e.year, title: e.title, description: e.description, order: i + 1 })),
   );
 
+  // Percentages are stored in Sanity the way editors type them (25.6 = 25.6%).
+  const toPct = (n: number) => Math.round(n * 1000) / 10;
   const p = data.portfolio;
-  docs.push(
+  if (want("portfolio")) docs.push(
     clean({
       _id: "portfolio",
       _type: "portfolio",
       aum: p.aum ?? undefined,
-      returnSinceInception: p.returnSinceInception != null ? p.returnSinceInception * 100 : undefined,
+      returnSinceInception: p.returnSinceInception != null ? toPct(p.returnSinceInception) : undefined,
       inceptionYear: p.inceptionYear,
+      asOf: p.asOf,
+      note: p.note,
       isSample: p.isSample,
+      benchmarkName: p.benchmarkName,
+      beta: p.beta,
       allocations: p.allocations.map((a) => ({ _type: "allocation", _key: key(), ...a })),
+      performance: p.performance.map((r) => ({
+        _type: "performanceRow",
+        _key: key(),
+        period: r.period,
+        fund: toPct(r.fund),
+        benchmark: toPct(r.benchmark),
+      })),
     }),
   );
 
+  if (want("letters")) {
+    for (const l of data.letters) {
+      const file = join(process.cwd(), "public", l.url);
+      const asset = await client.assets.upload("file", createReadStream(file), {
+        filename: l.filename,
+        contentType: "application/pdf",
+      });
+      console.log(`  ↑ uploaded ${l.url}`);
+      docs.push(
+        clean({
+          _id: l.id,
+          _type: "letter",
+          title: l.title,
+          semester: l.semester,
+          publishedAt: l.publishedAt,
+          file: { _type: "file", asset: { _type: "reference", _ref: asset._id } },
+        }),
+      );
+    }
+  }
+
   const t = data.trainingProgram;
-  docs.push(
+  if (want("training")) docs.push(
     clean({
       _id: "trainingProgram",
       _type: "trainingProgram",
@@ -175,6 +230,18 @@ async function main() {
     const tx = client.transaction();
     docs.slice(i, i + 50).forEach((d) => tx.createOrReplace(d as { _id: string; _type: string }));
     await tx.commit();
+  }
+
+  // When replacing holdings, remove holdings that are no longer in the list.
+  if (only?.has("holdings")) {
+    const keep = data.holdings.map((h) => `holding-${h.id}`);
+    const stale = await client.fetch<string[]>(`*[_type == "holding" && !(_id in $keep) && !(_id in path("drafts.**"))]._id`, { keep });
+    if (stale.length) {
+      const tx = client.transaction();
+      stale.forEach((id) => tx.delete(id));
+      await tx.commit();
+      console.log(`  ✕ removed ${stale.length} holdings no longer in the list`);
+    }
   }
 
   console.log(`✓ Seeded ${docs.length} documents and ${uploaded.size} photos.`);
