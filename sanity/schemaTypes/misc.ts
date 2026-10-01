@@ -17,6 +17,7 @@ export const holding = defineType({
       title: "Feature in “Selected positions”",
       type: "boolean",
       description: "All holdings appear in the full list; featured ones also get a card.",
+      initialValue: false,
     }),
     defineField({
       name: "highlight",
