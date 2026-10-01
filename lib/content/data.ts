@@ -245,6 +245,14 @@ const person = (name: string, sectorRole?: Person["sectorRole"]): string => {
   return id;
 };
 
+/** Headshots in public/images/people/<id>.jpg (square, face-centred). Add an id here when a new photo arrives. */
+const headshots = new Set([
+  // Financials
+  "kirill-kolotiy", "jonathan-plavnik", "jude-thomas", "noah-kaufman", "wesley-liu",
+  // Power, Utilities & Infrastructure
+  "abe-fang", "arya-agarwal", "gavin-nguyen", "james-wu", "judy-tsai", "rex-rutchik", "robert-fischer",
+]);
+
 const sectorsRaw: Sector[] = roster.map((r, i) => {
   const slug = slugify(r.name);
   return {
@@ -269,6 +277,10 @@ const alumni: Person[] = [
   { id: "placeholder-alum-7", name: "Alumni Name", status: "alumni", graduationYear: 2024, employer: "Private Equity Firm", jobTitle: "Associate", location: "New York, NY" },
   { id: "placeholder-alum-8", name: "Alumni Name", status: "alumni", graduationYear: 2024, employer: "Morgan Stanley", jobTitle: "Associate", location: "San Francisco, CA" },
 ].map((p) => ({ ...p, status: "alumni" as const }));
+
+for (const p of sectorPeople) {
+  if (headshots.has(p.id)) p.photo = img(`/images/people/${p.id}.jpg`, p.name, 800, 800, "50% 40%");
+}
 
 export const people: Person[] = [...board, ...sectorPeople, ...alumni];
 export const sectors: Sector[] = sectorsRaw;
