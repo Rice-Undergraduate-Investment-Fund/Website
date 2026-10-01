@@ -249,6 +249,10 @@ const person = (name: string, sectorRole?: Person["sectorRole"]): string => {
 const headshots = new Set([
   // Financials
   "kirill-kolotiy", "jonathan-plavnik", "jude-thomas", "noah-kaufman", "wesley-liu",
+  // Healthcare
+  "teo-lehaczynski", "annie-chen", "atish-amistapur", "dia-gupta", "eddy-zhang", "grace-yuan", "marco-de-azevedo-soares", "vishwas-vijayan",
+  // Real Estate
+  "krish-puri", "alina-chen", "anderson-zeidenstein", "conor-orchard", "jack-lu", "lukas-johnson", "mykhaylo-negrych", "sebastian-tirschwell",
   // Power, Utilities & Infrastructure
   "abe-fang", "arya-agarwal", "gavin-nguyen", "james-wu", "judy-tsai", "rex-rutchik", "robert-fischer",
 ]);
