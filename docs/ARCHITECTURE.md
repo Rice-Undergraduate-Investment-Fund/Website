@@ -258,6 +258,14 @@ The website itself needs **no secrets**: the dataset is read publicly (published
 ### Sanity CORS origins (sanity.io/manage → API)
 `http://localhost:3000` (with credentials) for local Studio; add the Netlify production + Deploy Preview URLs at deployment.
 
+
+### Adding headshots
+
+Headshots are never stored in the repo (it's public). Either:
+
+1. **Studio (preferred for officers):** open the person → drag in the photo → set the focal point on the face → Publish. Or
+2. **In bulk:** save each photo as `seed-assets/people/<person-id>.jpg` (square, face-centred; the id is the name in lowercase with dashes, e.g. `jane-smith.jpg`). The folder is git-ignored. Then run `npm run seed:people`. People without a local file keep the photo they already have in Sanity.
+
 ### Running Sanity scripts on a Mac with iCloud Desktop (verified workaround)
 
 If the repo lives in an iCloud-synced folder (e.g. Desktop), `npm` commands there can hang because iCloud syncs/offloads `node_modules`. Run seed scripts from a temporary copy outside iCloud instead. This works and was used to publish the Fall 2026 portfolio content:
@@ -265,7 +273,7 @@ If the repo lives in an iCloud-synced folder (e.g. Desktop), `npm` commands ther
 ```bash
 rm -rf /tmp/ruif-seed && mkdir /tmp/ruif-seed
 cd ~/Desktop/Rice/RUIF/Website/Website
-cp -R package.json package-lock.json tsconfig.json .env.local scripts lib sanity public /tmp/ruif-seed/
+cp -R package.json package-lock.json tsconfig.json .env.local scripts lib sanity public seed-assets /tmp/ruif-seed/
 cd /tmp/ruif-seed
 npm ci
 npm run seed:portfolio

@@ -115,14 +115,6 @@ export const siteSettings: SiteSettings = {
 // People
 // ---------------------------------------------------------------------------
 
-const img = (
-  src: string,
-  alt: string,
-  width = 1200,
-  height = 1200,
-  position?: string,
-) => ({ src, alt, width, height, position });
-
 // Fall 2026 roster, from the organization chart in the Fall 2026 RUIF Letter.
 
 const slugify = (s: string) =>
@@ -141,7 +133,6 @@ const board: Person[] = [
     status: "current",
     boardPosition: "President",
     boardOrder: 1,
-    photo: img("/images/sergio-karam.jpg", "Sergio Karam"),
   },
   { id: "tomas-hradil", name: "Tomas Hradil", status: "current", boardPosition: "Vice President", boardOrder: 2 },
   {
@@ -150,7 +141,6 @@ const board: Person[] = [
     status: "current",
     boardPosition: "Training Program Director",
     boardOrder: 3,
-    photo: img("/images/sriram-chundi.jpg", "Sriram Chundi"),
   },
   { id: "kenneth-manning", name: "Kenneth Manning", status: "current", boardPosition: "Training Program Director", boardOrder: 4 },
   { id: "rahul-herrero", name: "Rahul Herrero", status: "current", boardPosition: "Training Program Director", boardOrder: 5 },
@@ -245,18 +235,6 @@ const person = (name: string, sectorRole?: Person["sectorRole"]): string => {
   return id;
 };
 
-/** Headshots in public/images/people/<id>.jpg (square, face-centred). Add an id here when a new photo arrives. */
-const headshots = new Set([
-  // Financials
-  "kirill-kolotiy", "jonathan-plavnik", "jude-thomas", "noah-kaufman", "wesley-liu",
-  // Healthcare
-  "teo-lehaczynski", "annie-chen", "atish-amistapur", "dia-gupta", "eddy-zhang", "grace-yuan", "marco-de-azevedo-soares", "vishwas-vijayan",
-  // Real Estate
-  "krish-puri", "alina-chen", "anderson-zeidenstein", "conor-orchard", "jack-lu", "lukas-johnson", "mykhaylo-negrych", "sebastian-tirschwell",
-  // Power, Utilities & Infrastructure
-  "abe-fang", "arya-agarwal", "gavin-nguyen", "james-wu", "judy-tsai", "rex-rutchik", "robert-fischer",
-]);
-
 const sectorsRaw: Sector[] = roster.map((r, i) => {
   const slug = slugify(r.name);
   return {
@@ -282,9 +260,8 @@ const alumni: Person[] = [
   { id: "placeholder-alum-8", name: "Alumni Name", status: "alumni", graduationYear: 2024, employer: "Morgan Stanley", jobTitle: "Associate", location: "San Francisco, CA" },
 ].map((p) => ({ ...p, status: "alumni" as const }));
 
-for (const p of sectorPeople) {
-  if (headshots.has(p.id)) p.photo = img(`/images/people/${p.id}.jpg`, p.name, 800, 800, "50% 40%");
-}
+// Headshots are NOT stored in the repo. Put them in seed-assets/people/<person-id>.jpg
+// (git-ignored) and run `npm run seed:people`, or upload them directly in the Studio.
 
 export const people: Person[] = [...board, ...sectorPeople, ...alumni];
 export const sectors: Sector[] = sectorsRaw;

@@ -31,3 +31,6 @@ yarn-error.log*
 node_modules
 .next
 *.nosync
+
+# Local seed inputs (e.g. headshots) – uploaded to Sanity by scripts, never pushed to GitHub
+seed-assets/

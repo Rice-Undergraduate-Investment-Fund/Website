@@ -48,6 +48,13 @@ Project ID `237x8krw`, dataset `production` (set in `sanity/env.ts`).
 
 Until the dataset is seeded (or if Sanity can't be reached), the site automatically shows the starter content from `lib/content/data.ts`.
 
+**Adding headshots**
+
+Headshots are never stored in the repo (it's public). Either:
+
+1. **Studio (preferred for officers):** open the person → drag in the photo → set the focal point on the face → Publish. Or
+2. **In bulk:** save each photo as `seed-assets/people/<person-id>.jpg` (square, face-centred; the id is the name in lowercase with dashes, e.g. `jane-smith.jpg`). The folder is git-ignored. Then run `npm run seed:people`. People without a local file keep the photo they already have in Sanity.
+
 ## Troubleshooting
 
 **`npm` commands hang on a Mac with iCloud Desktop & Documents sync.** iCloud syncs and offloads the tens of thousands of files in `node_modules`, `.next` and `.git`, and Node.js stalls waiting for them. (Symlinking `node_modules` to a `.nosync` folder does *not* hold: `npm install` replaces the link.) Reliable fixes:
@@ -63,7 +70,7 @@ If the repo lives in an iCloud-synced folder (e.g. Desktop), `npm` commands ther
 ```bash
 rm -rf /tmp/ruif-seed && mkdir /tmp/ruif-seed
 cd ~/Desktop/Rice/RUIF/Website/Website
-cp -R package.json package-lock.json tsconfig.json .env.local scripts lib sanity public /tmp/ruif-seed/
+cp -R package.json package-lock.json tsconfig.json .env.local scripts lib sanity public seed-assets /tmp/ruif-seed/
 cd /tmp/ruif-seed
 npm ci
 npm run seed:portfolio

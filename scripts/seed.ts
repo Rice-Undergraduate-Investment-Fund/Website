@@ -14,7 +14,7 @@
  */
 import "./env";
 import { createClient, type SanityClient } from "@sanity/client";
-import { createReadStream } from "node:fs";
+import { createReadStream, existsSync } from "node:fs";
 import { basename, join } from "node:path";
 import { randomUUID } from "node:crypto";
 import { apiVersion, dataset, projectId } from "../sanity/env";
@@ -39,7 +39,8 @@ const uploaded = new Map<string, string>();
 
 async function uploadImage(src: string): Promise<string> {
   if (uploaded.has(src)) return uploaded.get(src)!;
-  const file = join(process.cwd(), "public", src);
+  // Paths starting with "seed-assets/" are local, git-ignored files; others live in public/.
+  const file = src.startsWith("seed-assets/") ? join(process.cwd(), src) : join(process.cwd(), "public", src);
   const asset = await client.assets.upload("image", createReadStream(file), { filename: basename(file) });
   uploaded.set(src, asset._id);
   console.log(`  ↑ uploaded ${src}`);
@@ -102,13 +103,32 @@ async function main() {
     }),
   });
 
+  // Headshots: seed-assets/people/<person-id>.jpg (git-ignored, never pushed to GitHub).
+  // If there's no local file, keep the photo already in Sanity (e.g. uploaded in the Studio).
+  const existingPhotos = want("people")
+    ? new Map(
+        (await client.fetch<{ _id: string; photo?: unknown }[]>(`*[_type == "person" && defined(photo.asset)]{ _id, photo }`)).map(
+          (d) => [d._id, d.photo],
+        ),
+      )
+    : new Map<string, unknown>();
+  const headshot = async (p: (typeof data.people)[number]) => {
+    for (const ext of ["jpg", "jpeg", "png"]) {
+      const rel = `seed-assets/people/${p.id}.${ext}`;
+      if (existsSync(join(process.cwd(), rel))) {
+        return photo({ src: rel, alt: p.name, width: 800, height: 800, position: "50% 40%" });
+      }
+    }
+    return p.photo ? photo(p.photo) : existingPhotos.get(p.id);
+  };
+
   if (want("people")) for (const p of data.people) {
     docs.push(
       clean({
         _id: p.id,
         _type: "person",
         name: p.name,
-        photo: await photo(p.photo),
+        photo: await headshot(p),
         status: p.status,
         graduationYear: p.graduationYear,
         email: p.email,
