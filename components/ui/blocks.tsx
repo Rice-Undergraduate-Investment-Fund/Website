@@ -63,11 +63,12 @@ export function PageHeader({
   );
 }
 
-export function StatRow({ stats, light = false }: { stats: Stat[]; light?: boolean }) {
+export function StatRow({ stats, light = false, columns = 4 }: { stats: Stat[]; light?: boolean; columns?: 3 | 4 }) {
   return (
     <dl
       className={cx(
-        "grid grid-cols-2 gap-y-10 lg:grid-cols-4",
+        "grid grid-cols-2 gap-y-10",
+        columns === 4 ? "lg:grid-cols-4" : "sm:grid-cols-3",
         light ? "divide-white/20" : "divide-line",
       )}
     >
@@ -75,13 +76,15 @@ export function StatRow({ stats, light = false }: { stats: Stat[]; light?: boole
         <div
           key={s.label}
           className={cx(
-            "border-l pl-5 sm:pl-7",
+            "border-l pl-5",
+            columns === 4 ? "sm:pl-7" : "sm:pl-6",
             light ? "border-white/25" : "border-line",
           )}
         >
           <dd
             className={cx(
-              "font-serif text-4xl tabular-nums sm:text-5xl",
+              "font-serif text-4xl tabular-nums",
+              columns === 4 ? "sm:text-5xl" : "sm:text-[2.6rem] xl:text-[2.75rem]",
               light ? "text-white" : "text-rice-blue",
             )}
           >
@@ -127,15 +130,18 @@ export function ProcessSteps({ steps }: { steps: Step[] }) {
   );
 }
 
-export function PillarGrid({ pillars }: { pillars: Step[] }) {
+export function PillarGrid({ pillars, stacked = false }: { pillars: Step[]; stacked?: boolean }) {
   return (
-    <div className="grid border-t border-l border-line md:grid-cols-3">
+    <div className={cx("grid border-t border-l border-line", stacked ? "h-full auto-rows-fr" : "md:grid-cols-3")}>
       {pillars.map((p, i) => (
-        <div key={p.title} className="border-r border-b border-line bg-white p-8 sm:p-10">
+        <div
+          key={p.title}
+          className={cx("border-r border-b border-line bg-white", stacked ? "flex flex-col justify-center p-7 sm:p-8" : "p-8 sm:p-10")}
+        >
           <span className="font-serif text-sm text-rice-gray tabular-nums">
             {String(i + 1).padStart(2, "0")}
           </span>
-          <h3 className="mt-6 text-2xl text-rice-blue">{p.title}</h3>
+          <h3 className={cx("text-2xl text-rice-blue", stacked ? "mt-3" : "mt-6")}>{p.title}</h3>
           <p className="mt-3 leading-relaxed text-slate">{p.description}</p>
         </div>
       ))}

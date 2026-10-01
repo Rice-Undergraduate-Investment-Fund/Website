@@ -8,13 +8,15 @@
  * Update only some content groups in an existing dataset (replaces those documents):
  *   npm run seed -- --only=portfolio,holdings,letters      (alias: npm run seed:portfolio)
  *   npm run seed -- --only=people,sectors                 (alias: npm run seed:people)
+ *   npm run seed -- --only=about                          (alias: npm run seed:about)
+ *     → How-we-operate steps, About photos from seed-assets/site/, history timeline
  *   groups: settings, people, sectors, holdings, timeline, portfolio, training, letters
  *
  * Requires SANITY_API_WRITE_TOKEN in .env.local (see README).
  */
 import "./env";
 import { createClient, type SanityClient } from "@sanity/client";
-import { createReadStream, existsSync } from "node:fs";
+import { createReadStream, existsSync, readdirSync } from "node:fs";
 import { basename, join } from "node:path";
 import { randomUUID } from "node:crypto";
 import { apiVersion, dataset, projectId } from "../sanity/env";
@@ -64,6 +66,25 @@ const ref = (id: string) => ({ _type: "reference", _ref: id });
 const clean = <T extends object>(o: T) =>
   Object.fromEntries(Object.entries(o).filter(([, v]) => v !== undefined && v !== null)) as T;
 
+/** Page photos dropped into seed-assets/site/<photoKey>.jpg (e.g. aboutHero.jpg). */
+async function localSitePhotos(): Promise<Record<string, unknown>> {
+  const dir = join(process.cwd(), "seed-assets", "site");
+  if (!existsSync(dir)) return {};
+  const out: Record<string, unknown> = {};
+  for (const f of readdirSync(dir)) {
+    const m = f.match(/^([A-Za-z]+)\.(jpe?g|png)$/);
+    if (!m) continue;
+    out[m[1]] = await photo({
+      src: `seed-assets/site/${f}`,
+      alt: "",
+      width: 2400,
+      height: 1600,
+      position: data.photoFocus[m[1]] ?? "50% 50%",
+    });
+  }
+  return out;
+}
+
 // ---- main -----------------------------------------------------------------
 async function main() {
   console.log(`Seeding Sanity project ${projectId}, dataset "${dataset}"…`);
@@ -100,6 +121,7 @@ async function main() {
       aboutHero: await photo(s.photos.aboutHero),
       trainingHero: await photo(s.photos.trainingHero),
       boardGroup: await photo(s.photos.boardGroup),
+      ...(await localSitePhotos()),
     }),
   });
 
@@ -178,9 +200,29 @@ async function main() {
     );
   }
 
-  if (want("timeline")) data.timeline.forEach((e, i) =>
-    docs.push(clean({ _id: `timeline-${i + 1}`, _type: "timelineEvent", year: e.year, title: e.title, description: e.description, order: i + 1 })),
+  if (want("timeline") || want("about")) data.timeline.forEach((e, i) =>
+    docs.push(
+      clean({
+        _id: `timeline-${i + 1}`,
+        _type: "timelineEvent",
+        year: e.year,
+        title: e.title,
+        description: e.description,
+        linkText: e.linkText,
+        linkUrl: e.linkUrl,
+        order: i + 1,
+      }),
+    ),
   );
+
+  // "about": update only the About-page parts of Site Settings (keeps every other setting as is).
+  if (only?.has("about")) {
+    const sitePhotos = await localSitePhotos();
+    const set: Record<string, unknown> = { operatingModel: steps(s.operatingModel) };
+    for (const [k, v] of Object.entries(sitePhotos)) set[`photos.${k}`] = v;
+    await client.patch("siteSettings").setIfMissing({ photos: {} }).set(set).commit();
+    console.log(`  ✎ updated Site Settings: How we operate${Object.keys(sitePhotos).length ? ` + photos (${Object.keys(sitePhotos).join(", ")})` : ""}`);
+  }
 
   // Percentages are stored in Sanity the way editors type them (25.6 = 25.6%).
   const toPct = (n: number) => Math.round(n * 1000) / 10;
@@ -253,6 +295,18 @@ async function main() {
     const tx = client.transaction();
     docs.slice(i, i + 50).forEach((d) => tx.createOrReplace(d as { _id: string; _type: string }));
     await tx.commit();
+  }
+
+  // When replacing the timeline, remove milestones that are no longer in the list.
+  if (only?.has("timeline") || only?.has("about")) {
+    const keep = data.timeline.map((_, i) => `timeline-${i + 1}`);
+    const stale = await client.fetch<string[]>(`*[_type == "timelineEvent" && !(_id in $keep) && !(_id in path("drafts.**"))]._id`, { keep });
+    if (stale.length) {
+      const tx = client.transaction();
+      stale.forEach((id) => tx.delete(id));
+      await tx.commit();
+      console.log(`  ✕ removed ${stale.length} old milestones`);
+    }
   }
 
   // When replacing sectors, remove sectors that are no longer in the list

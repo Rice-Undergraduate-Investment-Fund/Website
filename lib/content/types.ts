@@ -129,6 +129,9 @@ export type TimelineEvent = {
   year: string;
   title: string;
   description?: string;
+  /** Optional: words in the description to turn into a link. */
+  linkText?: string;
+  linkUrl?: string;
 };
 
 export type ContactEntry = { label: string; email?: string };
@@ -161,6 +164,9 @@ export type PagePhotos = {
   homeFeature?: ImageAsset;
   homeTraining?: ImageAsset;
   aboutHero?: ImageAsset;
+  aboutMission?: ImageAsset;
+  aboutFund?: ImageAsset;
+  aboutHistory?: ImageAsset;
   trainingHero?: ImageAsset;
   boardGroup?: ImageAsset;
 };

@@ -47,6 +47,13 @@ export const timelineEvent = defineType({
     defineField({ name: "year", type: "string", description: "e.g. “2017”", validation: (r) => r.required() }),
     defineField({ name: "title", type: "string", validation: (r) => r.required() }),
     defineField({ name: "description", type: "text", rows: 2 }),
+    defineField({
+      name: "linkText",
+      title: "Link: words to link",
+      type: "string",
+      description: "Optional. Exact words from the description to turn into a link.",
+    }),
+    defineField({ name: "linkUrl", title: "Link: URL", type: "url", hidden: ({ document }) => !document?.linkText }),
     defineField({ name: "order", title: "Display order", type: "number" }),
   ],
   orderings: [{ title: "Display order", name: "order", by: [{ field: "order", direction: "asc" }] }],

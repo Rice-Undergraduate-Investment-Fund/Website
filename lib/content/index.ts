@@ -103,7 +103,8 @@ export async function getSiteSettings(): Promise<SiteSettings> {
   >(`*[_id == "siteSettings"][0]{
     ..., photos {
       homeHero ${IMG}, homeFeature ${IMG}, homeTraining ${IMG},
-      aboutHero ${IMG}, trainingHero ${IMG}, boardGroup ${IMG}
+      aboutHero ${IMG}, aboutMission ${IMG}, aboutFund ${IMG}, aboutHistory ${IMG},
+      trainingHero ${IMG}, boardGroup ${IMG}
     }
   }`);
   const m = mock.siteSettings;
@@ -130,6 +131,9 @@ export async function getSiteSettings(): Promise<SiteSettings> {
       homeFeature: toImage(s.photos?.homeFeature),
       homeTraining: toImage(s.photos?.homeTraining),
       aboutHero: toImage(s.photos?.aboutHero),
+      aboutMission: toImage(s.photos?.aboutMission),
+      aboutFund: toImage(s.photos?.aboutFund),
+      aboutHistory: toImage(s.photos?.aboutHistory),
       trainingHero: toImage(s.photos?.trainingHero),
       boardGroup: toImage(s.photos?.boardGroup),
     },
@@ -274,7 +278,7 @@ export async function getTrainingProgram(): Promise<TrainingProgram> {
 export async function getTimeline(): Promise<TimelineEvent[]> {
   if (!(await sanityEnabled())) return mock.timeline;
   return query<TimelineEvent[]>(
-    `*[_type == "timelineEvent"] | order(coalesce(order, 999) asc, year asc) { year, title, description }`,
+    `*[_type == "timelineEvent"] | order(coalesce(order, 999) asc, year asc) { year, title, description, linkText, linkUrl }`,
   );
 }
 

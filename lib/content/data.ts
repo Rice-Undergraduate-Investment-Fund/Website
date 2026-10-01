@@ -66,9 +66,9 @@ export const siteSettings: SiteSettings = {
         "Graduates of the Training Program join one of the fund's sector teams.",
     },
     {
-      title: "Equity Research",
+      title: "Fundamental Analysis",
       description:
-        "Sector teams follow their industries and research individual companies.",
+        "Each sector conducts fundamental analysis on a company within its industry, developing an investment thesis and presentation.",
     },
     {
       title: "Pitch Day",
@@ -76,9 +76,14 @@ export const siteSettings: SiteSettings = {
         "Members present stock ideas to the RUIF Board and investment professionals.",
     },
     {
+      title: "Pitch Day 2",
+      description:
+        "Selected sectors present their stock analyses to a panel of Virani Business School professors and RUIF alumni working in the industry.",
+    },
+    {
       title: "Portfolio Decisions",
       description:
-        "Approved ideas enter the portfolio, and positions are reviewed collectively.",
+        "Stock recommendations undergo a final review by the Board and Portfolio Review team, with approved investments added to the portfolio.",
     },
   ],
   investmentProcess: [
@@ -392,7 +397,25 @@ export const trainingProgram: TrainingProgram = {
 
 export const timeline: TimelineEvent[] = [
   { year: "2017", title: "Fund Founded", description: "RUIF is established at Rice University." },
-  { year: "20XX", title: "Milestone", description: "Placeholder milestone." },
-  { year: "20XX", title: "Milestone", description: "Placeholder milestone." },
+  { year: "2019", title: "100+ Members", description: "Membership increases to 100+." },
+  {
+    year: "2021",
+    title: "Rice New Energy Fund",
+    description:
+      "Rice New Energy Fund (RNEF) is launched, with a mandate to invest in the energy transition and alternative energy sources.",
+    linkText: "Rice New Energy Fund",
+    linkUrl: "https://www.ricenewenergy.com/about-us",
+  },
   { year: "2026", title: "Today", description: "140+ members across 11 sectors." },
 ];
+
+/**
+ * Focal points for page photos dropped into seed-assets/site/<photoKey>.jpg
+ * (used by `npm run seed:about` / the settings seed). Editors can change them in the Studio.
+ */
+export const photoFocus: Record<string, string> = {
+  aboutHero: "50% 50%",
+  aboutMission: "35% 40%",
+  aboutFund: "50% 35%",
+  aboutHistory: "70% 40%",
+};

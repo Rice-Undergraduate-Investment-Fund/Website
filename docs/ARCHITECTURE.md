@@ -266,6 +266,8 @@ Headshots are never stored in the repo (it's public). Either:
 1. **Studio (preferred for officers):** open the person → drag in the photo → set the focal point on the face → Publish. Or
 2. **In bulk:** save each photo as `seed-assets/people/<person-id>.jpg` (square, face-centred; the id is the name in lowercase with dashes, e.g. `jane-smith.jpg`). The folder is git-ignored. Then run `npm run seed:people`. People without a local file keep the photo they already have in Sanity.
 
+**Page photos** (About page etc.) follow the same pattern: save as `seed-assets/site/<photoKey>.jpg` (e.g. `aboutHero`, `aboutMission`, `aboutFund`, `aboutHistory`) and run `npm run seed:about`. Editors can also replace them in the Studio under Site Settings → Photos. Timeline milestones support an optional link (`linkText` + `linkUrl`): the matching words in the description become a link.
+
 ### Running Sanity scripts on a Mac with iCloud Desktop (verified workaround)
 
 If the repo lives in an iCloud-synced folder (e.g. Desktop), `npm` commands there can hang because iCloud syncs/offloads `node_modules`. Run seed scripts from a temporary copy outside iCloud instead. This works and was used to publish the Fall 2026 portfolio content:

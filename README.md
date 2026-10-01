@@ -45,6 +45,7 @@ Project ID `237x8krw`, dataset `production` (set in `sanity/env.ts`).
    - Run `npm run seed`. It uploads the photos and creates all documents. It refuses to run if the dataset already has content.
 5. Optional: `npm run seed:clean` removes all placeholder people ("Member 1", "Director Name", "Name TBD", sample alumni) once real people are added.
 6. **Updating the portfolio from code** (e.g. after a new letter is added to `lib/content/data.ts`): `npm run seed:portfolio` replaces the Portfolio, Holdings and Letters documents in Sanity. Day-to-day, just edit them in the Studio.
+7. **Updating the About page from code** (operating steps, history milestones, About photos): `npm run seed:about`. Page photos are read from `seed-assets/site/<photoKey>.jpg` (`aboutHero`, `aboutMission`, `aboutFund`, `aboutHistory`; git-ignored, focal points in `photoFocus` in `lib/content/data.ts`). Keys without a local file keep their current Sanity photo.
 
 Until the dataset is seeded (or if Sanity can't be reached), the site automatically shows the starter content from `lib/content/data.ts`.
 
