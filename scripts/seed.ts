@@ -218,10 +218,14 @@ async function main() {
   // "about": update only the About-page parts of Site Settings (keeps every other setting as is).
   if (only?.has("about")) {
     const sitePhotos = await localSitePhotos();
-    const set: Record<string, unknown> = { operatingModel: steps(s.operatingModel) };
+    const set: Record<string, unknown> = {
+      operatingModel: steps(s.operatingModel),
+      "mission.pillars": steps(s.mission.pillars),
+      "stats.members": { _type: "stat", ...s.stats.members },
+    };
     for (const [k, v] of Object.entries(sitePhotos)) set[`photos.${k}`] = v;
-    await client.patch("siteSettings").setIfMissing({ photos: {} }).set(set).commit();
-    console.log(`  ✎ updated Site Settings: How we operate${Object.keys(sitePhotos).length ? ` + photos (${Object.keys(sitePhotos).join(", ")})` : ""}`);
+    await client.patch("siteSettings").setIfMissing({ photos: {}, mission: {}, stats: {} }).set(set).commit();
+    console.log(`  ✎ updated Site Settings: mission boxes, member count, How we operate${Object.keys(sitePhotos).length ? ` + photos (${Object.keys(sitePhotos).join(", ")})` : ""}`);
   }
 
   // Percentages are stored in Sanity the way editors type them (25.6 = 25.6%).

@@ -89,12 +89,6 @@ export default async function AboutPage() {
             <div className="mt-14">
               <StatRow light columns={3} stats={fundStats} />
             </div>
-            {outperformance && (
-              <p className="mt-10 max-w-xl text-sm leading-relaxed text-white/70">
-                The fund returned {fmtPct(outperformance.fund)} over the {outperformance.period.toLowerCase()}, versus{" "}
-                {fmtPct(outperformance.benchmark)} for its benchmark ({portfolio.benchmarkName}).
-              </p>
-            )}
           </div>
           <div className="relative aspect-[4/3] lg:aspect-auto lg:min-h-full">
             <CoverImage image={s.photos.aboutFund} sizes="(min-width: 1024px) 45vw, 100vw" />
@@ -147,14 +141,17 @@ export default async function AboutPage() {
       </Section>
 
       <Section className="!py-16 sm:!py-20">
-        <Container className="flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between">
-          <h2 className="text-3xl text-rice-blue sm:text-4xl">Meet the people behind the fund.</h2>
-          <div className="flex flex-wrap gap-3">
-            <ButtonLink href="/people/board">
-              The Board <Arrow />
-            </ButtonLink>
+        <Container className="flex flex-col items-center gap-8 text-center">
+          <h2 className="text-3xl text-rice-blue sm:text-4xl">Learn More</h2>
+          <div className="flex flex-wrap justify-center gap-3">
             <ButtonLink href="/sectors" variant="secondary">
-              Our Sectors
+              Sectors
+            </ButtonLink>
+            <ButtonLink href="/people/board" variant="secondary">
+              The Board
+            </ButtonLink>
+            <ButtonLink href="/training">
+              Training Program <Arrow />
             </ButtonLink>
           </div>
         </Container>

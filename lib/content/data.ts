@@ -28,7 +28,7 @@ export const siteSettings: SiteSettings = {
   intro:
     "RUIF gives Rice undergraduates a practical, hands-on education in finance. Members research public companies, pitch ideas and collectively manage a portion of the University's endowment.",
   stats: {
-    members: { value: "140+", label: "Fund Members" },
+    members: { value: "150+", label: "Fund Members" },
     sectors: { value: "11", label: "Sectors" },
     trainingStudents: { value: "200+", label: "Training Program Students" },
     alumni: { value: "400+", label: "Alumni Since 2017" },
@@ -48,9 +48,9 @@ export const siteSettings: SiteSettings = {
           "An unrivaled opportunity to manage a portion of the University's endowment, to invest as a team, and to learn by doing.",
       },
       {
-        title: "Collaborative Decision-Making",
+        title: "Access to a Strong Alumni Network",
         description:
-          "We manage real investments, and all decisions are made collectively.",
+          "As a hub for finance on campus, RUIF connects members with an extensive network of alumni across the industry.",
       },
     ],
   },
@@ -406,7 +406,7 @@ export const timeline: TimelineEvent[] = [
     linkText: "Rice New Energy Fund",
     linkUrl: "https://www.ricenewenergy.com/about-us",
   },
-  { year: "2026", title: "Today", description: "140+ members across 11 sectors." },
+  { year: "2026", title: "Today", description: "150+ members across 11 sectors." },
 ];
 
 /**
