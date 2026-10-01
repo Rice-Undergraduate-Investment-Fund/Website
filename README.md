@@ -50,17 +50,28 @@ Until the dataset is seeded (or if Sanity can't be reached), the site automatica
 
 ## Troubleshooting
 
-**`npm run dev` hangs on a Mac with iCloud Desktop & Documents sync.** iCloud tries to sync the tens of thousands of files in `node_modules` and `.next`, and Next.js stalls waiting for them. Folders ending in `.nosync` are skipped by iCloud, so keep the real folders there and link to them:
+**`npm` commands hang on a Mac with iCloud Desktop & Documents sync.** iCloud syncs and offloads the tens of thousands of files in `node_modules`, `.next` and `.git`, and Node.js stalls waiting for them. (Symlinking `node_modules` to a `.nosync` folder does *not* hold: `npm install` replaces the link.) Reliable fixes:
+
+- Keep the repo outside iCloud (e.g. `~/Developer/RUIF-Website`), or give the repo folder a name ending in `.nosync` (iCloud ignores it). Re-clone from GitHub into the new location and copy `.env.local` over.
+- Turning off *Optimize Mac Storage* (System Settings → Apple ID → iCloud) stops files being offloaded, which removes most hangs, but iCloud still syncs the folder.
+- For one-off scripts, use the `/tmp` workaround below.
+
+**Running Sanity scripts on a Mac with iCloud Desktop (verified workaround)**
+
+If the repo lives in an iCloud-synced folder (e.g. Desktop), `npm` commands there can hang because iCloud syncs/offloads `node_modules`. Run seed scripts from a temporary copy outside iCloud instead. This works and was used to publish the Fall 2026 portfolio content:
 
 ```bash
-rm -rf .next node_modules
-mkdir node_modules.nosync .next.nosync
-ln -s node_modules.nosync node_modules
-ln -s .next.nosync .next
-npm install
+rm -rf /tmp/ruif-seed && mkdir /tmp/ruif-seed
+cd ~/Desktop/Rice/RUIF/Website/Website
+cp -R package.json package-lock.json tsconfig.json .env.local scripts lib sanity public /tmp/ruif-seed/
+cd /tmp/ruif-seed
+npm ci
+npm run seed:portfolio
 ```
 
-(All of these are git-ignored.)
+- Swap the last line for `npm run seed` (empty dataset) or `npm run seed:clean` (remove placeholder people) as needed.
+- It copies only what the scripts need, including `.env.local` (the Sanity write token). `/tmp` is cleared on restart.
+- Re-run the `cp` line after changing `lib/content/data.ts` so the copy is current.
 
 ## Documentation
 
