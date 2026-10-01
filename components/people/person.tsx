@@ -59,9 +59,9 @@ export function PersonCard({
       <PersonPhoto person={person} sizes={sizes} />
       <figcaption className="mt-4">
         <p className="font-serif text-lg leading-snug text-ink">{person.name}</p>
-        {role && <p className="mt-1 text-sm font-medium text-rice-blue">{role}</p>}
+        {role && <p className="mt-1 text-sm text-muted">{role}</p>}
         {details?.filter(Boolean).map((d) => (
-          <p key={d} className="mt-0.5 text-sm text-slate">
+          <p key={d} className="mt-0.5 text-sm text-muted">
             {d}
           </p>
         ))}

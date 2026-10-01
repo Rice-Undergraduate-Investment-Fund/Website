@@ -15,6 +15,7 @@
   /* Neutrals */
   --color-ink: #0b0c10; /* primary text */
   --color-slate: #44474f; /* Rice Dark Gray: secondary text (AA on white) */
+  --color-muted: #6b6e73; /* titles under names: lighter than slate, still AA on white */
   --color-line: #e0e2e6; /* Rice Light Gray: borders and dividers */
   --color-mist: #f4f5f7; /* tinted section background */
 

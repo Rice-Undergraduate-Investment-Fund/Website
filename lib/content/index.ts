@@ -69,7 +69,7 @@ function toImage(img: RawImage | undefined, fallbackAlt = ""): ImageAsset | unde
 }
 
 const PERSON = `{
-  "id": _id, name, photo ${IMG}, email, linkedin, graduationYear, bio, status,
+  "id": _id, name, photo ${IMG}, email, linkedin, graduationYear, bio, status, sectorRole,
   boardPosition, boardOrder, employer, jobTitle, location, formerPosition, formerSector
 }`;
 
@@ -82,6 +82,15 @@ const toPerson = (p: RawPerson): Person => {
 };
 
 const arr = <T,>(x: T[] | null | undefined): T[] => x ?? [];
+
+/** Sector members: Senior Analysts, then Junior Analysts, then anyone else; A–Z within each. */
+const ROLE_RANK: Record<string, number> = { "Senior Analyst": 0, "Junior Analyst": 1 };
+export const sortMembers = (people: Person[]) =>
+  [...people].sort(
+    (a, b) =>
+      (ROLE_RANK[a.sectorRole ?? ""] ?? 2) - (ROLE_RANK[b.sectorRole ?? ""] ?? 2) ||
+      a.name.localeCompare(b.name, "en", { sensitivity: "base" }),
+  );
 
 // ---------------------------------------------------------------------------
 // Public API
@@ -143,7 +152,7 @@ export async function getSectors(): Promise<SectorWithPeople[]> {
     description: r.description ?? "",
     order: r.order ?? i + 1,
     director: r.director ? toPerson(r.director) : undefined,
-    members: arr(r.members).filter(Boolean).map(toPerson),
+    members: sortMembers(arr(r.members).filter(Boolean).map(toPerson)),
   }));
 }
 
@@ -279,6 +288,6 @@ function mockSectors(): SectorWithPeople[] {
     .map(({ directorId, memberIds, ...s }) => ({
       ...s,
       director: directorId ? byId.get(directorId) : undefined,
-      members: memberIds.map((id) => byId.get(id)).filter((p): p is Person => Boolean(p)),
+      members: sortMembers(memberIds.map((id) => byId.get(id)).filter((p): p is Person => Boolean(p))),
     }));
 }

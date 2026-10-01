@@ -15,6 +15,8 @@ export type ImageAsset = {
   position?: string;
 };
 
+export type SectorRole = "Senior Analyst" | "Junior Analyst";
+
 export type Person = {
   id: string;
   name: string;
@@ -24,6 +26,8 @@ export type Person = {
   graduationYear?: number;
   bio?: string;
   status: "current" | "alumni";
+  /** Role within their sector team (Sector Directors are set on the sector). */
+  sectorRole?: SectorRole;
   /** Set = appears on /people/board. */
   boardPosition?: string;
   boardOrder?: number;

@@ -271,7 +271,7 @@ npm ci
 npm run seed:portfolio
 ```
 
-- Swap the last line for `npm run seed` (empty dataset) or `npm run seed:clean` (remove placeholder people) as needed.
+- Swap the last line for `npm run seed:people` (board + sector rosters), `npm run seed` (empty dataset) or `npm run seed:clean` (remove placeholder people) as needed.
 - It copies only what the scripts need, including `.env.local` (the Sanity write token). `/tmp` is cleared on restart.
 - Re-run the `cp` line after changing `lib/content/data.ts` so the copy is current.
 

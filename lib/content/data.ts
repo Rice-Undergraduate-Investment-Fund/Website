@@ -123,7 +123,17 @@ const img = (
   position?: string,
 ) => ({ src, alt, width, height, position });
 
-/** Real board members with photos. */
+// Fall 2026 roster, from the organization chart in the Fall 2026 RUIF Letter.
+
+const slugify = (s: string) =>
+  s
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+
 const board: Person[] = [
   {
     id: "sergio-karam",
@@ -133,76 +143,117 @@ const board: Person[] = [
     boardOrder: 1,
     photo: img("/images/sergio-karam.jpg", "Sergio Karam"),
   },
-  {
-    id: "placeholder-board-vp",
-    name: "Name TBD", // placeholder
-    status: "current",
-    boardPosition: "Vice President",
-    boardOrder: 2,
-  },
-  {
-    id: "placeholder-board-training-1",
-    name: "Name TBD", // placeholder
-    status: "current",
-    boardPosition: "Training Director",
-    boardOrder: 3,
-  },
-  {
-    id: "placeholder-board-training-2",
-    name: "Name TBD", // placeholder
-    status: "current",
-    boardPosition: "Training Director",
-    boardOrder: 4,
-  },
+  { id: "tomas-hradil", name: "Tomas Hradil", status: "current", boardPosition: "Vice President", boardOrder: 2 },
   {
     id: "sriram-chundi",
     name: "Sriram Chundi",
     status: "current",
-    boardPosition: "Junior Training Director",
-    boardOrder: 5,
+    boardPosition: "Training Program Director",
+    boardOrder: 3,
     photo: img("/images/sriram-chundi.jpg", "Sriram Chundi"),
+  },
+  { id: "kenneth-manning", name: "Kenneth Manning", status: "current", boardPosition: "Training Program Director", boardOrder: 4 },
+  { id: "rahul-herrero", name: "Rahul Herrero", status: "current", boardPosition: "Training Program Director", boardOrder: 5 },
+];
+
+type Roster = { name: string; director: string; senior: string[]; junior: string[]; description: string };
+
+const roster: Roster[] = [
+  {
+    name: "Technology",
+    director: "Ethan Yuen",
+    senior: ["Dylan Uttamchandani", "Emma Yuan"],
+    junior: ["Jacob Davila", "Jay Kothari", "Hemanth Konda", "Daiwei Wang"],
+    description: "Covers software, semiconductors and internet infrastructure, from early AI winners to cloud platforms.",
+  },
+  {
+    name: "Healthcare",
+    director: "Teo Lehaczynski",
+    senior: ["Eddy Zhang", "Vishwas Vijayan", "Atish Amistapur", "Dia Gupta", "Marco de Azevedo Soares"],
+    junior: ["Annie Chen", "Grace Yuan"],
+    description: "Covers insurers, pharmaceuticals, biotech and medical devices.",
+  },
+  {
+    name: "Financials",
+    director: "Kirill Kolotiy",
+    senior: ["Jonathan Plavnik", "Jude Thomas"],
+    junior: ["Hans Zhu", "Wesley Liu", "Noah Kaufman"],
+    description: "Covers banks, payments, exchanges and alternative asset managers.",
+  },
+  {
+    name: "Energy",
+    director: "Landon Nickel",
+    senior: ["Varun Gite", "James Wang", "Clarence Wang", "Eric Lu"],
+    junior: ["Dhruv Koka", "Tony Wang", "Sriram Birur", "Blaise Martinez"],
+    description: "Covers oil and gas producers, LNG, midstream and oilfield services.",
+  },
+  {
+    name: "Natural Resources",
+    director: "Ellis Vance",
+    senior: ["Benjamin Viafore", "Jason Fu", "Kyle Chen"],
+    junior: ["Ian Vazquez", "Varun Khanna", "Muhammad Hassan Ebad", "Viola Cullen"],
+    description: "Covers metals and mining, fertilizers, uranium and integrated resource companies.",
+  },
+  {
+    name: "Industrials",
+    director: "William Theiss",
+    senior: ["Daniel Rodas", "Cecilia Wang", "Frankie Fu"],
+    junior: ["Teddy Staebler", "Amy Li", "Warren Chang"],
+    description: "Covers aerospace and defense, machinery, waste management and building products.",
+  },
+  {
+    name: "Consumer Goods",
+    director: "Kevin Sun",
+    senior: ["Neil Patel", "Nma Moghalu", "Winston Zhao", "Juliana Zhou"],
+    junior: ["Tibet Ozum", "Jasmine Cheng"],
+    description: "Covers retailers and consumer brands with resilient business models.",
+  },
+  {
+    name: "Communication & Sports",
+    director: "Ryan Ginn",
+    senior: ["Samantha Zhang", "Molly Chen", "Tim Alechkevitch"],
+    junior: ["Lamiah Haroon", "Mckayla Childs", "Maemi Carillo-Inagaki", "Enrique Almeida Davila"],
+    description: "Covers media, entertainment, telecom, advertising and sports.",
+  },
+  {
+    name: "Real Estate",
+    director: "Krish Puri",
+    senior: ["Mykhaylo Negrych", "Lukas Johnson", "Conor Orchard", "Sebastian Tirschwell"],
+    junior: ["Jack Lu", "Alina Chen", "Anderson Zeidenstein"],
+    description: "Covers REITs across residential, industrial, healthcare and experiential properties.",
+  },
+  {
+    name: "Power, Utilities & Infrastructure",
+    director: "Abe Fang",
+    senior: ["Gavin Nguyen", "Robert Fischer", "Arya Agarwal"],
+    junior: ["Judy Tsai", "Tomas Jiang", "James Wu", "Rex Rutchik"],
+    description: "RUIF's newest sector (Fall 2026), covering power generation, utilities and infrastructure.",
+  },
+  {
+    name: "Portfolio Review",
+    director: "Emily Yang",
+    senior: ["Elias Sikavitsas", "Caelyn Wang", "Yiqian Wang", "Lindsey Huang", "Mehul Menon", "William Liu"],
+    junior: [],
+    description: "Reviews the fund's positions, performance and risk, and writes the semester portfolio review.",
   },
 ];
 
-const sectorNames = [
-  "Technology",
-  "Healthcare",
-  "Financials",
-  "Energy",
-  "Industrials",
-  "Consumer",
-  "Communications",
-  "Real Estate",
-  "Natural Resources",
-  "Power, Utilities & Infrastructure",
-];
-
-const slugify = (s: string) =>
-  s
-    .toLowerCase()
-    .replace(/&/g, "and")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
-
-/** Placeholder sector directors and members (no photos yet). IDs start with "placeholder-" so `npm run seed:clean` can remove them. */
 const sectorPeople: Person[] = [];
-const sectorsRaw: Sector[] = sectorNames.map((name, i) => {
-  const slug = slugify(name);
-  const directorId = `placeholder-${slug}-director`;
-  sectorPeople.push({ id: directorId, name: "Director Name", status: "current" });
-  const memberCount = 6 + ((i * 5) % 7); // 6–12 placeholder members
-  const memberIds = Array.from({ length: memberCount }, (_, m) => {
-    const id = `placeholder-${slug}-member-${m + 1}`;
-    sectorPeople.push({ id, name: `Member ${m + 1}`, status: "current" });
-    return id;
-  });
+const person = (name: string, sectorRole?: Person["sectorRole"]): string => {
+  const id = slugify(name);
+  if (!sectorPeople.some((p) => p.id === id)) sectorPeople.push({ id, name, status: "current", sectorRole });
+  return id;
+};
+
+const sectorsRaw: Sector[] = roster.map((r, i) => {
+  const slug = slugify(r.name);
   return {
     id: slug,
-    name,
+    name: r.name,
     slug,
-    description: `The ${name} sector researches and covers public companies across the ${name.toLowerCase()} landscape.`, // placeholder
-    directorId,
-    memberIds,
+    description: r.description,
+    directorId: person(r.director),
+    memberIds: [...r.senior.map((n) => person(n, "Senior Analyst")), ...r.junior.map((n) => person(n, "Junior Analyst"))],
     order: i + 1,
   };
 });

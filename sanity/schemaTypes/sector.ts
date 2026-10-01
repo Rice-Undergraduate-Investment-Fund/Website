@@ -26,7 +26,7 @@ export const sector = defineType({
     defineField({
       name: "members",
       type: "array",
-      description: "Drag to reorder. Shown in rows of three.",
+      description: "Order doesn't matter: the site lists Senior Analysts, then Junior Analysts, each A–Z. Set each person's “Sector role”.",
       of: [
         defineArrayMember({
           type: "reference",

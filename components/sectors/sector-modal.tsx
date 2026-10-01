@@ -89,9 +89,7 @@ export function SectorModal({
                   />
                   <figcaption className="mt-4 text-center">
                     <p className="font-serif text-2xl text-ink">{sector.director.name}</p>
-                    <p className="mt-1 text-xs font-semibold tracking-[0.2em] text-rice-blue uppercase">
-                      Sector Director
-                    </p>
+                    <p className="mt-1 text-sm text-muted">Sector Director</p>
                   </figcaption>
                 </figure>
               )}
@@ -113,6 +111,9 @@ export function SectorModal({
                         <p className="mt-2.5 text-center text-sm leading-snug font-medium text-ink">
                           {m.name}
                         </p>
+                        {m.sectorRole && (
+                          <p className="mt-0.5 text-center text-xs leading-snug text-muted">{m.sectorRole}</p>
+                        )}
                       </li>
                     ))}
                   </ul>

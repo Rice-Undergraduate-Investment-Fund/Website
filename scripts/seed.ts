@@ -7,6 +7,7 @@
  *
  * Update only some content groups in an existing dataset (replaces those documents):
  *   npm run seed -- --only=portfolio,holdings,letters      (alias: npm run seed:portfolio)
+ *   npm run seed -- --only=people,sectors                 (alias: npm run seed:people)
  *   groups: settings, people, sectors, holdings, timeline, portfolio, training, letters
  *
  * Requires SANITY_API_WRITE_TOKEN in .env.local (see README).
@@ -115,6 +116,7 @@ async function main() {
         bio: p.bio,
         boardPosition: p.boardPosition,
         boardOrder: p.boardOrder,
+        sectorRole: p.sectorRole,
         employer: p.employer,
         jobTitle: p.jobTitle,
         location: p.location,
@@ -230,6 +232,35 @@ async function main() {
     const tx = client.transaction();
     docs.slice(i, i + 50).forEach((d) => tx.createOrReplace(d as { _id: string; _type: string }));
     await tx.commit();
+  }
+
+  // When replacing sectors, remove sectors that are no longer in the list
+  // (must happen before people, since sectors reference people).
+  if (only?.has("sectors")) {
+    const keep = data.sectors.map((sec) => `sector-${sec.slug}`);
+    const stale = await client.fetch<string[]>(`*[_type == "sector" && !(_id in $keep) && !(_id in path("drafts.**"))]._id`, { keep });
+    if (stale.length) {
+      const tx = client.transaction();
+      stale.forEach((id) => tx.delete(id));
+      await tx.commit();
+      console.log(`  ✕ removed ${stale.length} sectors no longer in the list`);
+    }
+  }
+
+  // When replacing people, remove old placeholder people that are no longer used.
+  // (Only IDs starting with "placeholder-" are ever removed; real people added in the Studio are kept.)
+  if (only?.has("people")) {
+    const keep = data.people.map((pp) => pp.id);
+    const stale = await client.fetch<string[]>(
+      `*[_type == "person" && string::startsWith(_id, "placeholder-") && !(_id in $keep) && count(*[references(^._id)]) == 0]._id`,
+      { keep },
+    );
+    if (stale.length) {
+      const tx = client.transaction();
+      stale.forEach((id) => tx.delete(id));
+      await tx.commit();
+      console.log(`  ✕ removed ${stale.length} placeholder people no longer used`);
+    }
   }
 
   // When replacing holdings, remove holdings that are no longer in the list.
