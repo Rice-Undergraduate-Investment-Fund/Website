@@ -266,6 +266,8 @@ Headshots are never stored in the repo (it's public). Either:
 1. **Studio (preferred for officers):** open the person → drag in the photo → set the focal point on the face → Publish. Or
 2. **In bulk:** save each photo as `seed-assets/people/<person-id>.jpg` (square, face-centred; the id is the name in lowercase with dashes, e.g. `jane-smith.jpg`). The folder is git-ignored. Then run `npm run seed:people`. People without a local file keep the photo they already have in Sanity.
 
+**Alumni firms** ("Where RUIF members go" on the home page): Studio → Alumni Firms. Each firm has an industry (= tab: Investment Banking, Private Equity, Hedge Funds & Trading; defined in `ALUMNI_INDUSTRIES` in `lib/content/types.ts`) and a row (1 = top, e.g. bulge brackets). Rows are unlabeled and sorted A–Z. A firm in two industries gets two entries.
+
 **Page photos** (About page etc.) follow the same pattern: save as `seed-assets/site/<photoKey>.jpg` (e.g. `aboutHero`, `aboutMission`, `aboutFund`, `aboutHistory`) and run `npm run seed:about`. Editors can also replace them in the Studio under Site Settings → Photos. Timeline milestones support an optional link (`linkText` + `linkUrl`): the matching words in the description become a link.
 
 ### Running Sanity scripts on a Mac with iCloud Desktop (verified workaround)

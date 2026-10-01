@@ -1,4 +1,4 @@
-import { holding, letter, timelineEvent } from "./misc";
+import { alumniFirm, holding, letter, timelineEvent } from "./misc";
 import { photo, stat, step } from "./objects";
 import { person } from "./person";
 import { sector } from "./sector";
@@ -15,6 +15,7 @@ export const schemaTypes = [
   holding,
   timelineEvent,
   letter,
+  alumniFirm,
   // singletons
   siteSettings,
   portfolio,

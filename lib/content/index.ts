@@ -9,7 +9,10 @@ import "server-only";
 import { cache } from "react";
 import { client, urlFor } from "@/sanity/lib/client";
 import * as mock from "./data";
+import { ALUMNI_INDUSTRIES } from "./types";
 import type {
+  AlumniFirm,
+  AlumniFirmGroup,
   Holding,
   ImageAsset,
   Letter,
@@ -262,11 +265,12 @@ export async function getLatestLetter(): Promise<Letter | null> {
 export async function getTrainingProgram(): Promise<TrainingProgram> {
   if (!(await sanityEnabled())) return mock.trainingProgram;
   const t = await query<(Omit<TrainingProgram, "sessions"> & { sessions?: { title: string; description?: string }[] }) | null>(
-    `*[_id == "trainingProgram"][0]{ semesterLabel, applicationsOpen, openDate, deadline, applyUrl, isSample, steps[]{title, description}, sessions[]{title, description} }`,
+    `*[_id == "trainingProgram"][0]{ semesterLabel, applicationsOpen, closedMessage, openDate, deadline, applyUrl, isSample, steps[]{title, description}, sessions[]{title, description} }`,
   );
   return {
     semesterLabel: t?.semesterLabel ?? "",
     applicationsOpen: t?.applicationsOpen ?? false,
+    closedMessage: t?.closedMessage ?? undefined,
     openDate: t?.openDate ?? undefined,
     deadline: t?.deadline ?? undefined,
     applyUrl: t?.applyUrl ?? undefined,
@@ -296,4 +300,30 @@ function mockSectors(): SectorWithPeople[] {
       director: directorId ? byId.get(directorId) : undefined,
       members: sortMembers(memberIds.map((id) => byId.get(id)).filter((p): p is Person => Boolean(p))),
     }));
+}
+
+// ---------------------------------------------------------------------------
+// Alumni placements (home page)
+// ---------------------------------------------------------------------------
+
+/** Firms grouped by industry tab, then by tier row (A–Z within a row). Empty industries are left out. */
+export async function getAlumniFirmGroups(): Promise<AlumniFirmGroup[]> {
+  let firms: AlumniFirm[] = mock.alumniFirms;
+  if (await sanityEnabled()) {
+    const fromCms = await query<AlumniFirm[]>(
+      `*[_type == "alumniFirm" && showOnHome != false && defined(name) && defined(industry)]{ name, industry, "tier": coalesce(tier, 1) }`,
+    );
+    if (fromCms.length) firms = fromCms;
+  }
+  return ALUMNI_INDUSTRIES.map(({ key, label }) => {
+    const inIndustry = firms.filter((f) => f.industry === key);
+    const tierNums = [...new Set(inIndustry.map((f) => f.tier))].sort((a, b) => a - b);
+    const tiers = tierNums.map((t) =>
+      inIndustry
+        .filter((f) => f.tier === t)
+        .map((f) => f.name)
+        .sort((a, b) => a.localeCompare(b, "en", { sensitivity: "base" })),
+    );
+    return { key, label, tiers };
+  }).filter((g) => g.tiers.length > 0);
 }

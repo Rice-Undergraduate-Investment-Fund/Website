@@ -117,6 +117,8 @@ export type TrainingSession = {
 export type TrainingProgram = {
   semesterLabel: string;
   applicationsOpen: boolean;
+  /** Headline shown in place of the recruiting pitch while applications are closed. */
+  closedMessage?: string;
   openDate?: string;
   deadline?: string;
   applyUrl?: string;
@@ -169,4 +171,27 @@ export type PagePhotos = {
   aboutHistory?: ImageAsset;
   trainingHero?: ImageAsset;
   boardGroup?: ImageAsset;
+};
+
+/** Industry tabs in "Where RUIF members go" (order = tab order). Keys are stored in Sanity. */
+export const ALUMNI_INDUSTRIES = [
+  { key: "ib", label: "Investment Banking" },
+  { key: "pe", label: "Private Equity" },
+  { key: "hf", label: "Hedge Funds & Trading" },
+] as const;
+
+export type AlumniIndustry = (typeof ALUMNI_INDUSTRIES)[number]["key"];
+
+/** A firm where alumni work. `tier` = row within its industry (1 = top row); rows are unlabeled. */
+export type AlumniFirm = {
+  name: string;
+  industry: AlumniIndustry;
+  tier: number;
+};
+
+export type AlumniFirmGroup = {
+  key: AlumniIndustry;
+  label: string;
+  /** Rows of firm names, top tier first, each row A–Z. */
+  tiers: string[][];
 };

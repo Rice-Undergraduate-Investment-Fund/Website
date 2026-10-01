@@ -7,6 +7,7 @@
  * Real facts here come from the current financegroup.rice.edu site.
  */
 import type {
+  AlumniFirm,
   Holding,
   Letter,
   Person,
@@ -31,7 +32,7 @@ export const siteSettings: SiteSettings = {
     members: { value: "150+", label: "Fund Members" },
     sectors: { value: "11", label: "Sectors" },
     trainingStudents: { value: "200+", label: "Training Program Students" },
-    alumni: { value: "400+", label: "Alumni Since 2017" },
+    alumni: { value: "500+", label: "Alumni Since 2017" },
   },
   mission: {
     heading:
@@ -368,7 +369,8 @@ export const letters: Letter[] = [
 
 export const trainingProgram: TrainingProgram = {
   semesterLabel: "Spring 2027", // placeholder
-  applicationsOpen: true, // placeholder – drives the Apply button
+  applicationsOpen: false, // drives the Apply buttons (greyed out while closed)
+  closedMessage: "Application for the Spring 2027 Training Program will Open in Late Fall",
   openDate: "TBD",
   deadline: "TBD",
   applyUrl: undefined, // placeholder – application form link
@@ -419,3 +421,24 @@ export const photoFocus: Record<string, string> = {
   aboutFund: "50% 35%",
   aboutHistory: "70% 40%",
 };
+
+/**
+ * Firms shown in "Where RUIF members go" on the home page.
+ * tier = row within the industry (1 = top). Rows are sorted A–Z automatically.
+ */
+export const alumniFirms: AlumniFirm[] = [
+  // Investment Banking: bulge brackets
+  ...["Bank of America", "Barclays", "Citi", "Deutsche Bank", "Goldman Sachs", "J.P. Morgan", "Mizuho", "Morgan Stanley", "Wells Fargo"]
+    .map((name) => ({ name, industry: "ib" as const, tier: 1 })),
+  // Investment Banking: elite boutiques
+  ...["Centerview Partners", "Evercore", "Lazard", "Moelis & Company", "Perella Weinberg Partners"]
+    .map((name) => ({ name, industry: "ib" as const, tier: 2 })),
+  // Investment Banking: middle market / specialists
+  ...["Guggenheim Securities", "RBC Capital Markets", "TPH&Co."]
+    .map((name) => ({ name, industry: "ib" as const, tier: 3 })),
+  // Private Equity
+  ...["Bain Capital", "BlackRock", "Blackstone"].map((name) => ({ name, industry: "pe" as const, tier: 1 })),
+  ...["Sixth Street", "Vista Equity Partners"].map((name) => ({ name, industry: "pe" as const, tier: 2 })),
+  // Hedge Funds & Trading
+  ...["Citadel", "Macquarie Group", "Point72", "Sixth Street"].map((name) => ({ name, industry: "hf" as const, tier: 1 })),
+];

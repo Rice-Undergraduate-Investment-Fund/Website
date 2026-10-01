@@ -1,3 +1,5 @@
+import { CaseIcon } from "@sanity/icons/Case";
+import { ALUMNI_INDUSTRIES } from "../../lib/content/types";
 import { CalendarIcon } from "@sanity/icons/Calendar";
 import { TagIcon } from "@sanity/icons/Tag";
 import { DocumentPdfIcon } from "@sanity/icons/DocumentPdf";
@@ -93,4 +95,52 @@ export const letter = defineType({
   ],
   orderings: [{ title: "Newest first", name: "publishedAt", by: [{ field: "publishedAt", direction: "desc" }] }],
   preview: { select: { title: "title", subtitle: "publishedAt" } },
+});
+
+export const alumniFirm = defineType({
+  name: "alumniFirm",
+  title: "Alumni Firm",
+  type: "document",
+  icon: CaseIcon,
+  description: "A firm shown in “Where RUIF members go” on the home page.",
+  fields: [
+    defineField({
+      name: "name",
+      type: "string",
+      description: "As it's commonly written in finance, e.g. “J.P. Morgan”, “TPH&Co.”.",
+      validation: (r) => r.required(),
+    }),
+    defineField({
+      name: "industry",
+      type: "string",
+      options: { list: ALUMNI_INDUSTRIES.map((i) => ({ value: i.key, title: i.label })), layout: "radio" },
+      description: "Which tab it appears under. A firm in two industries gets two entries.",
+      validation: (r) => r.required(),
+    }),
+    defineField({
+      name: "tier",
+      title: "Row",
+      type: "number",
+      options: {
+        list: [
+          { value: 1, title: "1 – top row (e.g. bulge brackets)" },
+          { value: 2, title: "2 – second row (e.g. elite boutiques)" },
+          { value: 3, title: "3 – third row (e.g. middle market)" },
+          { value: 4, title: "4 – fourth row" },
+        ],
+        layout: "radio",
+      },
+      description: "Rows aren't labeled on the site; they just group firms of similar standing. Firms in a row are sorted A–Z.",
+      initialValue: 1,
+    }),
+    defineField({ name: "showOnHome", title: "Show on home page", type: "boolean", initialValue: true }),
+  ],
+  orderings: [{ title: "Industry, row, name", name: "industryTier", by: [{ field: "industry", direction: "asc" }, { field: "tier", direction: "asc" }, { field: "name", direction: "asc" }] }],
+  preview: {
+    select: { title: "name", industry: "industry", tier: "tier" },
+    prepare: ({ title, industry, tier }) => ({
+      title,
+      subtitle: `${ALUMNI_INDUSTRIES.find((i) => i.key === industry)?.label ?? "No industry"} · row ${tier ?? 1}`,
+    }),
+  },
 });

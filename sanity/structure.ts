@@ -65,4 +65,12 @@ export const structure: StructureResolver = (S) =>
         .schemaType("holding")
         .child(S.documentTypeList("holding").title("Holdings").defaultOrdering([{ field: "company", direction: "asc" }])),
       S.documentTypeListItem("timelineEvent").title("History"),
+      S.listItem()
+        .title("Alumni Firms (home page)")
+        .schemaType("alumniFirm")
+        .child(
+          S.documentTypeList("alumniFirm")
+            .title("Alumni Firms")
+            .defaultOrdering([{ field: "industry", direction: "asc" }, { field: "tier", direction: "asc" }, { field: "name", direction: "asc" }]),
+        ),
     ]);

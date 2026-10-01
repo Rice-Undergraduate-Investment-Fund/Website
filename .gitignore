@@ -34,3 +34,6 @@ node_modules
 
 # Local seed inputs (e.g. headshots) – uploaded to Sanity by scripts, never pushed to GitHub
 seed-assets/
+
+# transfer bundles from Claude (safe to delete)
+_to_delete/

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Arrow, ButtonLink } from "@/components/ui/button";
+import { Arrow, ButtonLink, DisabledButton } from "@/components/ui/button";
 import { PhotoHero, ProcessSteps } from "@/components/ui/blocks";
 import { Container, Eyebrow, SampleNote, Section, SectionHeading } from "@/components/ui/layout";
 import { getSiteSettings, getTrainingProgram } from "@/lib/content";
@@ -35,14 +35,17 @@ export default async function TrainingPage() {
               Apply Now <Arrow />
             </ButtonLink>
           ) : (
-            <span className="inline-flex h-12 items-center border border-white/40 px-6 text-sm font-semibold text-white/80">
-              Applications currently closed
-            </span>
+            <DisabledButton onDark reason="Applications are not open yet">
+              Apply Now <Arrow />
+            </DisabledButton>
           )}
           <ButtonLink href="#curriculum" variant="outlineLight">
             View Curriculum
           </ButtonLink>
         </div>
+        {!t.applicationsOpen && (
+          <p className="mt-4 text-sm text-white/70">{t.closedMessage || "Applications are not open yet."}</p>
+        )}
       </PhotoHero>
 
       <Section>

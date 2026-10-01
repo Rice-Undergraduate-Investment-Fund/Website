@@ -46,6 +46,7 @@ Project ID `237x8krw`, dataset `production` (set in `sanity/env.ts`).
 5. Optional: `npm run seed:clean` removes all placeholder people ("Member 1", "Director Name", "Name TBD", sample alumni) once real people are added.
 6. **Updating the portfolio from code** (e.g. after a new letter is added to `lib/content/data.ts`): `npm run seed:portfolio` replaces the Portfolio, Holdings and Letters documents in Sanity. Day-to-day, just edit them in the Studio.
 7. **Updating the About page from code** (operating steps, history milestones, About photos): `npm run seed:about`. Page photos are read from `seed-assets/site/<photoKey>.jpg` (`aboutHero`, `aboutMission`, `aboutFund`, `aboutHistory`; git-ignored, focal points in `photoFocus` in `lib/content/data.ts`). Keys without a local file keep their current Sanity photo.
+8. **Home page figures / recruiting state from code:** `npm run seed:home` pushes the alumni count, the Training Program "Applications open?" switch + closed message, and the firms in "Where RUIF members go" (`alumniFirms` in `lib/content/data.ts`). Firms added in the Studio are never removed by the seed. Day-to-day, flip **Training Program → Applications open?** in the Studio: when off, Apply buttons are greyed out and the closed message replaces the recruiting headline.
 
 Until the dataset is seeded (or if Sanity can't be reached), the site automatically shows the starter content from `lib/content/data.ts`.
 

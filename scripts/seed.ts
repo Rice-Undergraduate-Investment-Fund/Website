@@ -10,7 +10,9 @@
  *   npm run seed -- --only=people,sectors                 (alias: npm run seed:people)
  *   npm run seed -- --only=about                          (alias: npm run seed:about)
  *     → How-we-operate steps, About photos from seed-assets/site/, history timeline
- *   groups: settings, people, sectors, holdings, timeline, portfolio, training, letters
+ *   groups: settings, people, sectors, holdings, timeline, portfolio, training, letters,
+ *           about (About page only), home (alumni count + applications open/closed),
+ *           alumni (firms in "Where RUIF members go")
  *
  * Requires SANITY_API_WRITE_TOKEN in .env.local (see README).
  */
@@ -228,6 +230,21 @@ async function main() {
     console.log(`  ✎ updated Site Settings: mission boxes, member count, How we operate${Object.keys(sitePhotos).length ? ` + photos (${Object.keys(sitePhotos).join(", ")})` : ""}`);
   }
 
+  // "home": Home-page figures + recruiting state (keeps every other setting as is).
+  if (only?.has("home")) {
+    await client
+      .patch("siteSettings")
+      .setIfMissing({ stats: {} })
+      .set({ "stats.alumni": { _type: "stat", ...s.stats.alumni } })
+      .commit();
+    const tp = data.trainingProgram;
+    await client
+      .patch("trainingProgram")
+      .set({ applicationsOpen: tp.applicationsOpen, closedMessage: tp.closedMessage ?? "" })
+      .commit();
+    console.log(`  ✎ updated alumni count (${s.stats.alumni.value}) and applications ${tp.applicationsOpen ? "OPEN" : "closed"}`);
+  }
+
   // Percentages are stored in Sanity the way editors type them (25.6 = 25.6%).
   const toPct = (n: number) => Math.round(n * 1000) / 10;
   const p = data.portfolio;
@@ -283,6 +300,7 @@ async function main() {
       _type: "trainingProgram",
       semesterLabel: t.semesterLabel,
       applicationsOpen: t.applicationsOpen,
+      closedMessage: t.closedMessage,
       openDate: t.openDate,
       deadline: t.deadline,
       applyUrl: t.applyUrl,
@@ -292,6 +310,13 @@ async function main() {
     }),
   );
 
+  // Alumni firms ("Where RUIF members go"). One document per firm + industry.
+  const firmId = (f: { name: string; industry: string }) =>
+    `alumniFirm-${f.industry}-${f.name.toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`;
+  if (want("alumni")) data.alumniFirms.forEach((f) =>
+    docs.push({ _id: firmId(f), _type: "alumniFirm", name: f.name, industry: f.industry, tier: f.tier, showOnHome: true }),
+  );
+
   // People first (sectors reference them), in chunks to keep requests small.
   const order = (d: Record<string, unknown>) => (d._type === "person" ? 0 : 1);
   docs.sort((a, b) => order(a) - order(b));
@@ -299,6 +324,18 @@ async function main() {
     const tx = client.transaction();
     docs.slice(i, i + 50).forEach((d) => tx.createOrReplace(d as { _id: string; _type: string }));
     await tx.commit();
+  }
+
+  // Remove seed-created firms that were dropped from data.ts. Firms added in the Studio are never touched.
+  if (only?.has("alumni")) {
+    const keep = data.alumniFirms.map(firmId);
+    const stale = await client.fetch<string[]>(`*[_type == "alumniFirm" && _id match "alumniFirm-*" && !(_id in $keep)]._id`, { keep });
+    if (stale.length) {
+      const tx = client.transaction();
+      stale.forEach((id) => tx.delete(id));
+      await tx.commit();
+      console.log(`  ✕ removed ${stale.length} old alumni firms`);
+    }
   }
 
   // When replacing the timeline, remove milestones that are no longer in the list.

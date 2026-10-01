@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { Arrow, ButtonLink } from "@/components/ui/button";
+import { Arrow, ButtonLink, DisabledButton } from "@/components/ui/button";
 import { CoverImage, PhotoHero, StatRow } from "@/components/ui/blocks";
 import { Container, Eyebrow, Section, SectionHeading } from "@/components/ui/layout";
-import { getSiteSettings, getTrainingProgram } from "@/lib/content";
+import { getAlumniFirmGroups, getSiteSettings, getTrainingProgram } from "@/lib/content";
+import { AlumniFirms } from "@/components/home/alumni-firms";
 
 const explore = [
   {
@@ -28,7 +29,7 @@ const explore = [
 ];
 
 export default async function HomePage() {
-  const [s, training] = await Promise.all([getSiteSettings(), getTrainingProgram()]);
+  const [s, training, firmGroups] = await Promise.all([getSiteSettings(), getTrainingProgram(), getAlumniFirmGroups()]);
   const applyHref = training.applyUrl ?? "/training#apply";
 
   return (
@@ -113,23 +114,32 @@ export default async function HomePage() {
           <div className="flex items-center px-5 py-16 sm:px-12 sm:py-20 lg:px-16 xl:px-24">
             <div className="max-w-lg">
               <Eyebrow light>{training.semesterLabel} Recruiting</Eyebrow>
-              <h2 className="mt-5 text-3xl leading-tight sm:text-4xl lg:text-5xl">
-                Learn finance. Apply it. Join the fund.
+              <h2 className="mt-5 text-3xl leading-tight sm:text-4xl lg:text-5xl text-balance">
+                {training.applicationsOpen || !training.closedMessage
+                  ? "Learn finance. Apply it. Join the fund."
+                  : training.closedMessage}
               </h2>
               <p className="mt-6 text-lg leading-relaxed text-white/80">
                 The Training Program is how students join RUIF. No prior finance experience is
                 required, just curiosity and commitment.
               </p>
               <div className="mt-9 flex flex-wrap gap-3">
-                {training.applicationsOpen && (
+                {training.applicationsOpen ? (
                   <ButtonLink href={applyHref} variant="light">
                     Apply Now <Arrow />
                   </ButtonLink>
+                ) : (
+                  <DisabledButton onDark reason="Applications are not open yet">
+                    Apply Now <Arrow />
+                  </DisabledButton>
                 )}
                 <ButtonLink href="/training" variant="outlineLight">
                   About the Program
                 </ButtonLink>
               </div>
+              {!training.applicationsOpen && (
+                <p className="mt-4 text-sm text-white/60">Applications are not open yet.</p>
+              )}
             </div>
           </div>
         </div>
@@ -151,16 +161,15 @@ export default async function HomePage() {
               View alumni <Arrow className="group-hover:translate-x-1" />
             </Link>
           </div>
-          <ul className="mt-14 grid grid-cols-2 border-t border-l border-line sm:grid-cols-3 lg:grid-cols-5">
-            {s.alumniEmployers.map((name) => (
-              <li
-                key={name}
-                className="flex h-28 items-center justify-center border-r border-b border-line px-4 text-center font-serif text-lg text-slate sm:text-xl"
-              >
-                {name}
-              </li>
-            ))}
-          </ul>
+          <div className="mt-14">
+            <AlumniFirms groups={firmGroups} />
+          </div>
+          <p className="mt-10 text-center text-sm text-slate">
+            …and many more across the industry.{" "}
+            <Link href="/people/alumni" className="font-semibold text-rice-blue underline-offset-4 hover:underline">
+              See where alumni are today
+            </Link>
+          </p>
         </Container>
       </Section>
 
