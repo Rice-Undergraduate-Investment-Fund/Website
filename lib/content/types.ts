@@ -13,6 +13,8 @@ export type ImageAsset = {
   height: number;
   /** CSS object-position, e.g. "50% 30%" (Sanity: hotspot). */
   position?: string;
+  /** Small blurred placeholder (data URL) shown while the photo loads. */
+  blurDataURL?: string;
 };
 
 export type SectorRole = "Senior Analyst" | "Junior Analyst";

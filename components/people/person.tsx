@@ -26,6 +26,8 @@ export function PersonPhoto({
           fill
           sizes={sizes}
           quality={PHOTO_QUALITY}
+          placeholder={person.photo.blurDataURL ? "blur" : "empty"}
+          blurDataURL={person.photo.blurDataURL}
           className="object-cover"
           style={{ objectPosition: person.photo.position ?? "50% 30%" }}
         />

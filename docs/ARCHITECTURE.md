@@ -31,7 +31,7 @@ A new officer with no coding experience must be able to update the Board, sector
 | Source control | GitHub org `Rice-Undergraduate-Investment-Fund` | Club-owned, not personal |
 | Images | `next/image` (Sanity image CDN once connected) | Crop/hotspot set in Studio |
 | Fonts | Source Serif 4 + Inter via Fontsource | Self-hosted, no external font requests |
-| Contact form | Serverless route (`/api/contact`) + email service | Provider TBD (§10) |
+| Contact form | Netlify Forms (`public/__forms.html` + `components/contact/contact-form.tsx`) | Emails ricefinancegroup@gmail.com via Netlify form notifications |
 | Analytics | Netlify Analytics or Google Analytics | Optional |
 | Database | **None** | Add (e.g. Supabase) only for auth, voting, attendance, etc. |
 
@@ -251,7 +251,6 @@ branch → commit → pull request → Netlify Deploy Preview URL → review →
 | `NEXT_PUBLIC_SANITY_DATASET` | Optional override (default `production`) |
 | `SANITY_API_WRITE_TOKEN` | Local only, for `npm run seed` / `seed:clean`. Never on Netlify, never committed |
 | `SANITY_REVALIDATE_SECRET` | Netlify only: verifies Sanity webhook calls to `/api/revalidate` |
-| `CONTACT_*` | Planned: contact form provider keys |
 
 The website itself needs **no secrets**: the dataset is read publicly (published documents only). See `.env.example`.
 
@@ -317,7 +316,7 @@ Full step-by-step: **`docs/DEPLOYMENT.md`**. One deployment (GitHub → Netlify)
 | 2026-09-30 | Fonts: Source Serif 4 + Inter, self-hosted | Done (revisable) |
 | 2026-09-30 | Content layer reads Sanity, falls back to seed data | Done |
 | 2026-09-30 | Sector membership stored on `sector`, not `person` | Done |
-| — | Contact form provider (Resend / Formspree / other) | Open |
+| — | Contact form provider | Decided: Netlify Forms (free, no keys) |
 | 2026-09-30 | Repo is **public** (Netlify's free plan doesn't deploy private org repos). No secrets in code; `.env.local` git-ignored | Decided |
 | 2026-09-30 | Workflow: Claude edits local clone; officer commits/pushes via GitHub Desktop | Decided |
 
@@ -331,3 +330,15 @@ Full step-by-step: **`docs/DEPLOYMENT.md`**. One deployment (GitHub → Netlify)
 - Rice IT contact for the DNS change?
 - Which emails receive contact-form submissions?
 - Who manages the current Wix DNS record for `financegroup.rice.edu`?
+
+
+## Images and performance
+
+- `next/image` uses a custom loader (`lib/image-loader.ts`): Sanity photos are resized and encoded (WebP/AVIF) by Sanity's image CDN from the original upload. This is fast worldwide and keeps photo traffic off Netlify's credit allowance. Files in `/public` are served as-is.
+- Photos show Sanity's blurred preview (`lqip`) while loading, so there is never an empty box.
+- Banner photos load with `priority`; images further down load as the visitor approaches them (standard browser lazy-loading).
+- Photo quality: `PHOTO_QUALITY` in `lib/images.ts` (82).
+
+## Contact form (Netlify Forms)
+
+`public/__forms.html` declares the form so Netlify detects it at deploy time; the React form posts to it. Field names in both files must match. Submissions: Netlify → Forms. Email delivery: Netlify → Site configuration → Notifications → Form submission notifications. A hidden honeypot field (`company`) filters bots.

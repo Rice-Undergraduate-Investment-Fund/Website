@@ -48,21 +48,23 @@ const sanityEnabled = cache(async (): Promise<boolean> => {
 });
 
 /** GROQ projection for a `photo` field. */
-const IMG = `{ alt, hotspot, crop, asset->{ _id, url, metadata { dimensions { width, height } } } }`;
+const IMG = `{ alt, hotspot, crop, asset->{ _id, url, metadata { lqip, dimensions { width, height } } } }`;
 
 type RawImage = {
   alt?: string;
   hotspot?: { x: number; y: number };
   crop?: unknown;
-  asset?: { _id: string; url: string; metadata?: { dimensions?: { width: number; height: number } } };
+  asset?: { _id: string; url: string; metadata?: { lqip?: string; dimensions?: { width: number; height: number } } };
 } | null;
 
 function toImage(img: RawImage | undefined, fallbackAlt = ""): ImageAsset | undefined {
   if (!img?.asset) return undefined;
   const dims = img.asset.metadata?.dimensions;
   return {
-    // Original file, untouched by Sanity: next/image does the single resize + re-encode.
+    // Original upload; lib/image-loader.ts asks Sanity's CDN for the right size.
     src: urlFor(img).url(),
+    // Tiny blurred preview Sanity generates on upload, shown while the photo loads.
+    blurDataURL: img.asset.metadata?.lqip,
     alt: img.alt || fallbackAlt,
     width: dims?.width ?? 1600,
     height: dims?.height ?? 1600,

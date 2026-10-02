@@ -2,10 +2,11 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    // Photos uploaded through Sanity Studio are served from Sanity's CDN.
+    // Sanity photos are resized by Sanity's image CDN (see lib/image-loader.ts).
+    loader: "custom",
+    loaderFile: "./lib/image-loader.ts",
     remotePatterns: [{ protocol: "https", hostname: "cdn.sanity.io" }],
-    // Photos render at PHOTO_QUALITY (lib/images.ts); 75 is the default for everything else.
-    qualities: [75, 90],
+    qualities: [75, 82],
   },
 };
 

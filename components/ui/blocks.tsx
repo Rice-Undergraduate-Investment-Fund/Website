@@ -170,6 +170,8 @@ export function CoverImage({
       priority={priority}
       sizes={sizes}
       quality={PHOTO_QUALITY}
+      placeholder={image.blurDataURL ? "blur" : "empty"}
+      blurDataURL={image.blurDataURL}
       className={cx("object-cover", className)}
       style={{ objectPosition: image.position ?? "50% 50%" }}
     />
