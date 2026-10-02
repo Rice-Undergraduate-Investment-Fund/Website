@@ -209,7 +209,7 @@ function DirectoryModal({ modal, onClose, showClass }: { modal: Modal; onClose: 
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
-      className="m-auto h-dvh max-h-dvh w-full max-w-none bg-transparent p-0 open:animate-[modal-in_240ms_var(--ease-out-soft)] sm:h-auto sm:max-h-[min(90dvh,900px)] sm:w-[calc(100%-3rem)] sm:max-w-3xl"
+      className="m-auto h-dvh max-h-dvh w-full max-w-none bg-transparent p-0 open:animate-[modal-in_240ms_var(--ease-out-soft)] sm:h-auto sm:max-h-[min(90dvh,900px)] sm:w-[calc(100%-3rem)] sm:max-w-[52rem]"
     >
       {modal && (
         <div className="flex h-full max-h-[inherit] flex-col bg-white shadow-2xl shadow-rice-blue-deep/40">
@@ -251,21 +251,21 @@ function ProfileRow({ a, showClass = false }: { a: Alumnus; showClass?: boolean 
   const role = [a.ruifRole, a.ruifSector].filter(Boolean).join(", ");
   const job = [a.position, a.company].filter(Boolean).join(" · ");
   return (
-    <article className="flex gap-5 py-6 sm:gap-7">
-      <div className="w-20 shrink-0 sm:w-28">
-        <PersonPhoto person={asPerson} portrait sizes="112px" />
+    <article className="flex gap-5 py-6 sm:gap-8 sm:py-7">
+      <div className="w-24 shrink-0 sm:w-40">
+        <PersonPhoto person={asPerson} portrait sizes="(min-width: 640px) 160px, 96px" />
       </div>
-      <div className="min-w-0 flex-1">
-        <h3 className="font-serif text-xl leading-snug text-ink sm:text-2xl">{a.name}</h3>
-        {job && <p className="mt-1 text-ink">{job}</p>}
-        {a.location && <p className="mt-0.5 text-sm text-muted">{a.location}</p>}
+      <div className="flex min-w-0 flex-1 flex-col justify-center">
+        <h3 className="font-serif text-xl leading-snug text-ink sm:text-[1.75rem]">{a.name}</h3>
+        {job && <p className="mt-1.5 text-ink sm:text-lg">{job}</p>}
+        {a.location && <p className="mt-0.5 text-sm text-muted sm:text-base">{a.location}</p>}
         {(role || showClass) && (
-          <p className="mt-3 text-xs font-semibold tracking-[0.12em] text-rice-blue uppercase">
-            {[role ? `RUIF ${role}` : null, showClass ? `Class of ${a.classYear}` : null].filter(Boolean).join(" · ")}
+          <p className="mt-3 text-xs font-semibold tracking-[0.12em] text-rice-blue uppercase sm:mt-4">
+            {[role || null, showClass ? `Class of ${a.classYear}` : null].filter(Boolean).join(" · ")}
           </p>
         )}
         {(a.linkedin || a.email) && (
-          <div className="mt-4 flex flex-wrap gap-2">
+          <div className="mt-4 flex flex-wrap gap-2 sm:mt-5">
             {a.linkedin && (
               <a
                 href={a.linkedin}
