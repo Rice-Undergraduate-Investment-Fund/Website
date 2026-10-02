@@ -306,6 +306,8 @@ async function main() {
       semesterLabel: t.semesterLabel,
       applicationsOpen: t.applicationsOpen,
       closedMessage: t.closedMessage,
+      closedHeadline: t.closedHeadline,
+      closedNote: t.closedNote,
       openDate: t.openDate,
       deadline: t.deadline,
       applyUrl: t.applyUrl,

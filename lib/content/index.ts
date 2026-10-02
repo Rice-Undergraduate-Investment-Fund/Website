@@ -108,7 +108,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     ..., photos {
       homeHero ${IMG}, homeFeature ${IMG}, homeTraining ${IMG},
       aboutHero ${IMG}, aboutMission ${IMG}, aboutFund ${IMG}, aboutHistory ${IMG},
-      trainingHero ${IMG}, portfolioHero ${IMG}, sectorsHero ${IMG}, boardGroup ${IMG}
+      trainingHero ${IMG}, trainingCurriculum1 ${IMG}, trainingCurriculum2 ${IMG}, trainingCurriculum3 ${IMG}, portfolioHero ${IMG}, sectorsHero ${IMG}, boardGroup ${IMG}
     }
   }`);
   const m = mock.siteSettings;
@@ -139,6 +139,9 @@ export async function getSiteSettings(): Promise<SiteSettings> {
       aboutFund: toImage(s.photos?.aboutFund),
       aboutHistory: toImage(s.photos?.aboutHistory),
       trainingHero: toImage(s.photos?.trainingHero),
+      trainingCurriculum1: toImage(s.photos?.trainingCurriculum1),
+      trainingCurriculum2: toImage(s.photos?.trainingCurriculum2),
+      trainingCurriculum3: toImage(s.photos?.trainingCurriculum3),
       portfolioHero: toImage(s.photos?.portfolioHero),
       sectorsHero: toImage(s.photos?.sectorsHero),
       boardGroup: toImage(s.photos?.boardGroup),
@@ -267,12 +270,14 @@ export async function getLatestLetter(): Promise<Letter | null> {
 export async function getTrainingProgram(): Promise<TrainingProgram> {
   if (!(await sanityEnabled())) return mock.trainingProgram;
   const t = await query<(Omit<TrainingProgram, "sessions"> & { sessions?: { title: string; description?: string }[] }) | null>(
-    `*[_id == "trainingProgram"][0]{ semesterLabel, applicationsOpen, closedMessage, openDate, deadline, applyUrl, isSample, steps[]{title, description}, sessions[]{title, description} }`,
+    `*[_id == "trainingProgram"][0]{ semesterLabel, applicationsOpen, closedMessage, closedHeadline, closedNote, openDate, deadline, applyUrl, isSample, steps[]{title, description}, sessions[]{title, description} }`,
   );
   return {
     semesterLabel: t?.semesterLabel ?? "",
     applicationsOpen: t?.applicationsOpen ?? false,
     closedMessage: t?.closedMessage ?? undefined,
+    closedHeadline: t?.closedHeadline ?? undefined,
+    closedNote: t?.closedNote ?? undefined,
     openDate: t?.openDate ?? undefined,
     deadline: t?.deadline ?? undefined,
     applyUrl: t?.applyUrl ?? undefined,

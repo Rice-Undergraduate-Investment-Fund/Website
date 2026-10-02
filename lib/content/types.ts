@@ -119,6 +119,9 @@ export type TrainingProgram = {
   applicationsOpen: boolean;
   /** Headline shown in place of the recruiting pitch while applications are closed. */
   closedMessage?: string;
+  /** Training page "Apply" section while closed, e.g. "Fall 2026 applications are closed." */
+  closedHeadline?: string;
+  closedNote?: string;
   openDate?: string;
   deadline?: string;
   applyUrl?: string;
@@ -170,6 +173,10 @@ export type PagePhotos = {
   aboutFund?: ImageAsset;
   aboutHistory?: ImageAsset;
   trainingHero?: ImageAsset;
+  /** Curriculum photos, beside sessions 1–2, 3–5 and 6–7. */
+  trainingCurriculum1?: ImageAsset;
+  trainingCurriculum2?: ImageAsset;
+  trainingCurriculum3?: ImageAsset;
   portfolioHero?: ImageAsset;
   sectorsHero?: ImageAsset;
   boardGroup?: ImageAsset;

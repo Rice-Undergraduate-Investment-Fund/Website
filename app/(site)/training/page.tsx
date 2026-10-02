@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Arrow, ButtonLink, DisabledButton } from "@/components/ui/button";
-import { PhotoHero, ProcessSteps } from "@/components/ui/blocks";
-import { Container, Eyebrow, SampleNote, Section, SectionHeading } from "@/components/ui/layout";
+import { CoverImage, PhotoHero, ProcessSteps } from "@/components/ui/blocks";
+import { Container, Eyebrow, SampleNote, Section, SectionHeading, cx } from "@/components/ui/layout";
 import { getSiteSettings, getTrainingProgram } from "@/lib/content";
 
 export const metadata: Metadata = { title: "Training Program" };
@@ -9,6 +9,12 @@ export const metadata: Metadata = { title: "Training Program" };
 export default async function TrainingPage() {
   const [t, s] = await Promise.all([getTrainingProgram(), getSiteSettings()]);
   const applyHref = t.applyUrl ?? "#apply";
+  // Curriculum: sessions 1–2, 3–5, 6–7, each beside a photo (alternating sides on desktop).
+  const curriculum = [
+    { sessions: t.sessions.slice(0, 2), photo: s.photos.trainingCurriculum1 },
+    { sessions: t.sessions.slice(2, 5), photo: s.photos.trainingCurriculum2 },
+    { sessions: t.sessions.slice(5), photo: s.photos.trainingCurriculum3 },
+  ].filter((b) => b.sessions.length > 0);
 
   return (
     <>
@@ -64,36 +70,50 @@ export default async function TrainingPage() {
             title="Seven sessions, one complete foundation"
             intro="Each session builds on the last, ending with a pitch of your own."
           />
-          <ol className="mt-14 grid border-t border-l border-line bg-white md:grid-cols-2">
-            {t.sessions.map((s) => (
-              <li key={s.number} className="flex gap-6 border-r border-b border-line bg-white p-7 sm:p-9">
-                <span className="font-serif text-4xl leading-none text-rice-blue/25 tabular-nums">
-                  {String(s.number).padStart(2, "0")}
-                </span>
-                <div>
-                  <p className="text-xs font-semibold tracking-[0.2em] text-rice-blue uppercase">
-                    Session {s.number}
-                  </p>
-                  <h3 className="mt-2 text-2xl text-ink">{s.title}</h3>
-                  <p className="mt-2 leading-relaxed text-slate">{s.description}</p>
-                </div>
-              </li>
+          <div className="mt-14 space-y-4">
+            {curriculum.map((band, i) => (
+              <div
+                key={i}
+                className={cx("grid gap-4 lg:grid-cols-2", i % 2 === 1 && "lg:[&>*:first-child]:order-2")}
+              >
+                <ol className="grid gap-4">
+                  {band.sessions.map((s) => (
+                    <li key={s.number} className="flex gap-6 bg-white p-7 sm:p-9">
+                      <span className="font-serif text-4xl leading-none text-rice-blue/25 tabular-nums">
+                        {String(s.number).padStart(2, "0")}
+                      </span>
+                      <div>
+                        <p className="text-xs font-semibold tracking-[0.2em] text-rice-blue uppercase">
+                          Session {s.number}
+                        </p>
+                        <h3 className="mt-2 text-2xl text-ink">{s.title}</h3>
+                        <p className="mt-2 leading-relaxed text-slate">{s.description}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+                {band.photo && (
+                  <div className="relative aspect-[3/2] overflow-hidden bg-rice-blue/10 lg:aspect-auto lg:min-h-full">
+                    <CoverImage image={band.photo} sizes="(min-width: 1024px) 40vw, 100vw" />
+                  </div>
+                )}
+              </div>
             ))}
-          </ol>
+          </div>
         </Container>
       </Section>
 
       <section id="apply" className="scroll-mt-20 bg-rice-blue text-white">
         <Container className="grid gap-12 py-20 sm:py-28 lg:grid-cols-[1.2fr_1fr] lg:items-center">
           <div>
-            <Eyebrow light>{t.semesterLabel} Applications</Eyebrow>
-            <h2 className="mt-5 text-4xl leading-tight sm:text-5xl">
-              {t.applicationsOpen ? "Applications are open." : "Applications are closed."}
+            {t.applicationsOpen && <Eyebrow light>{t.semesterLabel} Applications</Eyebrow>}
+            <h2 className={cx("text-4xl leading-tight sm:text-5xl", t.applicationsOpen && "mt-5")}>
+              {t.applicationsOpen ? "Applications are open." : t.closedHeadline || "Applications are closed."}
             </h2>
             <p className="mt-5 max-w-lg text-lg text-white/80">
               {t.applicationsOpen
                 ? "No prior finance experience required. We welcome students of every major."
-                : "Check back at the start of next semester for the next application cycle."}
+                : t.closedNote || "Check back at the start of next semester for the next application cycle."}
             </p>
             {t.isSample && (
               <div className="mt-6">

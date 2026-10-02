@@ -371,16 +371,18 @@ export const trainingProgram: TrainingProgram = {
   semesterLabel: "Spring 2027", // placeholder
   applicationsOpen: false, // drives the Apply buttons (greyed out while closed)
   closedMessage: "Application for the Spring 2027 Training Program will Open in Late Fall",
-  openDate: "TBD",
-  deadline: "TBD",
-  applyUrl: undefined, // placeholder – application form link
-  isSample: true,
+  closedHeadline: "Fall 2026 applications are closed.",
+  closedNote: "Check back in December for Spring 2027 applications.",
+  openDate: "Closed",
+  deadline: "N/A",
+  applyUrl: undefined, // application form link (add when applications open)
+  isSample: false,
   steps: [
     { title: "Apply", description: "Submit a short application at the start of the semester." },
     { title: "Training Sessions", description: "Attend seven weekly sessions led by the Training Directors." },
     { title: "Complete Training", description: "Build core skills in accounting, valuation and markets." },
     { title: "Pitch Interview", description: "Present a stock pitch to demonstrate what you've learned." },
-    { title: "Join a Sector", description: "Successful candidates are placed on a sector team." },
+    { title: "Join a Sector", description: "Successful candidates are admitted into the fund and placed into a sector." },
   ],
   sessions: [
     { number: 1, title: "Financial Statements", description: "Reading the income statement, balance sheet and cash flow statement." },
@@ -417,6 +419,10 @@ export const timeline: TimelineEvent[] = [
  */
 export const photoFocus: Record<string, string> = {
   homeHero: "50% 50%",
+  trainingHero: "50% 40%",
+  trainingCurriculum1: "70% 50%",
+  trainingCurriculum2: "50% 60%",
+  trainingCurriculum3: "50% 75%",
   aboutHero: "50% 50%",
   portfolioHero: "50% 40%",
   sectorsHero: "50% 48%",
@@ -450,6 +456,10 @@ export const alumniFirms: AlumniFirm[] = [
 /** Alt text (screen readers / search) for page photos in seed-assets/site/. */
 export const photoAlt: Record<string, string> = {
   homeHero: "McNair Hall, home of Rice Business, at Rice University",
+  trainingHero: "A Training Director helping a student during a Training Program session",
+  trainingCurriculum1: "Two Training Program students at a session",
+  trainingCurriculum2: "A Training Program session in progress",
+  trainingCurriculum3: "Two students working through a Training Program exercise",
   aboutHero: "The skylit atrium of Virani Hall at Rice Business",
   portfolioHero: "Rice University campus at sunrise, with the Houston skyline in the distance",
   sectorsHero: "Rice University and the Houston skyline at night",
