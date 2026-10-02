@@ -1,15 +1,11 @@
 import type { Metadata } from "next";
-import { PersonCard } from "@/components/people/person";
+import { BoardGrid } from "@/components/people/board-grid";
 import { Container, Eyebrow, Section, SectionHeading } from "@/components/ui/layout";
 import { getBoard, getSiteSettings } from "@/lib/content";
 import { CoverImage } from "@/components/ui/blocks";
 
 export const metadata: Metadata = { title: "Board" };
 
-/**
- * DRAFT: the spec asks to preserve the current site's Board design and
- * hierarchy. This version will be aligned with the existing Wix page next.
- */
 export default async function BoardPage() {
   const [board, s] = await Promise.all([getBoard(), getSiteSettings()]);
 
@@ -33,18 +29,8 @@ export default async function BoardPage() {
 
       <Section>
         <Container>
-          <SectionHeading eyebrow="2026–27" title="Executive Board" />
-          <ul className="mt-14 grid grid-cols-2 gap-x-6 gap-y-12 md:grid-cols-3 lg:grid-cols-5">
-            {board.map((p) => (
-              <li key={p.id}>
-                <PersonCard
-                  person={p}
-                  role={p.boardPosition}
-                  sizes="(min-width: 1024px) 20vw, (min-width: 768px) 33vw, 50vw"
-                />
-              </li>
-            ))}
-          </ul>
+          <SectionHeading eyebrow="2026–27" title="Executive Board" intro="Select a member to read their bio and get in touch." />
+          <BoardGrid people={board} />
         </Container>
       </Section>
     </>

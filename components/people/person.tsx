@@ -3,20 +3,22 @@ import { PHOTO_QUALITY } from "@/lib/images";
 import type { Person } from "@/lib/content";
 import { cx } from "@/components/ui/layout";
 
-/** Square person photo, or a neutral silhouette placeholder when no photo exists. */
+/** Person photo (square, or 4:5 portrait), or a neutral silhouette placeholder when no photo exists. */
 export function PersonPhoto({
   person,
   sizes,
   className,
   large = false,
+  portrait = false,
 }: {
   person: Person;
   sizes: string;
   className?: string;
   large?: boolean;
+  portrait?: boolean;
 }) {
   return (
-    <div className={cx("relative aspect-square w-full overflow-hidden bg-mist", className)}>
+    <div className={cx("relative w-full overflow-hidden bg-mist", portrait ? "aspect-[4/5]" : "aspect-square", className)}>
       {person.photo ? (
         <Image
           src={person.photo.src}
