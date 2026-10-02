@@ -1,20 +1,21 @@
 import type { Metadata } from "next";
 import { SectorDirectory } from "@/components/sectors/sector-directory";
-import { PageHeader } from "@/components/ui/blocks";
+import { PhotoHero } from "@/components/ui/blocks";
 import { Container, Section } from "@/components/ui/layout";
-import { getSectors } from "@/lib/content";
+import { getSectors, getSiteSettings } from "@/lib/content";
 
 export const metadata: Metadata = { title: "Sectors" };
 
 export default async function SectorsPage() {
-  const sectors = await getSectors();
+  const [sectors, s] = await Promise.all([getSectors(), getSiteSettings()]);
   return (
     <>
-      <PageHeader
-        eyebrow="Our Sectors"
-        title={`${sectors.length} Sectors Across Every Industry`}
-        intro="Each sector is led by a Sector Director and staffed by Senior and Junior Analysts, who research companies and pitch ideas to the fund."
-      />
+      <PhotoHero image={s.photos.sectorsHero} eyebrow="Our Sectors" title={`${sectors.length} Sectors Across Every Industry`}>
+        <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/85 text-pretty">
+          Each sector is led by a Sector Director and staffed by Senior and Junior Analysts, who research companies
+          and pitch ideas to the fund.
+        </p>
+      </PhotoHero>
       <Section>
         <Container>
           <SectorDirectory sectors={sectors} />

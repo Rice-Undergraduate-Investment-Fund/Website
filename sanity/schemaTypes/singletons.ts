@@ -58,6 +58,8 @@ export const siteSettings = defineType({
         defineField({ name: "aboutFund", title: "About: “A real fund” photo (blue section)", type: "photo" }),
         defineField({ name: "aboutHistory", title: "About: history photo", type: "photo" }),
         defineField({ name: "trainingHero", title: "Training Program: top banner", type: "photo" }),
+        defineField({ name: "portfolioHero", title: "Portfolio: top banner", type: "photo" }),
+        defineField({ name: "sectorsHero", title: "Sectors: top banner", type: "photo" }),
         defineField({ name: "boardGroup", title: "Board: group photo", type: "photo" }),
       ],
     }),

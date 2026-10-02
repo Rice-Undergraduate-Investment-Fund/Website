@@ -10,19 +10,18 @@ export function PhotoHero({
   eyebrow,
   title,
   children,
-  tall = false,
 }: {
   image?: ImageAsset;
   eyebrow?: string;
   title: ReactNode;
   children?: ReactNode;
-  tall?: boolean;
 }) {
   return (
     <section
       className={cx(
         "relative isolate flex items-end overflow-hidden bg-rice-blue-deep text-white",
-        tall ? "min-h-[88svh] sm:min-h-[max(640px,80svh)]" : "min-h-[62svh] sm:min-h-[max(520px,64svh)]",
+        // One height for every page banner so the site feels consistent.
+        "min-h-[72svh] sm:min-h-[max(560px,72svh)]",
       )}
     >
       <CoverImage image={image} priority sizes="100vw" className="-z-10" />

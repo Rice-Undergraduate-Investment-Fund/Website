@@ -416,7 +416,10 @@ export const timeline: TimelineEvent[] = [
  * (used by `npm run seed:about` / the settings seed). Editors can change them in the Studio.
  */
 export const photoFocus: Record<string, string> = {
-  aboutHero: "50% 55%",
+  homeHero: "50% 50%",
+  aboutHero: "50% 50%",
+  portfolioHero: "50% 40%",
+  sectorsHero: "50% 48%",
   homeFeature: "50% 62%",
   aboutMission: "35% 40%",
   aboutFund: "50% 35%",
@@ -446,7 +449,10 @@ export const alumniFirms: AlumniFirm[] = [
 
 /** Alt text (screen readers / search) for page photos in seed-assets/site/. */
 export const photoAlt: Record<string, string> = {
-  aboutHero: "Students walking past the Virani Business School building at Rice University",
+  homeHero: "McNair Hall, home of Rice Business, at Rice University",
+  aboutHero: "The skylit atrium of Virani Hall at Rice Business",
+  portfolioHero: "Rice University campus at sunrise, with the Houston skyline in the distance",
+  sectorsHero: "Rice University and the Houston skyline at night",
   aboutMission: "A RUIF general club meeting",
   aboutFund: "RUIF members at a general club meeting",
   aboutHistory: "RUIF members presenting at a general club meeting",

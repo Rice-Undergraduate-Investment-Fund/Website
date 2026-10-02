@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { AllocationChart } from "@/components/portfolio/allocation-chart";
 import { LetterViewer } from "@/components/portfolio/letter-viewer";
 import { PerformanceTable, fmtPct } from "@/components/portfolio/performance-table";
-import { PageHeader, ProcessSteps, StatRow } from "@/components/ui/blocks";
+import { PhotoHero, ProcessSteps, StatRow } from "@/components/ui/blocks";
 import { Container, SampleNote, Section, SectionHeading } from "@/components/ui/layout";
 import {
   getFeaturedHoldings,
@@ -30,11 +30,12 @@ export default async function PortfolioPage() {
 
   return (
     <>
-      <PageHeader
-        eyebrow="Our Portfolio"
-        title="A real portfolio, managed by students"
-        intro="RUIF manages a portion of Rice University's endowment. Every position is researched, pitched and approved collectively by members."
-      />
+      <PhotoHero image={s.photos.portfolioHero} eyebrow="Our Portfolio" title="A real portfolio, managed by students">
+        <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/85 text-pretty">
+          RUIF manages a portion of Rice University&apos;s endowment. Every position is researched, pitched and approved
+          collectively by members.
+        </p>
+      </PhotoHero>
 
       {/* Key figures + performance */}
       <Section>

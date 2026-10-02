@@ -170,6 +170,8 @@ export type PagePhotos = {
   aboutFund?: ImageAsset;
   aboutHistory?: ImageAsset;
   trainingHero?: ImageAsset;
+  portfolioHero?: ImageAsset;
+  sectorsHero?: ImageAsset;
   boardGroup?: ImageAsset;
 };
 

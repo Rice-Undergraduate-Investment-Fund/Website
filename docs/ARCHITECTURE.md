@@ -268,7 +268,7 @@ Headshots are never stored in the repo (it's public). Either:
 
 **Alumni firms** ("Where RUIF members go" on the home page): Studio → Alumni Firms. Each firm has an industry (= tab: Investment Banking, Private Equity, Hedge Funds & Trading; defined in `ALUMNI_INDUSTRIES` in `lib/content/types.ts`) and a row (1 = top, e.g. bulge brackets). Rows are unlabeled and sorted A–Z. A firm in two industries gets two entries.
 
-**Page photos** (About page etc.) follow the same pattern: save as `seed-assets/site/<photoKey>.jpg` (e.g. `aboutHero`, `aboutMission`, `aboutFund`, `aboutHistory`) and run `npm run seed:about`. Editors can also replace them in the Studio under Site Settings → Photos. Timeline milestones support an optional link (`linkText` + `linkUrl`): the matching words in the description become a link.
+**Page photos** follow the same pattern: save as `seed-assets/site/<photoKey>.jpg` (banners: `homeHero`, `aboutHero`, `portfolioHero`, `sectorsHero`, `trainingHero`; others: `homeFeature`, `aboutMission`, `aboutFund`, `aboutHistory`; see `PagePhotos` in `lib/content/types.ts`), keep them ≥3,500px wide for banners, and run `npm run seed:home` (or `seed:about`). All page banners share one height (`PhotoHero` in `components/ui/blocks.tsx`). Editors can also replace them in the Studio under Site Settings → Photos. Timeline milestones support an optional link (`linkText` + `linkUrl`): the matching words in the description become a link.
 
 ### Running Sanity scripts on a Mac with iCloud Desktop (verified workaround)
 

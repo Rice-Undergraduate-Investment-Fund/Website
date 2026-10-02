@@ -34,7 +34,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <PhotoHero image={s.photos.homeHero} eyebrow={s.orgName} title={s.tagline} tall>
+      <PhotoHero image={s.photos.homeHero} eyebrow={s.orgName} title={s.tagline}>
         <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/85 text-pretty">{s.intro}</p>
         <div className="mt-9 flex flex-wrap gap-3">
           <ButtonLink href="/training" variant="light">

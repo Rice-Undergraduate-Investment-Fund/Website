@@ -108,7 +108,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     ..., photos {
       homeHero ${IMG}, homeFeature ${IMG}, homeTraining ${IMG},
       aboutHero ${IMG}, aboutMission ${IMG}, aboutFund ${IMG}, aboutHistory ${IMG},
-      trainingHero ${IMG}, boardGroup ${IMG}
+      trainingHero ${IMG}, portfolioHero ${IMG}, sectorsHero ${IMG}, boardGroup ${IMG}
     }
   }`);
   const m = mock.siteSettings;
@@ -139,6 +139,8 @@ export async function getSiteSettings(): Promise<SiteSettings> {
       aboutFund: toImage(s.photos?.aboutFund),
       aboutHistory: toImage(s.photos?.aboutHistory),
       trainingHero: toImage(s.photos?.trainingHero),
+      portfolioHero: toImage(s.photos?.portfolioHero),
+      sectorsHero: toImage(s.photos?.sectorsHero),
       boardGroup: toImage(s.photos?.boardGroup),
     },
   };
