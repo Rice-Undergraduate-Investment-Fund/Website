@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Arrow, ButtonLink, DisabledButton } from "@/components/ui/button";
 import { CoverImage, PhotoHero, StatRow } from "@/components/ui/blocks";
-import { Container, Eyebrow, Section, SectionHeading } from "@/components/ui/layout";
+import { Container, Section, SectionHeading } from "@/components/ui/layout";
 import { getAlumniFirmGroups, getSiteSettings, getTrainingProgram } from "@/lib/content";
 import { AlumniFirms } from "@/components/home/alumni-firms";
 
@@ -34,7 +34,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <PhotoHero image={s.photos.homeHero} eyebrow={s.orgName} title={s.tagline}>
+      <PhotoHero image={s.photos.homeHero} title={s.tagline}>
         <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/85 text-pretty">{s.intro}</p>
         <div className="mt-9 flex flex-wrap gap-3">
           <ButtonLink href="/training" variant="light">
@@ -60,7 +60,7 @@ export default async function HomePage() {
       <Section>
         <Container className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
           <div>
-            <SectionHeading eyebrow="Who We Are" title={s.mission.heading} />
+            <SectionHeading title={s.mission.heading} />
             <p className="mt-6 text-lg leading-relaxed text-slate">
               Members manage a portion of Rice University&apos;s endowment, overseen by Rice
               Management Company. They learn by researching companies, pitching ideas and making
@@ -82,7 +82,7 @@ export default async function HomePage() {
       {/* Explore */}
       <Section tone="mist">
         <Container>
-          <SectionHeading eyebrow="Explore" title="Inside the fund" />
+          <SectionHeading title="Inside the fund" />
           <div className="mt-12 grid border-t border-l border-line sm:grid-cols-2 lg:grid-cols-4">
             {explore.map((e) => (
               <Link
@@ -113,8 +113,7 @@ export default async function HomePage() {
           </div>
           <div className="flex items-center px-5 py-16 sm:px-12 sm:py-20 lg:px-16 xl:px-24">
             <div className="max-w-lg">
-              <Eyebrow light>{training.semesterLabel}</Eyebrow>
-              <h2 className="mt-5 text-3xl leading-tight sm:text-4xl lg:text-5xl text-balance">
+              <h2 className="text-3xl leading-tight sm:text-4xl lg:text-5xl text-balance">
                 {training.applicationsOpen || !training.closedMessage
                   ? "Learn finance. Apply it. Join the fund."
                   : training.closedMessage}
@@ -150,7 +149,6 @@ export default async function HomePage() {
         <Container>
           <div className="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
             <SectionHeading
-              eyebrow="Alumni"
               title="Where RUIF members go"
               intro={`${s.stats.alumni.value} alumni since the fund's founding in 2017.`}
             />

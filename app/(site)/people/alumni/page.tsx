@@ -23,7 +23,6 @@ export default async function AlumniPage({ searchParams }: { searchParams: Promi
   return (
     <>
       <PageHeader
-        eyebrow="Alumni"
         title="Alumni Directory"
         intro="A members-only directory of everyone who has been through RUIF. Browse by class or by company to find and reach alumni across the industry."
       />

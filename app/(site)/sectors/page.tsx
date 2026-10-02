@@ -10,7 +10,7 @@ export default async function SectorsPage() {
   const [sectors, s] = await Promise.all([getSectors(), getSiteSettings()]);
   return (
     <>
-      <PhotoHero image={s.photos.sectorsHero} eyebrow="Our Sectors" title={`${sectors.length} Sectors Across Every Industry`}>
+      <PhotoHero image={s.photos.sectorsHero} title={`${sectors.length} Sectors Across Every Industry`}>
         <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/85 text-pretty">
           Each sector is led by a Sector Director and staffed by Senior and Junior Analysts, who research companies
           and pitch ideas to the fund.

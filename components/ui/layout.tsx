@@ -73,13 +73,11 @@ export function Eyebrow({
 }
 
 export function SectionHeading({
-  eyebrow,
   title,
   intro,
   light = false,
   align = "left",
 }: {
-  eyebrow?: string;
   title: ReactNode;
   intro?: ReactNode;
   light?: boolean;
@@ -92,10 +90,9 @@ export function SectionHeading({
         align === "center" && "mx-auto text-center [&>p:first-child]:justify-center",
       )}
     >
-      {eyebrow && <Eyebrow light={light}>{eyebrow}</Eyebrow>}
       <h2
         className={cx(
-          "mt-4 text-3xl leading-tight sm:text-4xl lg:text-[2.75rem]",
+          "text-3xl leading-tight sm:text-4xl lg:text-[2.75rem]",
           light ? "text-white" : "text-rice-blue",
         )}
       >

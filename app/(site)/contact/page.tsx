@@ -11,7 +11,6 @@ export default async function ContactPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Contact"
         title="Contact Rice Finance"
         intro="Have a question about Rice Finance, the Training Program, the portfolio, or working with RUIF? We'd love to hear from you."
       />

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Arrow, ButtonLink, DisabledButton } from "@/components/ui/button";
 import { CoverImage, PhotoHero, ProcessSteps } from "@/components/ui/blocks";
-import { Container, Eyebrow, SampleNote, Section, SectionHeading, cx } from "@/components/ui/layout";
+import { Container, SampleNote, Section, SectionHeading, cx } from "@/components/ui/layout";
 import { getSiteSettings, getTrainingProgram } from "@/lib/content";
 
 export const metadata: Metadata = { title: "Training Program" };
@@ -20,7 +20,6 @@ export default async function TrainingPage() {
     <>
       <PhotoHero
         image={s.photos.trainingHero}
-        eyebrow="RUIF Training Program"
         title={
           <>
             Learn Finance.
@@ -56,7 +55,7 @@ export default async function TrainingPage() {
 
       <Section>
         <Container>
-          <SectionHeading eyebrow="How It Works" title="Your path into the fund" />
+          <SectionHeading title="Your path into the fund" />
           <div className="mt-16">
             <ProcessSteps steps={t.steps} />
           </div>
@@ -66,7 +65,6 @@ export default async function TrainingPage() {
       <Section tone="mist" id="curriculum">
         <Container>
           <SectionHeading
-            eyebrow="Curriculum"
             title="Seven sessions, one complete foundation"
             intro="Upon program completion, students are given a chance to be placed in an RUIF sector for the following semester."
           />
@@ -106,8 +104,7 @@ export default async function TrainingPage() {
       <section id="apply" className="scroll-mt-20 bg-rice-blue text-white">
         <Container className="grid gap-12 py-20 sm:py-28 lg:grid-cols-[1.2fr_1fr] lg:items-center">
           <div>
-            {t.applicationsOpen && <Eyebrow light>{t.semesterLabel} Applications</Eyebrow>}
-            <h2 className={cx("text-4xl leading-tight sm:text-5xl", t.applicationsOpen && "mt-5")}>
+            <h2 className="text-4xl leading-tight sm:text-5xl">
               {t.applicationsOpen ? "Applications are open." : t.closedHeadline || "Applications are closed."}
             </h2>
             <p className="mt-5 max-w-lg text-lg text-white/80">

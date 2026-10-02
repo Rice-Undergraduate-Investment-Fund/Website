@@ -32,7 +32,6 @@ export default async function PortfolioPage() {
     <>
       <PhotoHero
         image={s.photos.portfolioHero}
-        eyebrow="Our Portfolio"
         title="Long-Only Value Investing, Demonstrated Through Performance"
       >
         <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/85 text-pretty">
@@ -66,7 +65,6 @@ export default async function PortfolioPage() {
           {p.performance.length > 0 && (
             <div className="mt-20 grid gap-10 lg:grid-cols-[1fr_1.5fr] lg:gap-20 [&>*]:min-w-0">
               <SectionHeading
-                eyebrow="Performance"
                 title={`Measured against ${p.benchmarkName}`}
                 intro="The fund is benchmarked against the total U.S. stock market."
               />
@@ -83,7 +81,6 @@ export default async function PortfolioPage() {
             <div className="grid gap-12 lg:grid-cols-[1fr_2fr] lg:gap-16 [&>*]:min-w-0">
               <div>
                 <SectionHeading
-                  eyebrow={`${letter.semester} Letter`}
                   title="Letter to members"
                   intro={
                     letter.summary ||
@@ -102,7 +99,6 @@ export default async function PortfolioPage() {
 
           <div className="grid gap-12 lg:grid-cols-[1fr_2fr] lg:gap-16 [&>*]:min-w-0">
             <SectionHeading
-              eyebrow="Allocation"
               title="Portfolio allocation"
             />
             <div className="bg-white p-4 sm:p-8">
@@ -115,7 +111,7 @@ export default async function PortfolioPage() {
       {/* Selected positions */}
       <Section>
         <Container>
-          <SectionHeading eyebrow="Select Holdings" title="Selected positions" />
+          <SectionHeading title="Selected positions" />
           <ul className="mt-12 grid border-t border-l border-line sm:grid-cols-2 lg:grid-cols-4">
             {featured.map((h) => (
               <li key={h.id} className="flex min-h-56 flex-col border-r border-b border-line bg-white p-7">
@@ -157,7 +153,6 @@ export default async function PortfolioPage() {
       <Section tone="mist">
         <Container>
           <SectionHeading
-            eyebrow="Our Investment Process"
             title="From research to allocation"
             intro="Every idea follows the same disciplined path before it reaches the portfolio."
           />

@@ -153,10 +153,7 @@ export function AlumniDirectory({ alumni, firms }: { alumni: Alumnus[]; firms: D
         <div className="mt-10 space-y-14">
           {groups.map((g) => (
             <section key={g.key} aria-label={g.label}>
-              <p className="flex items-center gap-3 text-xs font-semibold tracking-[0.2em] text-rice-blue uppercase">
-                <span aria-hidden className="h-px w-8 bg-rice-blue" />
-                {g.label}
-              </p>
+              <p className="text-xs font-semibold tracking-[0.2em] text-rice-blue uppercase">{g.label}</p>
               <div className="mt-4 divide-y divide-line border-t border-line">
                 {g.tiers.map((row, r) => (
                   <ul key={r} className="flex flex-wrap justify-center gap-x-10 gap-y-4 py-7 sm:gap-x-14">

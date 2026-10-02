@@ -2,17 +2,15 @@ import Image from "next/image";
 import { PHOTO_QUALITY } from "@/lib/images";
 import type { ReactNode } from "react";
 import type { ImageAsset, Stat, Step } from "@/lib/content";
-import { Container, Eyebrow, cx } from "./layout";
+import { Container, cx } from "./layout";
 
 /** Full-bleed photo hero with a Rice Blue gradient for legible text. */
 export function PhotoHero({
   image,
-  eyebrow,
   title,
   children,
 }: {
   image?: ImageAsset;
-  eyebrow?: string;
   title: ReactNode;
   children?: ReactNode;
 }) {
@@ -31,8 +29,7 @@ export function PhotoHero({
       />
       <Container className="pt-32 pb-14 sm:pb-20">
         <div className="max-w-2xl">
-          {eyebrow && <Eyebrow light>{eyebrow}</Eyebrow>}
-          <h1 className="mt-5 text-4xl leading-[1.08] sm:text-5xl lg:text-6xl">{title}</h1>
+          <h1 className="text-4xl leading-[1.08] sm:text-5xl lg:text-6xl">{title}</h1>
           {children}
         </div>
       </Container>
@@ -42,19 +39,16 @@ export function PhotoHero({
 
 /** Solid Rice Blue header band for inner pages without a photo. */
 export function PageHeader({
-  eyebrow,
   title,
   intro,
 }: {
-  eyebrow: string;
   title: ReactNode;
   intro?: ReactNode;
 }) {
   return (
     <section className="bg-rice-blue text-white">
       <Container className="py-20 sm:py-28">
-        <Eyebrow light>{eyebrow}</Eyebrow>
-        <h1 className="mt-5 max-w-3xl text-4xl leading-[1.1] sm:text-5xl lg:text-6xl">{title}</h1>
+        <h1 className="max-w-3xl text-4xl leading-[1.1] sm:text-5xl lg:text-6xl">{title}</h1>
         {intro && (
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-white/80 text-pretty">{intro}</p>
         )}

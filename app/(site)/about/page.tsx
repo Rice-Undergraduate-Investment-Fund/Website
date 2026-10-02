@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ButtonLink, Arrow } from "@/components/ui/button";
 import { CoverImage, PhotoHero, PillarGrid, ProcessSteps, StatRow } from "@/components/ui/blocks";
-import { Container, Eyebrow, Section, SectionHeading } from "@/components/ui/layout";
+import { Container, Section, SectionHeading } from "@/components/ui/layout";
 import { fmtPct } from "@/components/portfolio/performance-table";
 import { getPortfolio, getSiteSettings, getTimeline, type Stat, type TimelineEvent } from "@/lib/content";
 
@@ -61,14 +61,14 @@ export default async function AboutPage() {
 
   return (
     <>
-      <PhotoHero image={s.photos.aboutHero} eyebrow="About Rice Finance" title="Learning finance by managing real capital">
+      <PhotoHero image={s.photos.aboutHero} title="Learning finance by managing real capital">
         <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/85 text-pretty">{s.intro}</p>
       </PhotoHero>
 
       {/* Mission: heading, then photo beside the three pillars */}
       <Section>
         <Container>
-          <SectionHeading eyebrow="Our Mission" title={s.mission.heading} />
+          <SectionHeading title={s.mission.heading} />
           <div className="mt-14 grid lg:grid-cols-[1.15fr_1fr]">
             <div className="relative aspect-[4/3] overflow-hidden bg-mist lg:aspect-auto lg:min-h-[480px]">
               <CoverImage image={s.photos.aboutMission} sizes="(min-width: 1024px) 55vw, 100vw" />
@@ -82,8 +82,7 @@ export default async function AboutPage() {
       <section className="bg-rice-blue text-white">
         <div className="grid lg:grid-cols-[1.25fr_1fr]">
           <div className="px-5 py-20 sm:px-8 sm:py-28 lg:pr-16 lg:pl-[max(2rem,calc((100vw-80rem)/2+2rem))]">
-            <Eyebrow light>The Fund</Eyebrow>
-            <h2 className="mt-4 text-3xl leading-tight text-white sm:text-4xl lg:text-[2.75rem]">
+            <h2 className="text-3xl leading-tight text-white sm:text-4xl lg:text-[2.75rem]">
               A real fund, run by students
             </h2>
             <div className="mt-14">
@@ -99,7 +98,6 @@ export default async function AboutPage() {
       <Section>
         <Container>
           <SectionHeading
-            eyebrow="How We Operate"
             title="From training to portfolio decisions"
           />
           <div className="mt-16">
@@ -112,7 +110,7 @@ export default async function AboutPage() {
       <Section tone="mist">
         <Container className="grid gap-12 lg:grid-cols-[1fr_1.2fr] lg:gap-20">
           <div>
-            <SectionHeading eyebrow="Our History" title="Since 2017" />
+            <SectionHeading title="Since 2017" />
             {s.photos.aboutHistory && (
               <div className="relative mt-10 aspect-[4/3] overflow-hidden">
                 <CoverImage image={s.photos.aboutHistory} sizes="(min-width: 1024px) 40vw, 100vw" />
