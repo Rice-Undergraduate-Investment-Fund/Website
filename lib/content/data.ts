@@ -7,6 +7,7 @@
  * Real facts here come from the current financegroup.rice.edu site.
  */
 import type {
+  Alumnus,
   AlumniFirm,
   Holding,
   Letter,
@@ -523,3 +524,19 @@ export const photoAlt: Record<string, string> = {
   homeFeature: "The 2026–27 RUIF Board",
   boardGroup: "The 2026–27 RUIF Board",
 };
+
+/** Sample entries for previewing the Alumni Directory locally (never used once Sanity is connected). */
+export const sampleAlumni: Alumnus[] = [
+  { id: "sample-alum-1", name: "Sample Alumnus 01", classYear: 2026, company: "Evercore", position: "Investment Banking Analyst", location: "Houston, TX", ruifRole: "Sector Director", ruifSector: "Energy", linkedin: "https://www.linkedin.com/" },
+  { id: "sample-alum-2", name: "Sample Alumnus 02", classYear: 2026, company: "Goldman Sachs", position: "Investment Banking Analyst", location: "New York, NY", ruifRole: "Senior Analyst", ruifSector: "Technology", linkedin: "https://www.linkedin.com/" },
+  { id: "sample-alum-3", name: "Sample Alumnus 03", classYear: 2026, company: "Citadel", position: "Investment Analyst", location: "Chicago, IL", ruifRole: "Vice President", linkedin: "https://www.linkedin.com/" },
+  { id: "sample-alum-4", name: "Sample Alumnus 04", classYear: 2026, company: "Bain & Company", position: "Associate Consultant", location: "Houston, TX", ruifRole: "Junior Analyst", ruifSector: "Healthcare", linkedin: "https://www.linkedin.com/" },
+  { id: "sample-alum-5", name: "Sample Alumnus 05", classYear: 2025, company: "J.P. Morgan", position: "Investment Banking Analyst", location: "San Francisco, CA", ruifRole: "President", linkedin: "https://www.linkedin.com/" },
+  { id: "sample-alum-6", name: "Sample Alumnus 06", classYear: 2025, company: "Lazard", position: "Financial Advisory Analyst", location: "New York, NY", ruifRole: "Sector Director", ruifSector: "Financials", linkedin: "https://www.linkedin.com/" },
+  { id: "sample-alum-7", name: "Sample Alumnus 07", classYear: 2025, company: "Blackstone", position: "Private Equity Analyst", location: "New York, NY", ruifRole: "Senior Analyst", ruifSector: "Real Estate", linkedin: "https://www.linkedin.com/" },
+  { id: "sample-alum-8", name: "Sample Alumnus 08", classYear: 2025, company: "TPH&Co.", position: "Investment Banking Analyst", location: "Houston, TX", ruifRole: "Senior Analyst", ruifSector: "Energy", linkedin: "https://www.linkedin.com/" },
+  { id: "sample-alum-9", name: "Sample Alumnus 09", classYear: 2024, company: "Point72", position: "Research Associate", location: "Stamford, CT", ruifRole: "Sector Director", ruifSector: "Consumer Goods", linkedin: "https://www.linkedin.com/" },
+  { id: "sample-alum-10", name: "Sample Alumnus 10", classYear: 2024, company: "Morgan Stanley", position: "Associate", location: "New York, NY", ruifRole: "Senior Training Program Director", linkedin: "https://www.linkedin.com/" },
+  { id: "sample-alum-11", name: "Sample Alumnus 11", classYear: 2024, company: "McKinsey & Company", position: "Business Analyst", location: "Dallas, TX", ruifRole: "Junior Analyst", ruifSector: "Industrials", linkedin: "https://www.linkedin.com/" },
+  { id: "sample-alum-12", name: "Sample Alumnus 12", classYear: 2023, company: "Vista Equity Partners", position: "Associate", location: "Austin, TX", ruifRole: "Sector Director", ruifSector: "Technology", linkedin: "https://www.linkedin.com/" },
+];

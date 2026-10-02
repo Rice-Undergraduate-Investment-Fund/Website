@@ -342,3 +342,12 @@ Full step-by-step: **`docs/DEPLOYMENT.md`**. One deployment (GitHub → Netlify)
 ## Contact form (Netlify Forms)
 
 `public/__forms.html` declares the form so Netlify detects it at deploy time; the React form posts to it. Field names in both files must match. Submissions: Netlify → Forms. Email delivery: Netlify → Site configuration → Notifications → Form submission notifications. A hidden honeypot field (`company`) filters bots.
+
+
+## Alumni Directory (members only)
+
+- Page: `/people/alumni`. Visitors see a password form; members who enter the shared password get a 30-day cookie (an HMAC of the password, so changing the password signs everyone out). Routes: `app/api/members/login`, `app/api/members/logout`; helpers in `lib/members/session.ts`.
+- Privacy: alumni records (`alumnus`, IDs `alumni.…`) and the password (`private.membersAccess`) have a dot in their ID, which Sanity never serves to anonymous requests, even in a public dataset. The website reads them on the server with `SANITY_API_READ_TOKEN` (a Viewer token; Netlify env var, never `NEXT_PUBLIC_`).
+- Studio: Alumni Directory → Add alumnus (creates a private ID) · All alumni · By class · Missing info · Members password. The generic "+" menu cannot create alumni, and a record without the private prefix shows a validation error.
+- Views: "Browse by Class" (tiles → pop-up sorted by RUIF seniority, `RUIF_ROLES` in `lib/content/types.ts`) and "Browse by Company" (Alumni Firms by tab and row, firms with ≥1 alumnus, plus "Other"). Companies are matched to firms with `normalizeFirm` ("J.P. Morgan" = "JPMorgan").
+- Bulk updates: `npm run import:alumni` reads `../Alumni Directory/RUIF Alumni Template.xlsx` (or a Google Form response sheet saved as .xlsx), headshots from `../Photos/Website/Alumni/<Full Name>.jpg`. `--dry-run` checks the file first. Password: `npm run members:password -- "…"` or edit it in the Studio.

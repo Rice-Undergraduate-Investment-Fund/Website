@@ -7,7 +7,7 @@ import { visionTool } from "@sanity/vision";
 import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
 import { apiVersion, dataset, projectId } from "./sanity/env";
-import { schemaTypes, singletonTypes } from "./sanity/schemaTypes";
+import { privateTypes, schemaTypes, singletonTypes } from "./sanity/schemaTypes";
 import { structure } from "./sanity/structure";
 
 export default defineConfig({
@@ -22,6 +22,9 @@ export default defineConfig({
     templates: (templates) => templates.filter(({ schemaType }) => !singletonTypes.has(schemaType)),
   },
   document: {
+    // Alumni must be created via "Add alumnus" (private ID), not the global "+" menu.
+    newDocumentOptions: (prev, { creationContext }) =>
+      creationContext.type === "global" ? prev.filter((t) => !privateTypes.has(t.templateId)) : prev,
     // Singletons can't be deleted or duplicated.
     actions: (input, context) =>
       singletonTypes.has(context.schemaType)

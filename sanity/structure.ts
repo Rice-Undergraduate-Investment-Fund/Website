@@ -1,10 +1,14 @@
 import type { StructureResolver } from "sanity/structure";
+import { AddIcon } from "@sanity/icons/Add";
 import { ArchiveIcon } from "@sanity/icons/Archive";
+import { CalendarIcon } from "@sanity/icons/Calendar";
+import { LockIcon } from "@sanity/icons/Lock";
+import { WarningOutlineIcon } from "@sanity/icons/WarningOutline";
 import { StarIcon } from "@sanity/icons/Star";
 import { UsersIcon } from "@sanity/icons/Users";
 
 /** Studio sidebar, organized around the tasks officers actually do. */
-export const structure: StructureResolver = (S) =>
+export const structure: StructureResolver = (S, context) =>
   S.list()
     .title("RUIF Website")
     .items([
@@ -47,14 +51,71 @@ export const structure: StructureResolver = (S) =>
             .defaultOrdering([{ field: "name", direction: "asc" }]),
         ),
       S.listItem()
-        .title("Alumni")
+        .title("Alumni Directory (members only)")
         .icon(ArchiveIcon)
         .child(
-          S.documentList()
-            .title("Alumni")
-            .schemaType("person")
-            .filter('_type == "person" && status == "alumni"')
-            .defaultOrdering([{ field: "graduationYear", direction: "desc" }]),
+          S.list()
+            .title("Alumni Directory")
+            .items([
+              S.listItem()
+                .title("Add alumnus")
+                .icon(AddIcon)
+                // A fresh private ID ("alumni.…") each time, so the record is never public.
+                .child(() =>
+                  S.document().schemaType("alumnus").documentId(`alumni.${crypto.randomUUID()}`).title("New alumnus"),
+                ),
+              S.listItem()
+                .title("All alumni")
+                .schemaType("alumnus")
+                .child(
+                  S.documentTypeList("alumnus")
+                    .title("All alumni")
+                    .initialValueTemplates([])
+                    .defaultOrdering([{ field: "classYear", direction: "desc" }, { field: "name", direction: "asc" }]),
+                ),
+              S.listItem()
+                .title("By class")
+                .icon(CalendarIcon)
+                .child(async () => {
+                  const years = await context
+                    .getClient({ apiVersion: "2025-09-01" })
+                    .fetch<number[]>(`array::unique(*[_type == "alumnus" && defined(classYear)].classYear) | order(@ desc)`);
+                  return S.list()
+                    .title("By class")
+                    .items(
+                      years.map((y) =>
+                        S.listItem()
+                          .id(`class-${y}`)
+                          .title(`Class of ${y}`)
+                          .child(
+                            S.documentList()
+                              .title(`Class of ${y}`)
+                              .schemaType("alumnus")
+                              .filter('_type == "alumnus" && classYear == $y')
+                              .params({ y })
+                              .initialValueTemplates([])
+                              .defaultOrdering([{ field: "name", direction: "asc" }]),
+                          ),
+                      ),
+                    );
+                }),
+              S.listItem()
+                .title("Missing info")
+                .icon(WarningOutlineIcon)
+                .child(
+                  S.documentList()
+                    .title("Missing photo, company or LinkedIn")
+                    .schemaType("alumnus")
+                    .filter('_type == "alumnus" && (!defined(photo) || !defined(company) || !defined(linkedin))')
+                    .initialValueTemplates([])
+                    .defaultOrdering([{ field: "classYear", direction: "desc" }]),
+                ),
+              S.divider(),
+              S.listItem()
+                .title("Members password")
+                .icon(LockIcon)
+                .child(S.document().schemaType("membersAccess").documentId("private.membersAccess").title("Members password")),
+            ]),
         ),
       S.documentTypeListItem("person").title("All People"),
       S.divider(),

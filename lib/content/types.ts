@@ -214,3 +214,44 @@ export type AlumniFirmGroup = {
   /** Rows of firm names, top tier first, each row A–Z. */
   tiers: string[][];
 };
+
+/** RUIF roles, most → least senior. Drives ordering in the alumni directory. */
+export const RUIF_ROLES = [
+  "President",
+  "Vice President",
+  "Senior Training Program Director",
+  "Junior Training Program Director",
+  "Other Board Member",
+  "Sector Director",
+  "Senior Analyst",
+  "Junior Analyst",
+] as const;
+
+export type RuifRole = (typeof RUIF_ROLES)[number];
+
+/** One entry in the members-only alumni directory. */
+export type Alumnus = {
+  id: string;
+  name: string;
+  classYear: number;
+  company?: string;
+  position?: string;
+  location?: string;
+  ruifRole?: string;
+  ruifSector?: string;
+  linkedin?: string;
+  /** Only present when the alumnus agreed to share it with members. */
+  email?: string;
+  photo?: ImageAsset;
+};
+
+/** Every firm known to the site (home-page firms and the rest), for the "By Company" view. */
+export type DirectoryFirm = { name: string; industry: AlumniIndustry; tier: number };
+
+/** Matches company spellings to Alumni Firms ("J.P. Morgan" = "JPMorgan" = "JP Morgan"). */
+export const normalizeFirm = (s: string) =>
+  s
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/\b(inc|llc|lp|plc|ltd|co|corp|corporation|company|group)\b\.?/g, "")
+    .replace(/[^a-z0-9]/g, "");

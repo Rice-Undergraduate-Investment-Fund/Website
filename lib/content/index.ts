@@ -11,6 +11,8 @@ import { client, urlFor } from "@/sanity/lib/client";
 import * as mock from "./data";
 import { ALUMNI_INDUSTRIES } from "./types";
 import type {
+  Alumnus,
+  DirectoryFirm,
   AlumniFirm,
   AlumniFirmGroup,
   Holding,
@@ -336,4 +338,67 @@ export async function getAlumniFirmGroups(): Promise<AlumniFirmGroup[]> {
     );
     return { key, label, tiers };
   }).filter((g) => g.tiers.length > 0);
+}
+
+// ---------------------------------------------------------------------------
+// Members-only: alumni directory + password
+//
+// Alumni records and the members password live in documents whose IDs contain
+// a dot ("alumni.…", "private.membersAccess"). Sanity never serves those to
+// anonymous requests, so they are read here, on the server, with a read token
+// (SANITY_API_READ_TOKEN, set in Netlify; never exposed to the browser).
+// ---------------------------------------------------------------------------
+
+const readToken = process.env.SANITY_API_READ_TOKEN;
+const privateClient = readToken ? client.withConfig({ token: readToken, useCdn: false }) : null;
+
+async function privateQuery<T>(groq: string): Promise<T> {
+  if (!privateClient) throw new Error("SANITY_API_READ_TOKEN is not set");
+  return privateClient.fetch<T>(groq, {}, { next: { revalidate: REVALIDATE, tags: ["sanity"] } });
+}
+
+/** True when the site can read members-only content from Sanity. */
+export async function membersAreaConfigured(): Promise<boolean> {
+  return !(await sanityEnabled()) || Boolean(privateClient);
+}
+
+/** The members password (Studio → Alumni Directory → Members password). */
+export async function getMembersPassword(): Promise<string | null> {
+  if (privateClient && (await sanityEnabled())) {
+    try {
+      const pw = await privateQuery<string | null>(`*[_id == "private.membersAccess"][0].password`);
+      if (pw) return pw;
+    } catch (err) {
+      console.warn("[members] could not read password:", (err as Error).message);
+    }
+  }
+  // Fallback for local development only (never commit a real password).
+  return process.env.MEMBERS_PASSWORD || null;
+}
+
+type RawAlumnus = Omit<Alumnus, "photo" | "email"> & { photo?: RawImage; email?: string; shareEmail?: boolean };
+
+export async function getAlumniDirectory(): Promise<Alumnus[]> {
+  if (!(await sanityEnabled())) return mock.sampleAlumni;
+  if (!privateClient) return [];
+  const rows = await privateQuery<RawAlumnus[]>(
+    `*[_type == "alumnus" && _id in path("alumni.**") && defined(name) && defined(classYear)]{
+      "id": _id, name, classYear, company, position, location, ruifRole, ruifSector, linkedin, email, shareEmail,
+      photo ${IMG}
+    }`,
+  );
+  return rows.map(({ shareEmail, email, photo, ...a }) => ({
+    ...a,
+    email: shareEmail && email ? email : undefined,
+    photo: toImage(photo ?? undefined, a.name),
+  }));
+}
+
+/** All Alumni Firms (including ones not shown on the home page). */
+export async function getDirectoryFirms(): Promise<DirectoryFirm[]> {
+  if (!(await sanityEnabled())) return mock.alumniFirms;
+  const rows = await query<DirectoryFirm[]>(
+    `*[_type == "alumniFirm" && defined(name) && defined(industry)]{ name, industry, "tier": coalesce(tier, 1) }`,
+  );
+  return rows.length ? rows : mock.alumniFirms;
 }
