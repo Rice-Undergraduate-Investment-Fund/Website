@@ -76,7 +76,7 @@ export default async function TrainingPage() {
                 key={i}
                 className={cx("grid gap-4 lg:grid-cols-2", i % 2 === 1 && "lg:[&>*:first-child]:order-2")}
               >
-                <ol className="grid gap-4">
+                <ol className={cx("grid gap-4", !band.photo && "lg:col-span-2 lg:grid-cols-2")}>
                   {band.sessions.map((s) => (
                     <li key={s.number} className="flex gap-6 bg-white p-7 sm:p-9">
                       <span className="font-serif text-4xl leading-none text-rice-blue/25 tabular-nums">

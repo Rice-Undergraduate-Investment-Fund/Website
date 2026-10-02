@@ -74,7 +74,7 @@ async function localSitePhotos(): Promise<Record<string, unknown>> {
   if (!existsSync(dir)) return {};
   const out: Record<string, unknown> = {};
   for (const f of readdirSync(dir)) {
-    const m = f.match(/^([A-Za-z]+)\.(jpe?g|png)$/);
+    const m = f.match(/^([A-Za-z][A-Za-z0-9]*)\.(jpe?g|png)$/);
     if (!m) continue;
     out[m[1]] = await photo({
       src: `seed-assets/site/${f}`,

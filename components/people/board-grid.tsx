@@ -108,10 +108,8 @@ export function BoardGrid({ people }: { people: Person[] }) {
                   <h2 id="board-profile-name" className="mt-3 text-3xl leading-tight text-ink sm:text-4xl">
                     {person.name}
                   </h2>
-                  <span aria-hidden className="mt-6 block h-px w-12 bg-rice-blue" />
-                  {person.bio && <p className="mt-6 leading-relaxed text-slate text-pretty">{person.bio}</p>}
                   {(person.linkedin || person.email) && (
-                    <div className="mt-8 flex flex-wrap gap-3">
+                    <div className="mt-5 flex flex-wrap gap-3">
                       {person.linkedin && (
                         <a
                           href={person.linkedin}
@@ -139,6 +137,8 @@ export function BoardGrid({ people }: { people: Person[] }) {
                       )}
                     </div>
                   )}
+                  <span aria-hidden className="mt-7 block h-px w-12 bg-rice-blue" />
+                  {person.bio && <p className="mt-6 leading-relaxed text-slate text-pretty">{person.bio}</p>}
                 </div>
               </div>
             </div>

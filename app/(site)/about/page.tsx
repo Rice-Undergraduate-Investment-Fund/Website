@@ -101,7 +101,6 @@ export default async function AboutPage() {
           <SectionHeading
             eyebrow="How We Operate"
             title="From training to portfolio decisions"
-            intro="Every member follows the same path, from the Training Program to managing real capital."
           />
           <div className="mt-16">
             <ProcessSteps steps={s.operatingModel} />

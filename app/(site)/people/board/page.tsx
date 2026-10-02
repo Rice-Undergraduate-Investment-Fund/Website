@@ -11,25 +11,26 @@ export default async function BoardPage() {
 
   return (
     <>
-      <section className="bg-rice-blue text-white">
-        <Container className="grid gap-12 py-20 sm:py-24 lg:grid-cols-[1fr_1.1fr] lg:items-center">
-          <div>
+      {/* Header: text on Rice Blue, group photo full-bleed on the right (same height as the other page banners). */}
+      <section className="bg-rice-blue text-white lg:grid lg:min-h-[max(560px,72svh)] lg:grid-cols-2">
+        <div className="flex items-end">
+          <Container className="pt-32 pb-14 sm:pb-20 lg:mr-0 lg:max-w-[40rem] lg:pr-12">
             <Eyebrow light>People</Eyebrow>
-            <h1 className="mt-5 text-4xl leading-[1.1] sm:text-5xl lg:text-6xl">The Board</h1>
-            <p className="mt-6 max-w-lg text-lg leading-relaxed text-white/80">
+            <h1 className="mt-5 text-4xl leading-[1.08] sm:text-5xl lg:text-6xl">The Board</h1>
+            <p className="mt-6 max-w-lg text-lg leading-relaxed text-white/85 text-pretty">
               RUIF&apos;s executive leadership for the 2026–27 academic year oversees the fund, the
-              Training Program and the sector teams.
+              Training Program and the sectors.
             </p>
-          </div>
-          <div className="relative aspect-[3/2] overflow-hidden">
-            <CoverImage image={s.photos.boardGroup} priority sizes="(min-width: 1024px) 50vw, 100vw" />
-          </div>
-        </Container>
+          </Container>
+        </div>
+        <div className="relative aspect-[4/3] sm:aspect-[16/10] lg:aspect-auto">
+          <CoverImage image={s.photos.boardGroup} priority sizes="(min-width: 1024px) 50vw, 100vw" />
+        </div>
       </section>
 
       <Section>
         <Container>
-          <SectionHeading eyebrow="2026–27" title="Executive Board" intro="Select a member to read their bio and get in touch." />
+          <SectionHeading eyebrow="2026–27" title="Executive Board" />
           <BoardGrid people={board} />
         </Container>
       </Section>

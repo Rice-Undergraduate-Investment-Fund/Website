@@ -403,7 +403,7 @@ export const letters: Letter[] = [
 export const trainingProgram: TrainingProgram = {
   semesterLabel: "Spring 2027", // placeholder
   applicationsOpen: false, // drives the Apply buttons (greyed out while closed)
-  closedMessage: "Application for the Spring 2027 Training Program will Open in Late Fall",
+  closedMessage: "Applications for the Spring 2027 Training Program will Open in Late Fall",
   closedHeadline: "Fall 2026 applications are closed.",
   closedNote: "Check back in December for Spring 2027 applications.",
   openDate: "Closed",
@@ -439,7 +439,7 @@ export const timeline: TimelineEvent[] = [
     year: "2021",
     title: "Rice New Energy Fund",
     description:
-      "Rice New Energy Fund (RNEF) is launched, with a mandate to invest in the energy transition and alternative energy sources.",
+      "Rice New Energy Fund (RNEF) is launched, with a mandate to invest in energy transition projects and alternative energy sources.",
     linkText: "Rice New Energy Fund",
     linkUrl: "https://www.ricenewenergy.com/about-us",
   },
@@ -460,6 +460,7 @@ export const photoFocus: Record<string, string> = {
   portfolioHero: "50% 40%",
   sectorsHero: "50% 48%",
   homeFeature: "50% 62%",
+  boardGroup: "50% 62%",
   aboutMission: "35% 40%",
   aboutFund: "50% 35%",
   aboutHistory: "70% 40%",
@@ -500,4 +501,5 @@ export const photoAlt: Record<string, string> = {
   aboutFund: "RUIF members at a general club meeting",
   aboutHistory: "RUIF members presenting at a general club meeting",
   homeFeature: "The 2026–27 RUIF Board",
+  boardGroup: "The 2026–27 RUIF Board",
 };

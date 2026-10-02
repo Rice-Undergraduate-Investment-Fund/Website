@@ -64,8 +64,8 @@ export function AlumniFirms({ groups }: { groups: AlumniFirmGroup[] }) {
 }
 
 /**
- * Firm names as wordmarks, centered. Rows (tiers) are split by hairlines and step down
- * slightly in size, so the hierarchy reads without labels.
+ * Firm names as wordmarks, centered, all the same size. Rows (tiers) are split by
+ * hairlines, so the hierarchy reads without labels.
  */
 function Tiers({ tiers }: { tiers: string[][] }) {
   return (
@@ -75,14 +75,7 @@ function Tiers({ tiers }: { tiers: string[][] }) {
           {row.map((name) => (
             <li
               key={name}
-              className={cx(
-                "font-serif whitespace-nowrap",
-                r === 0
-                  ? "text-xl text-rice-blue sm:text-[1.7rem]"
-                  : r === 1
-                    ? "text-lg text-rice-blue sm:text-2xl"
-                    : "text-lg text-slate sm:text-xl",
-              )}
+              className="font-serif text-lg whitespace-nowrap text-rice-blue sm:text-2xl"
             >
               {name}
             </li>
