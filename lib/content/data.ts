@@ -420,7 +420,7 @@ export const timeline: TimelineEvent[] = [
 export const photoFocus: Record<string, string> = {
   homeHero: "50% 50%",
   trainingHero: "50% 40%",
-  trainingCurriculum1: "70% 50%",
+  trainingCurriculum1: "30% 40%",
   trainingCurriculum2: "50% 60%",
   trainingCurriculum3: "50% 75%",
   aboutHero: "50% 50%",
@@ -456,8 +456,8 @@ export const alumniFirms: AlumniFirm[] = [
 /** Alt text (screen readers / search) for page photos in seed-assets/site/. */
 export const photoAlt: Record<string, string> = {
   homeHero: "McNair Hall, home of Rice Business, at Rice University",
-  trainingHero: "A Training Director helping a student during a Training Program session",
-  trainingCurriculum1: "Two Training Program students at a session",
+  trainingHero: "Two Training Program students at a session",
+  trainingCurriculum1: "A Training Director helping a student during a Training Program session",
   trainingCurriculum2: "A Training Program session in progress",
   trainingCurriculum3: "Two students working through a Training Program exercise",
   aboutHero: "The skylit atrium of Virani Hall at Rice Business",
