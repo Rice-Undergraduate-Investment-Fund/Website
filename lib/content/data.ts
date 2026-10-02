@@ -416,7 +416,8 @@ export const timeline: TimelineEvent[] = [
  * (used by `npm run seed:about` / the settings seed). Editors can change them in the Studio.
  */
 export const photoFocus: Record<string, string> = {
-  aboutHero: "50% 50%",
+  aboutHero: "50% 55%",
+  homeFeature: "50% 62%",
   aboutMission: "35% 40%",
   aboutFund: "50% 35%",
   aboutHistory: "70% 40%",
@@ -434,11 +435,20 @@ export const alumniFirms: AlumniFirm[] = [
   ...["Centerview Partners", "Evercore", "Lazard", "Moelis & Company", "Perella Weinberg Partners"]
     .map((name) => ({ name, industry: "ib" as const, tier: 2 })),
   // Investment Banking: middle market / specialists
-  ...["Guggenheim Securities", "RBC Capital Markets", "TPH&Co."]
+  ...["Guggenheim Securities", "Piper Sandler", "RBC Capital Markets", "TPH&Co."]
     .map((name) => ({ name, industry: "ib" as const, tier: 3 })),
   // Private Equity
-  ...["Bain Capital", "BlackRock", "Blackstone"].map((name) => ({ name, industry: "pe" as const, tier: 1 })),
-  ...["Sixth Street", "Vista Equity Partners"].map((name) => ({ name, industry: "pe" as const, tier: 2 })),
+  ...["Bain Capital", "BlackRock", "Blackstone", "Sixth Street", "Vista Equity Partners"]
+    .map((name) => ({ name, industry: "pe" as const, tier: 1 })),
   // Hedge Funds & Trading
   ...["Citadel", "Macquarie Group", "Point72", "Sixth Street"].map((name) => ({ name, industry: "hf" as const, tier: 1 })),
 ];
+
+/** Alt text (screen readers / search) for page photos in seed-assets/site/. */
+export const photoAlt: Record<string, string> = {
+  aboutHero: "Students walking past the Virani Business School building at Rice University",
+  aboutMission: "A RUIF general club meeting",
+  aboutFund: "RUIF members at a general club meeting",
+  aboutHistory: "RUIF members presenting at a general club meeting",
+  homeFeature: "The 2026–27 RUIF Board",
+};

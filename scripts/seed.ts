@@ -78,7 +78,7 @@ async function localSitePhotos(): Promise<Record<string, unknown>> {
     if (!m) continue;
     out[m[1]] = await photo({
       src: `seed-assets/site/${f}`,
-      alt: "",
+      alt: data.photoAlt[m[1]] ?? "",
       width: 2400,
       height: 1600,
       position: data.photoFocus[m[1]] ?? "50% 50%",
@@ -235,7 +235,12 @@ async function main() {
     await client
       .patch("siteSettings")
       .setIfMissing({ stats: {} })
-      .set({ "stats.alumni": { _type: "stat", ...s.stats.alumni } })
+      .setIfMissing({ photos: {} })
+      .set({
+        "stats.alumni": { _type: "stat", ...s.stats.alumni },
+        // Any page photos in seed-assets/site/ (homeFeature, aboutHero, …)
+        ...Object.fromEntries(Object.entries(await localSitePhotos()).map(([k, v]) => [`photos.${k}`, v])),
+      })
       .commit();
     const tp = data.trainingProgram;
     await client

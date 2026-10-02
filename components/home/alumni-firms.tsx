@@ -5,9 +5,9 @@ import type { AlumniFirmGroup } from "@/lib/content/types";
 import { cx } from "@/components/ui/layout";
 
 /**
- * "Where RUIF members go": one tab per industry; inside a tab, firms sit in
- * unlabeled rows by tier (e.g. bulge brackets, then elite boutiques, then
- * middle market), each row A–Z.
+ * "Where RUIF members go": one tab per industry; inside a tab, firms appear as
+ * wordmarks in unlabeled rows by tier (e.g. bulge brackets, then elite
+ * boutiques, then middle market), each row A–Z.
  */
 export function AlumniFirms({ groups }: { groups: AlumniFirmGroup[] }) {
   const [active, setActive] = useState(0);
@@ -54,21 +54,40 @@ export function AlumniFirms({ groups }: { groups: AlumniFirmGroup[] }) {
           role="tabpanel"
           aria-labelledby={`${id}-tab-${i}`}
           hidden={i !== active}
-          className="mt-10 space-y-8 sm:space-y-10"
+          className="mt-10"
         >
-          {g.tiers.map((row, r) => (
-            <ul key={r} className="flex flex-wrap justify-center gap-px">
-              {row.map((name) => (
-                <li
-                  key={name}
-                  className="flex h-24 w-[calc(50%-1px)] items-center justify-center bg-white px-3 text-center font-serif text-base text-slate shadow-[0_0_0_1px_var(--color-line)] sm:h-28 sm:w-[calc(33.333%-1px)] sm:text-xl lg:w-[calc(20%-1px)]"
-                >
-                  {name}
-                </li>
-              ))}
-            </ul>
-          ))}
+          <Tiers tiers={g.tiers} />
         </div>
+      ))}
+    </div>
+  );
+}
+
+/**
+ * Firm names as wordmarks, centered. Rows (tiers) are split by hairlines and step down
+ * slightly in size, so the hierarchy reads without labels.
+ */
+function Tiers({ tiers }: { tiers: string[][] }) {
+  return (
+    <div className="divide-y divide-line">
+      {tiers.map((row, r) => (
+        <ul key={r} className="flex flex-wrap justify-center gap-x-10 gap-y-4 py-8 first:pt-4 sm:gap-x-16 sm:gap-y-5">
+          {row.map((name) => (
+            <li
+              key={name}
+              className={cx(
+                "font-serif whitespace-nowrap",
+                r === 0
+                  ? "text-xl text-rice-blue sm:text-[1.7rem]"
+                  : r === 1
+                    ? "text-lg text-rice-blue sm:text-2xl"
+                    : "text-lg text-slate sm:text-xl",
+              )}
+            >
+              {name}
+            </li>
+          ))}
+        </ul>
       ))}
     </div>
   );
