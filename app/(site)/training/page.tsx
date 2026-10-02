@@ -68,7 +68,7 @@ export default async function TrainingPage() {
           <SectionHeading
             eyebrow="Curriculum"
             title="Seven sessions, one complete foundation"
-            intro="Each session builds on the last, ending with a pitch of your own."
+            intro="Upon program completion, students are given a chance to be placed in an RUIF sector for the following semester."
           />
           <div className="mt-14 space-y-4">
             {curriculum.map((band, i) => (

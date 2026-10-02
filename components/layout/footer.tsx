@@ -9,14 +9,14 @@ export function Footer({ orgName }: { orgName: string }) {
     <footer className="mt-auto bg-rice-blue-deep text-white">
       <Container className="grid gap-12 py-16 sm:py-20 md:grid-cols-[1.4fr_1fr]">
         <div>
-          <Link href="/" className="inline-flex items-center gap-4">
-            <span className="flex size-14 items-center justify-center bg-white">
-              <Image src="/images/logo.png" alt="" width={48} height={48} className="size-12" />
-            </span>
-            <span>
-              <span className="block font-serif text-2xl">Rice Finance</span>
-              <span className="block text-xs tracking-[0.18em] text-white/70 uppercase">{orgName}</span>
-            </span>
+          <Link href="/" aria-label="Rice Finance home" className="inline-block">
+            <Image
+              src="/images/logo-full-white.png"
+              alt="Rice Finance"
+              width={900}
+              height={439}
+              className="h-auto w-56 sm:w-64"
+            />
           </Link>
           <p className="mt-6 max-w-sm text-sm leading-relaxed text-white/70">
             Rice University&apos;s student-run investment fund, established in 2017.
