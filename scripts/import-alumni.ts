@@ -17,7 +17,8 @@
  * Needs SANITY_API_WRITE_TOKEN in .env.local.
  */
 import "./env";
-import { createReadStream, existsSync, readdirSync } from "node:fs";
+import { existsSync, readdirSync } from "node:fs";
+import { readFile } from "node:fs/promises";
 import { basename, extname, join, resolve } from "node:path";
 import { createClient } from "@sanity/client";
 import readXlsxFile, { readSheetNames } from "read-excel-file/node";
@@ -174,35 +175,82 @@ async function main() {
     return;
   }
 
-  // Keep photos already in Sanity for people without a new file.
+  // 1) Save everyone first (keeping photos already in Sanity), so the data is live
+  //    even if a photo upload fails later.
   const existing = new Map(
     (await client.fetch<{ _id: string; photo?: unknown }[]>(`*[_id in $ids]{ _id, photo }`, { ids: [...byId.keys()] })).map(
       (d) => [d._id, d.photo],
     ),
   );
-  let uploaded = 0;
   for (const [id, doc] of byId) {
-    const file = photoFor.get(id);
-    if (file) {
-      const asset = await client.assets.upload("image", createReadStream(file), { filename: basename(file) });
-      doc.photo = { _type: "photo", asset: { _type: "reference", _ref: asset._id }, alt: String(doc.name) };
-      uploaded++;
-    } else if (existing.get(id)) {
-      doc.photo = existing.get(id);
-    }
+    if (existing.get(id)) doc.photo = existing.get(id);
     for (const k of Object.keys(doc)) if (doc[k] === undefined) delete doc[k];
   }
-
   const docs = [...firmDocs, ...byId.values()];
+  process.stdout.write(`\nSaving ${byId.size} alumni and ${firmDocs.length} firms… `);
   for (let i = 0; i < docs.length; i += 50) {
     const tx = client.transaction();
     docs.slice(i, i + 50).forEach((d) => tx.createOrReplace(d as { _id: string; _type: string }));
     await tx.commit();
   }
+  console.log("done.");
+
+  // 2) Photos, one at a time with a time limit. Files that live only in iCloud
+  //    (not downloaded to this Mac) can stall; those are skipped and listed.
+  let uploaded = 0;
+  const failed: string[] = [];
+  const entries = [...photoFor.entries()];
+  for (const [i, [id, file]] of entries.entries()) {
+    const name = String(byId.get(id)?.name);
+    process.stdout.write(`Photo ${i + 1}/${entries.length}: ${basename(file)} … `);
+    try {
+      const data = await withTimeout(readFile(file), 45_000, "reading the file took too long");
+      const asset = await withTimeout(
+        client.assets.upload("image", data, { filename: basename(file) }),
+        90_000,
+        "upload took too long",
+      );
+      await client
+        .patch(id)
+        .set({ photo: { _type: "photo", asset: { _type: "reference", _ref: asset._id }, alt: name } })
+        .commit();
+      uploaded++;
+      console.log("✓");
+    } catch (err) {
+      failed.push(`${basename(file)} (${(err as Error).message})`);
+      console.log("skipped");
+    }
+  }
+
   console.log(`\n✓ Imported ${byId.size} alumni (${uploaded} photos uploaded) and ${firmDocs.length} firms.`);
+  if (failed.length) {
+    console.log("\nPhotos skipped (everything else was saved):");
+    failed.forEach((f) => console.log(`  - ${f}`));
+    console.log(
+      'If a photo is stored only in iCloud, right-click it in Finder → "Download Now" (or the Alumni folder → "Keep Downloaded"), then run the import again.',
+    );
+  }
 }
 
-main().catch((err) => {
+function withTimeout<T>(p: Promise<T>, ms: number, message: string): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const t = setTimeout(() => reject(new Error(message)), ms);
+    p.then(
+      (v) => {
+        clearTimeout(t);
+        resolve(v);
+      },
+      (e) => {
+        clearTimeout(t);
+        reject(e);
+      },
+    );
+  });
+}
+
+main()
+  .then(() => process.exit(0)) // don't wait on any stuck file reads
+  .catch((err) => {
   console.error("✗ Import failed:", err.message ?? err);
   process.exit(1);
 });
