@@ -139,7 +139,13 @@ export type TimelineEvent = {
   linkUrl?: string;
 };
 
-export type ContactEntry = { label: string; email?: string };
+export type ContactEntry = {
+  label: string;
+  email?: string;
+  /** Optional link (website, LinkedIn…) and the text to show for it. */
+  url?: string;
+  urlLabel?: string;
+};
 
 export type Stat = { value: string; label: string };
 
@@ -159,6 +165,8 @@ export type SiteSettings = {
   investmentProcess: Step[];
   alumniEmployers: string[];
   contacts: ContactEntry[];
+  /** Mailing address, one line per row. */
+  address?: string;
   socials: { label: string; url: string }[];
   photos: PagePhotos;
 };

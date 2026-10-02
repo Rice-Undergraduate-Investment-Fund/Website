@@ -102,10 +102,20 @@ export const siteSettings: SiteSettings = {
     "Point72",
   ],
   contacts: [
-    { label: "General Inquiries" }, // placeholder: email to be added
-    { label: "Training Program" }, // placeholder
-    { label: "President" }, // placeholder
+    { label: "General Inquiries", email: "ricefinancegroup@gmail.com" },
+    {
+      label: "LinkedIn",
+      url: "https://www.linkedin.com/company/rice-undergraduate-investment-fund/",
+      urlLabel: "Rice Undergraduate Investment Fund",
+    },
+    {
+      label: "Rice New Energy Fund",
+      url: "https://www.ricenewenergy.com",
+      urlLabel: "ricenewenergy.com",
+      email: "ricenewenergyfund@gmail.com",
+    },
   ],
+  address: "6100 Main St\nHouston, TX 77005",
   socials: [],
   photos: {
     homeHero: { src: "/images/board-2026-wide.jpg", alt: "The 2026–27 RUIF Board", width: 2400, height: 1500, position: "50% 18%" },
@@ -313,9 +323,8 @@ export const portfolio: Portfolio = {
   aum: 70000, // letter: "approximately $70,000 currently under management"
   returnSinceInception: 1.305, // performance table, MAX: 130.5%
   inceptionYear: 2017,
-  asOf: "Fall 2026",
+  asOf: "August 2026", // figures: Fall 2026 letter; allocation: holdings report of Aug 26, 2026
   isSample: false,
-  note: "Figures from the Fall 2026 letter. Allocation from the holdings report of August 26, 2026.",
   benchmarkName: "VTI",
   beta: 1.11, // 5-year beta vs VTI
   performance: [
@@ -354,14 +363,15 @@ const bySector: Record<string, H[]> = {
 
 /** Featured on the Portfolio page (highlighted in the Fall 2026 letter), in display order. */
 const featured: Record<string, string | undefined> = {
-  NVDA: "≈ +4,052% since purchase: the fund’s largest gain",
-  MSFT: "Triple-digit return since purchase",
-  NET: "Triple-digit return since purchase",
-  GOOG: "Core long-term holding: advertising, cloud and AI",
-  META: "Core long-term holding: advertising and AI",
-  LNG: "Exposure to growing U.S. LNG exports",
-  DVN: "U.S. Lower 48 shale producer",
-  WMT: "Resilient U.S. consumer franchise",
+  // Optional one-liner per card (e.g. "+4,052% since purchase"); left empty for now.
+  NVDA: undefined,
+  MSFT: undefined,
+  NET: undefined,
+  GOOG: undefined,
+  META: undefined,
+  LNG: undefined,
+  DVN: undefined,
+  WMT: undefined,
 };
 const featuredOrder = Object.keys(featured);
 

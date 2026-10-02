@@ -30,10 +30,14 @@ export default async function PortfolioPage() {
 
   return (
     <>
-      <PhotoHero image={s.photos.portfolioHero} eyebrow="Our Portfolio" title="A real portfolio, managed by students">
+      <PhotoHero
+        image={s.photos.portfolioHero}
+        eyebrow="Our Portfolio"
+        title="Long-Only Value Investing, Demonstrated Through Performance"
+      >
         <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/85 text-pretty">
-          RUIF manages a portion of Rice University&apos;s endowment. Every position is researched, pitched and approved
-          collectively by members.
+          Deploying a portion of Rice University&apos;s endowment, we pursue a fundamental, long-only investment
+          strategy focused on identifying undervalued businesses with strong long-term growth potential.
         </p>
       </PhotoHero>
 
@@ -100,7 +104,6 @@ export default async function PortfolioPage() {
             <SectionHeading
               eyebrow="Allocation"
               title="Portfolio allocation"
-              intro={`Diversified across ${s.stats.sectors.value} sector teams, each responsible for its own positions.`}
             />
             <div className="bg-white p-4 sm:p-8">
               <AllocationChart allocations={p.allocations} />

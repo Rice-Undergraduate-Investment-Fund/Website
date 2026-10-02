@@ -113,7 +113,7 @@ export default async function HomePage() {
           </div>
           <div className="flex items-center px-5 py-16 sm:px-12 sm:py-20 lg:px-16 xl:px-24">
             <div className="max-w-lg">
-              <Eyebrow light>{training.semesterLabel} Recruiting</Eyebrow>
+              <Eyebrow light>{training.semesterLabel}</Eyebrow>
               <h2 className="mt-5 text-3xl leading-tight sm:text-4xl lg:text-5xl text-balance">
                 {training.applicationsOpen || !training.closedMessage
                   ? "Learn finance. Apply it. Join the fund."

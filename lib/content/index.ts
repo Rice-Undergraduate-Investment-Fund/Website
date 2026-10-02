@@ -129,6 +129,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     investmentProcess: arr(s.investmentProcess),
     alumniEmployers: arr(s.alumniEmployers),
     contacts: arr(s.contacts),
+    address: s.address || m.address,
     socials: arr(s.socials),
     photos: {
       homeHero: toImage(s.photos?.homeHero),

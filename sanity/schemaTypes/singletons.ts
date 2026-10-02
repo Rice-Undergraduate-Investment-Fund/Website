@@ -102,10 +102,19 @@ export const siteSettings = defineType({
           fields: [
             defineField({ name: "label", type: "string", validation: (r) => r.required() }),
             defineField({ name: "email", type: "email" }),
+            defineField({ name: "url", title: "Link", type: "url", description: "Optional, e.g. a LinkedIn page or website" }),
+            defineField({ name: "urlLabel", title: "Link text", type: "string", description: "Shown instead of the raw link" }),
           ],
           preview: { select: { title: "label", subtitle: "email" } },
         }),
       ],
+    }),
+    defineField({
+      name: "address",
+      type: "text",
+      rows: 3,
+      group: "contact",
+      description: "Shown on the Contact page. One line per row.",
     }),
     defineField({
       name: "socials",

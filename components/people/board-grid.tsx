@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { Person } from "@/lib/content/types";
 import { PersonPhoto } from "@/components/people/person";
+import { cx } from "@/components/ui/layout";
 
 /**
  * Executive Board: portrait cards; clicking one opens a profile panel
@@ -26,9 +27,18 @@ export function BoardGrid({ people }: { people: Person[] }) {
 
   return (
     <>
-      <ul className="mt-14 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-3 lg:grid-cols-5">
+      {/* 2 / 3 formation: President + VP on top, Training Directors below. */}
+      <ul className="mx-auto mt-14 grid max-w-5xl grid-cols-2 gap-x-4 gap-y-12 sm:gap-x-8 lg:grid-cols-6 lg:gap-x-10 lg:gap-y-16">
         {people.map((p, i) => (
-          <li key={p.id}>
+          <li
+            key={p.id}
+            className={cx(
+              "lg:col-span-2",
+              i === 0 && "lg:col-start-2",
+              // a lone last card on phones/tablets sits centered
+              people.length % 2 === 1 && i === people.length - 1 && "col-span-2 mx-auto w-[calc(50%-0.5rem)] sm:w-[calc(50%-1rem)] lg:mx-0 lg:w-auto",
+            )}
+          >
             <button
               type="button"
               onClick={() => setIndex(i)}
@@ -39,15 +49,15 @@ export function BoardGrid({ people }: { people: Person[] }) {
                 <PersonPhoto
                   person={p}
                   portrait
-                  sizes="(min-width: 1024px) 20vw, (min-width: 768px) 33vw, 50vw"
+                  sizes="(min-width: 1024px) 320px, 50vw"
                   className="transition-transform duration-500 ease-out-soft group-hover:scale-[1.03]"
                 />
                 <span className="absolute inset-x-0 bottom-0 flex translate-y-full items-center justify-between bg-rice-blue/90 px-4 py-2.5 text-xs font-semibold tracking-wide text-white transition-transform duration-300 ease-out-soft group-hover:translate-y-0 group-focus-visible:translate-y-0">
                   View profile <span aria-hidden>→</span>
                 </span>
               </div>
-              <p className="mt-4 font-serif text-lg leading-snug text-ink group-hover:text-rice-blue">{p.name}</p>
-              {p.boardPosition && <p className="mt-1 text-sm leading-snug text-muted">{p.boardPosition}</p>}
+              <p className="mt-5 font-serif text-xl leading-snug text-ink group-hover:text-rice-blue sm:text-2xl">{p.name}</p>
+              {p.boardPosition && <p className="mt-1.5 text-sm leading-snug text-muted sm:text-base">{p.boardPosition}</p>}
             </button>
           </li>
         ))}

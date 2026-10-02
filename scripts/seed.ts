@@ -115,6 +115,7 @@ async function main() {
     operatingModel: steps(s.operatingModel),
     investmentProcess: steps(s.investmentProcess),
     contacts: s.contacts.map((c) => clean({ _type: "contact", _key: key(), ...c })),
+    address: s.address,
     socials: s.socials.map((c) => ({ _type: "social", _key: key(), ...c })),
     photos: clean({
       homeHero: await photo(s.photos.homeHero),
@@ -238,6 +239,8 @@ async function main() {
       .setIfMissing({ photos: {} })
       .set({
         "stats.alumni": { _type: "stat", ...s.stats.alumni },
+        contacts: s.contacts.map((c) => clean({ _type: "contact", _key: key(), ...c })),
+        address: s.address ?? "",
         // Any page photos in seed-assets/site/ (homeFeature, aboutHero, …)
         ...Object.fromEntries(Object.entries(await localSitePhotos()).map(([k, v]) => [`photos.${k}`, v])),
       })

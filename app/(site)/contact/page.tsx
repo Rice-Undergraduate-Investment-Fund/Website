@@ -21,17 +21,37 @@ export default async function ContactPage() {
             {s.contacts.map((c) => (
               <div key={c.label} className="border-t border-line pt-5">
                 <dt className="text-xs font-semibold tracking-[0.2em] text-rice-blue uppercase">{c.label}</dt>
-                <dd className="mt-2 font-serif text-xl">
-                  {c.email ? (
+                {c.url && (
+                  <dd className="mt-2 font-serif text-xl">
+                    <a
+                      href={c.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group inline-flex items-center gap-2 text-ink underline-offset-4 hover:underline"
+                    >
+                      {c.urlLabel || c.url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "")}
+                      <span aria-hidden className="text-base text-rice-blue">↗</span>
+                    </a>
+                  </dd>
+                )}
+                {c.email && (
+                  <dd className={c.url ? "mt-1 text-slate" : "mt-2 font-serif text-xl"}>
                     <a href={`mailto:${c.email}`} className="text-ink underline-offset-4 hover:underline">
                       {c.email}
                     </a>
-                  ) : (
-                    <span className="text-rice-gray">Email to be added</span>
-                  )}
-                </dd>
+                  </dd>
+                )}
+                {!c.url && !c.email && <dd className="mt-2 font-serif text-xl text-rice-gray">Email to be added</dd>}
               </div>
             ))}
+            {s.address && (
+              <div className="border-t border-line pt-5">
+                <dt className="text-xs font-semibold tracking-[0.2em] text-rice-blue uppercase">Address</dt>
+                <dd className="mt-2 font-serif text-xl leading-snug whitespace-pre-line text-ink">
+                  <address className="not-italic">{s.address}</address>
+                </dd>
+              </div>
+            )}
           </dl>
           <div>
             <h2 className="text-2xl text-rice-blue sm:text-3xl">Send us a message</h2>
