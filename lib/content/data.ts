@@ -91,8 +91,18 @@ export const siteSettings: SiteSettings = {
     { title: "Research", description: "Sector teams build a thesis on a company." },
     { title: "Sector Discussion", description: "Ideas are debated within the sector." },
     { title: "Stock Pitch", description: "The strongest ideas are developed into a full pitch." },
-    { title: "Pitch Day", description: "Pitches are presented to the Board and investment committee." },
-    { title: "Portfolio Allocation", description: "Approved positions are sized and added to the portfolio." },
+    // 04–06 match "How We Operate" on the About page.
+    { title: "Pitch Day 1", description: "Members present stock ideas to the RUIF Board and investment professionals." },
+    {
+      title: "Pitch Day 2",
+      description:
+        "Selected sectors present their stock analyses to a panel of Virani Business School professors and RUIF alumni working in the industry.",
+    },
+    {
+      title: "Portfolio Decisions",
+      description:
+        "Stock recommendations undergo a final review by the Board and Portfolio Review team, with approved investments added to the portfolio.",
+    },
   ],
   alumniEmployers: [
     "Morgan Stanley",

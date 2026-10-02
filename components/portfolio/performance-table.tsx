@@ -19,15 +19,15 @@ export function PerformanceTable({
 }) {
   if (!rows.length) return null;
   return (
-    <figure>
+    <figure className="min-w-0">
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[28rem] text-left">
+        <table className="w-full text-left">
           <thead>
-            <tr className="border-b-2 border-rice-blue text-xs font-semibold tracking-[0.15em] text-slate uppercase">
-              <th scope="col" className="py-3 pr-4 font-semibold">Period</th>
-              <th scope="col" className="px-4 py-3 text-right font-semibold">RUIF</th>
-              <th scope="col" className="px-4 py-3 text-right font-semibold">{benchmark}</th>
-              <th scope="col" className="py-3 pl-4 text-right font-semibold">Alpha</th>
+            <tr className="border-b-2 border-rice-blue text-[11px] font-semibold tracking-[0.12em] text-slate uppercase sm:text-xs sm:tracking-[0.15em]">
+              <th scope="col" className="py-3 pr-2 sm:pr-4 font-semibold">Period</th>
+              <th scope="col" className="px-2 py-3 sm:px-4 text-right font-semibold">RUIF</th>
+              <th scope="col" className="px-2 py-3 sm:px-4 text-right font-semibold">{benchmark}</th>
+              <th scope="col" className="py-3 pl-2 sm:pl-4 text-right font-semibold">Alpha</th>
             </tr>
           </thead>
           <tbody className="tabular-nums">
@@ -35,10 +35,10 @@ export function PerformanceTable({
               const alpha = r.fund - r.benchmark;
               return (
                 <tr key={r.period} className="border-b border-line">
-                  <th scope="row" className="py-4 pr-4 font-medium text-ink">{r.period}</th>
-                  <td className="px-4 py-4 text-right font-serif text-lg text-rice-blue">{fmtPct(r.fund)}</td>
-                  <td className="px-4 py-4 text-right text-slate">{fmtPct(r.benchmark)}</td>
-                  <td className={cx("py-4 pl-4 text-right font-semibold", alpha >= 0 ? "text-rice-blue" : "text-slate")}>
+                  <th scope="row" className="py-4 pr-2 text-sm font-medium text-ink sm:pr-4 sm:text-base">{r.period}</th>
+                  <td className="px-2 py-4 text-right font-serif text-base sm:px-4 sm:text-lg text-rice-blue">{fmtPct(r.fund)}</td>
+                  <td className="px-2 py-4 text-right text-sm text-slate sm:px-4 sm:text-base">{fmtPct(r.benchmark)}</td>
+                  <td className={cx("py-4 pl-2 text-right text-sm font-semibold sm:pl-4 sm:text-base", alpha >= 0 ? "text-rice-blue" : "text-slate")}>
                     {fmtPct(alpha)}
                   </td>
                 </tr>

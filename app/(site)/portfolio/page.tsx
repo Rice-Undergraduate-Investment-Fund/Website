@@ -64,7 +64,7 @@ export default async function PortfolioPage() {
             ]}
           />
           {p.performance.length > 0 && (
-            <div className="mt-20 grid gap-10 lg:grid-cols-[1fr_1.5fr] lg:gap-20">
+            <div className="mt-20 grid gap-10 lg:grid-cols-[1fr_1.5fr] lg:gap-20 [&>*]:min-w-0">
               <SectionHeading
                 eyebrow="Performance"
                 title={`Measured against ${p.benchmarkName}`}
@@ -80,7 +80,7 @@ export default async function PortfolioPage() {
       <Section tone="mist">
         <Container className="space-y-24">
           {letter && (
-            <div className="grid gap-12 lg:grid-cols-[1fr_2fr] lg:gap-16">
+            <div className="grid gap-12 lg:grid-cols-[1fr_2fr] lg:gap-16 [&>*]:min-w-0">
               <div>
                 <SectionHeading
                   eyebrow={`${letter.semester} Letter`}
@@ -100,7 +100,7 @@ export default async function PortfolioPage() {
             </div>
           )}
 
-          <div className="grid gap-12 lg:grid-cols-[1fr_2fr] lg:gap-16">
+          <div className="grid gap-12 lg:grid-cols-[1fr_2fr] lg:gap-16 [&>*]:min-w-0">
             <SectionHeading
               eyebrow="Allocation"
               title="Portfolio allocation"
@@ -129,15 +129,14 @@ export default async function PortfolioPage() {
 
           {holdingCount > 0 && (
             <div className="mt-20">
-              <div className="flex items-end justify-between gap-6 border-b border-line pb-5">
+              <div className="border-b border-line pb-5">
                 <h3 className="text-2xl text-rice-blue sm:text-3xl">All holdings</h3>
-                <p className="shrink-0 text-sm text-slate">{holdingCount} positions</p>
               </div>
               <div className="mt-10 grid gap-x-12 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
                 {bySector.map((g) => (
                   <div key={g.sector}>
                     <p className="text-xs font-semibold tracking-[0.2em] text-rice-blue uppercase">
-                      {g.sector} <span className="text-rice-gray">· {g.holdings.length}</span>
+                      {g.sector}
                     </p>
                     <ul className="mt-3 space-y-1.5 text-sm">
                       {g.holdings.map((h) => (

@@ -239,6 +239,7 @@ async function main() {
       .setIfMissing({ photos: {} })
       .set({
         "stats.alumni": { _type: "stat", ...s.stats.alumni },
+        investmentProcess: steps(s.investmentProcess),
         contacts: s.contacts.map((c) => clean({ _type: "contact", _key: key(), ...c })),
         address: s.address ?? "",
         // Any page photos in seed-assets/site/ (homeFeature, aboutHero, …)
