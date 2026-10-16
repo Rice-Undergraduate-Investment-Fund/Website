@@ -49,29 +49,6 @@ export function Section({
   );
 }
 
-export function Eyebrow({
-  children,
-  light = false,
-}: {
-  children: ReactNode;
-  light?: boolean;
-}) {
-  return (
-    <p
-      className={cx(
-        "flex items-center gap-3 text-xs font-semibold tracking-[0.2em] uppercase",
-        light ? "text-white/80" : "text-rice-blue",
-      )}
-    >
-      <span
-        aria-hidden
-        className={cx("h-px w-8", light ? "bg-white/60" : "bg-rice-blue")}
-      />
-      {children}
-    </p>
-  );
-}
-
 export function SectionHeading({
   title,
   intro,

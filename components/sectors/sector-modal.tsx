@@ -97,13 +97,9 @@ export function SectorModal({
               {/* Members */}
               {sector.members.length > 0 && (
                 <section className="mt-12" aria-label={`${sector.name} members`}>
-                  <div className="flex items-center gap-4">
-                    <span className="h-px flex-1 bg-line" />
-                    <p className="text-xs font-semibold tracking-[0.2em] text-slate uppercase">
-                      Members · {sector.members.length}
-                    </p>
-                    <span className="h-px flex-1 bg-line" />
-                  </div>
+                  <p className="text-center text-xs font-semibold tracking-[0.2em] text-slate uppercase">
+                    Members · {sector.members.length}
+                  </p>
                   <ul className="mt-8 grid grid-cols-2 gap-x-3 gap-y-6 min-[360px]:grid-cols-3 sm:gap-x-4 sm:gap-y-7">
                     {sector.members.map((m) => (
                       <li key={m.id}>

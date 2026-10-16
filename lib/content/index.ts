@@ -9,6 +9,7 @@ import "server-only";
 import { cache } from "react";
 import { client, urlFor } from "@/sanity/lib/client";
 import * as mock from "./data";
+import { firmLogo } from "./firm-logos";
 import { ALUMNI_INDUSTRIES } from "./types";
 import type {
   Alumnus,
@@ -330,13 +331,23 @@ export async function getAlumniFirmGroups(): Promise<AlumniFirmGroup[]> {
   return ALUMNI_INDUSTRIES.map(({ key, label }) => {
     const inIndustry = firms.filter((f) => f.industry === key);
     const tierNums = [...new Set(inIndustry.map((f) => f.tier))].sort((a, b) => a - b);
-    const tiers = tierNums.map((t) =>
-      inIndustry
+    const logos: AlumniFirmGroup["logos"] = {};
+    const tiers = tierNums.map((t) => {
+      const seen = new Set<string>();
+      return inIndustry
         .filter((f) => f.tier === t)
         .map((f) => f.name)
-        .sort((a, b) => a.localeCompare(b, "en", { sensitivity: "base" })),
-    );
-    return { key, label, tiers };
+        .sort((a, b) => a.localeCompare(b, "en", { sensitivity: "base" }))
+        .filter((name) => {
+          const logo = firmLogo(name);
+          if (!logo) return true;
+          if (seen.has(logo.src)) return false; // e.g. Sixth Street Growth shares Sixth Street's logo
+          seen.add(logo.src);
+          logos[name] = logo;
+          return true;
+        });
+    });
+    return { key, label, tiers, logos };
   }).filter((g) => g.tiers.length > 0);
 }
 

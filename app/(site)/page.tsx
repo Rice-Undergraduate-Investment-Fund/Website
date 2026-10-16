@@ -47,12 +47,9 @@ export default async function HomePage() {
       </PhotoHero>
 
       {/* Key stats */}
-      <section className="bg-rice-blue py-14 text-white sm:py-16">
+      <section className="pt-16 sm:pt-20">
         <Container>
-          <StatRow
-            light
-            stats={[s.stats.members, s.stats.sectors, s.stats.trainingStudents, s.stats.alumni]}
-          />
+          <StatRow stats={[s.stats.members, s.stats.sectors, s.stats.trainingStudents, s.stats.alumni]} />
         </Container>
       </section>
 

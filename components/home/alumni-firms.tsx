@@ -1,12 +1,12 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useId, useState, type CSSProperties } from "react";
 import type { AlumniFirmGroup } from "@/lib/content/types";
 import { cx } from "@/components/ui/layout";
 
 /**
  * "Where RUIF members go": one tab per industry; inside a tab, firms appear as
- * wordmarks in unlabeled rows by tier (e.g. bulge brackets, then elite
+ * logos (or names, where no logo is on file) in unlabeled rows by tier (e.g. bulge brackets, then elite
  * boutiques, then middle market), each row A–Z.
  */
 export function AlumniFirms({ groups }: { groups: AlumniFirmGroup[] }) {
@@ -56,7 +56,7 @@ export function AlumniFirms({ groups }: { groups: AlumniFirmGroup[] }) {
           hidden={i !== active}
           className="mt-10"
         >
-          <Tiers tiers={g.tiers} />
+          <Tiers tiers={g.tiers} logos={g.logos} />
         </div>
       ))}
     </div>
@@ -64,22 +64,42 @@ export function AlumniFirms({ groups }: { groups: AlumniFirmGroup[] }) {
 }
 
 /**
- * Firm names as wordmarks, centered, all the same size. Rows (tiers) are split by
- * hairlines, so the hierarchy reads without labels.
+ * Firm logos, centered and optically matched in size (wide wordmarks get less
+ * height than square marks). Rows (tiers) are split by hairlines, so the
+ * hierarchy reads without labels. Firms without a logo show their name.
  */
-function Tiers({ tiers }: { tiers: string[][] }) {
+function Tiers({ tiers, logos }: { tiers: string[][]; logos: AlumniFirmGroup["logos"] }) {
   return (
     <div className="divide-y divide-line">
       {tiers.map((row, r) => (
-        <ul key={r} className="flex flex-wrap justify-center gap-x-10 gap-y-4 py-8 first:pt-4 sm:gap-x-16 sm:gap-y-5">
-          {row.map((name) => (
-            <li
-              key={name}
-              className="font-serif text-lg whitespace-nowrap text-rice-blue sm:text-2xl"
-            >
-              {name}
-            </li>
-          ))}
+        <ul
+          key={r}
+          className="flex flex-wrap items-center justify-center gap-x-10 gap-y-8 py-10 first:pt-6 sm:gap-x-14 sm:gap-y-10"
+        >
+          {row.map((name) => {
+            const logo = logos[name];
+            if (!logo) {
+              return (
+                <li key={name} className="font-serif text-lg whitespace-nowrap text-rice-blue sm:text-2xl">
+                  {name}
+                </li>
+              );
+            }
+            // Same visual area for every logo, within sensible bounds.
+            const h = Math.min(44, Math.max(21, Math.sqrt(3800 / logo.aspect)));
+            return (
+              <li key={name} className="flex items-center">
+                {/* eslint-disable-next-line @next/next/no-img-element -- small static logos, no optimisation needed */}
+                <img
+                  src={logo.src}
+                  alt={name}
+                  loading="lazy"
+                  style={{ "--h": `${h.toFixed(1)}px`, aspectRatio: logo.aspect } as CSSProperties}
+                  className="h-[calc(var(--h)*0.78)] w-auto max-w-[10rem] object-contain sm:h-[var(--h)] sm:max-w-[13rem]"
+                />
+              </li>
+            );
+          })}
         </ul>
       ))}
     </div>

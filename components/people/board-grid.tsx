@@ -147,8 +147,7 @@ export function BoardGrid({ people }: { people: Person[] }) {
                       )}
                     </div>
                   )}
-                  <span aria-hidden className="mt-7 block h-px w-12 bg-rice-blue" />
-                  {person.bio && <p className="mt-6 leading-relaxed text-slate text-pretty">{person.bio}</p>}
+                  {person.bio && <p className="mt-7 leading-relaxed text-slate text-pretty">{person.bio}</p>}
                 </div>
               </div>
             </div>

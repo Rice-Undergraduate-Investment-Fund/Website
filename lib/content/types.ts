@@ -213,6 +213,8 @@ export type AlumniFirmGroup = {
   label: string;
   /** Rows of firm names, top tier first, each row A–Z. */
   tiers: string[][];
+  /** Logo per firm name, where one exists (see firm-logos.ts). */
+  logos: Record<string, { src: string; aspect: number }>;
 };
 
 /** RUIF roles, most → least senior. Drives ordering in the alumni directory. */

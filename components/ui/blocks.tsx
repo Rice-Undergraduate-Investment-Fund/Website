@@ -19,7 +19,7 @@ export function PhotoHero({
       className={cx(
         "relative isolate flex items-end overflow-hidden bg-rice-blue-deep text-white",
         // One height for every page banner so the site feels consistent.
-        "min-h-[72svh] sm:min-h-[max(560px,72svh)]",
+        "min-h-[72svh] sm:h-[max(560px,72svh)] sm:min-h-0",
       )}
     >
       <CoverImage image={image} priority sizes="100vw" className="-z-10" />
