@@ -37,3 +37,6 @@ seed-assets/
 
 # transfer bundles from Claude (safe to delete)
 _to_delete/
+
+# scratch folder (never commit)
+_to_delete/
