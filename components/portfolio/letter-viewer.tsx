@@ -81,7 +81,7 @@ export function LetterViewer({ letter }: { letter: Letter }) {
       <div className="flex aspect-[8.5/11] w-full flex-col items-center justify-center gap-4 bg-mist p-8 text-center">
         <p className="text-slate">The letter couldn&apos;t be displayed here.</p>
         <a href={letter.url} target="_blank" rel="noopener noreferrer" className="font-semibold text-rice-blue underline underline-offset-4">
-          Open the PDF
+          Open the letter (PDF)
         </a>
       </div>
     );
@@ -117,7 +117,7 @@ export function LetterViewer({ letter }: { letter: Letter }) {
               download={letter.filename}
               className="inline-flex h-10 items-center gap-2 bg-rice-blue px-4 text-sm font-semibold text-white transition-colors hover:bg-rich-blue"
             >
-              <DownloadIcon /> <span className="hidden min-[380px]:inline">Download</span>
+              <DownloadIcon /> <span className="sr-only min-[380px]:not-sr-only">Download</span>
             </a>
           </>
         }
@@ -144,7 +144,7 @@ export function LetterViewer({ letter }: { letter: Letter }) {
                   download={letter.filename}
                   className="inline-flex h-10 items-center gap-2 bg-white px-4 text-sm font-semibold text-rice-blue transition-colors hover:bg-mist"
                 >
-                  <DownloadIcon /> <span className="hidden sm:inline">Download PDF</span>
+                  <DownloadIcon /> <span className="sr-only sm:not-sr-only">Download PDF</span>
                 </a>
                 <button
                   type="button"

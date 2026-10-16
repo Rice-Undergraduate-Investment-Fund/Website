@@ -15,13 +15,14 @@
   /* Neutrals */
   --color-ink: #0b0c10; /* primary text */
   --color-slate: #44474f; /* Rice Dark Gray: secondary text (AA on white) */
-  --color-muted: #6b6e73; /* titles under names: lighter than slate, still AA on white */
+  --color-muted: color-mix(in srgb, #44474f 82%, white); /* Rice Dark Gray tint: titles under names, AA on white */
   --color-line: #e0e2e6; /* Rice Light Gray: borders and dividers */
-  --color-mist: #f4f5f7; /* tinted section background */
+  --color-mist: color-mix(in srgb, #e0e2e6 40%, white); /* Rice Light Gray tint: section background */
 
   /* Type */
-  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Source Serif 4 Variable", ui-serif, Georgia, serif;
+  /* Rice brand fonts: Lato (for Mallory) and Cormorant Garamond (for Copernicus) */
+  --font-sans: "Lato", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Cormorant Garamond Variable", ui-serif, Georgia, serif;
 
   /* Motion */
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
@@ -38,7 +39,15 @@
   h1,
   h2,
   h3 {
-    @apply font-serif tracking-tight text-balance;
+    @apply font-serif text-balance;
+  }
+  /* Cormorant is light and has old-style figures by default: give it weight and even-height numbers */
+  h1,
+  h2,
+  h3,
+  .font-serif {
+    font-weight: 600;
+    font-feature-settings: "lnum" 1;
   }
   ::selection {
     @apply bg-rice-blue text-white;

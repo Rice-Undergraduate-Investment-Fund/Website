@@ -30,7 +30,7 @@ A new officer with no coding experience must be able to update the Board, sector
 | Hosting | Netlify (Next.js runtime / OpenNext adapter) | Deploy Preview per PR, production on merge to `main`; config in `netlify.toml` |
 | Source control | GitHub org `Rice-Undergraduate-Investment-Fund` | Club-owned, not personal |
 | Images | `next/image` (Sanity image CDN once connected) | Crop/hotspot set in Studio |
-| Fonts | Source Serif 4 + Inter via Fontsource | Self-hosted, no external font requests |
+| Fonts | Cormorant Garamond + Lato via Fontsource | Rice brand alternates for Copernicus + Mallory; self-hosted |
 | Contact form | Netlify Forms (`public/__forms.html` + `components/contact/contact-form.tsx`) | Emails ricefinancegroup@gmail.com via Netlify form notifications |
 | Analytics | Netlify Analytics or Google Analytics | Optional |
 | Database | **None** | Add (e.g. Supabase) only for auth, voting, attendance, etc. |
@@ -199,9 +199,9 @@ Implementation: `app/globals.css` → `@theme` tokens `rice-blue`, `rice-blue-de
 ### Typography
 | Role | Font | Notes |
 |---|---|---|
-| Headings | Source Serif 4 (variable) | Institutional, finance feel |
-| Body / UI | Inter (variable) | |
-| Eyebrow labels | Inter, 12px, semibold, uppercase, 0.2em tracking | With a short rule before |
+| Headings | Cormorant Garamond (variable), 600, lining figures | Rice brand serif alternate |
+| Body / UI | Lato 400/700/900 | Rice brand sans alternate |
+| Small labels | Lato, 12px, bold, uppercase, 0.2em tracking | |
 
 Rice's official typefaces are licensed; these are free, close-in-spirit substitutes. Swap in `globals.css` if licensed fonts become available.
 
@@ -313,7 +313,8 @@ Full step-by-step: **`docs/DEPLOYMENT.md`**. One deployment (GitHub → Netlify)
 | 2026-09-30 | Semester letter PDF embedded on Portfolio page; figures from Fall 2026 letter | Done |
 | 2026-09-30 | pdf.js pinned to v4 (v5+/v6 need very new browser APIs) | Done |
 | 2026-09-30 | Tailwind v4: tokens in `globals.css`, no `tailwind.config.ts` | Done |
-| 2026-09-30 | Fonts: Source Serif 4 + Inter, self-hosted | Done (revisable) |
+| 2026-09-30 | Fonts: Source Serif 4 + Inter, self-hosted | Replaced 2026-10-15 |
+| 2026-10-15 | Rice brand + WAVE pass: Cormorant Garamond + Lato, Rice-palette neutrals, contrast fixes, Rice footer links (privacy.rice.edu, access.rice.edu), logo chevron #ADC7DC | Done |
 | 2026-09-30 | Content layer reads Sanity, falls back to seed data | Done |
 | 2026-09-30 | Sector membership stored on `sector`, not `person` | Done |
 | — | Contact form provider | Decided: Netlify Forms (free, no keys) |

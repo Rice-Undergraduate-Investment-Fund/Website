@@ -108,7 +108,7 @@ export function AlumniDirectory({ alumni, firms }: { alumni: Alumnus[]; firms: D
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search by name"
-            className="h-10 w-full border border-line bg-white pr-3 pl-9 text-sm text-ink placeholder:text-rice-gray focus:border-rice-blue focus:ring-1 focus:ring-rice-blue focus:outline-none"
+            className="h-10 w-full border border-line bg-white pr-3 pl-9 text-sm text-ink placeholder:text-muted focus:border-rice-blue focus:ring-1 focus:ring-rice-blue focus:outline-none"
           />
         </label>
       </div>

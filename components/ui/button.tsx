@@ -81,7 +81,7 @@ export function DisabledButton({
         base,
         sizes[size],
         "cursor-not-allowed select-none",
-        onDark ? "bg-white/15 text-white/45" : "bg-line text-muted",
+        onDark ? "border border-dashed border-white/50 text-white/85" : "border border-dashed border-slate/60 text-slate",
         className,
       )}
     >

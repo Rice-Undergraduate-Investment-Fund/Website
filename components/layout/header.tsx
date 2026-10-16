@@ -32,7 +32,7 @@ export function Header({ showApply, applyHref }: { showApply: boolean; applyHref
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-white">
       <Container className="flex h-18 items-center justify-between gap-6 sm:h-20">
-        <Link href="/" className="flex items-center gap-3" aria-label="Rice Finance home">
+        <Link href="/" className="flex items-center gap-3">
           <Image src="/images/logo.png" alt="" width={44} height={44} priority className="size-10 sm:size-11" />
           <span className="leading-tight">
             <span className="block font-serif text-lg font-semibold text-rice-blue sm:text-xl">

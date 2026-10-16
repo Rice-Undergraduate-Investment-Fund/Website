@@ -1,6 +1,10 @@
 import type { Metadata, Viewport } from "next";
-import "@fontsource-variable/inter";
-import "@fontsource-variable/source-serif-4";
+// Rice brand typefaces (free alternates to Mallory and Copernicus; brand.rice.edu).
+import "@fontsource/lato/400.css";
+import "@fontsource/lato/400-italic.css";
+import "@fontsource/lato/700.css";
+import "@fontsource/lato/900.css";
+import "@fontsource-variable/cormorant-garamond";
 import "./globals.css";
 import { isLiveSite } from "@/lib/site";
 

@@ -40,7 +40,7 @@ export default async function ContactPage() {
                     </a>
                   </dd>
                 )}
-                {!c.url && !c.email && <dd className="mt-2 font-serif text-xl text-rice-gray">Email to be added</dd>}
+                {!c.url && !c.email && <dd className="mt-2 font-serif text-xl text-slate">Email to be added</dd>}
               </div>
             ))}
             {s.address && (

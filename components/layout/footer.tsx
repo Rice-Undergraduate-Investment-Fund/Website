@@ -3,13 +3,19 @@ import Link from "next/link";
 import { primaryNav } from "@/lib/navigation";
 import { Container } from "@/components/ui/layout";
 
+/** Links Rice requires on university-affiliated sites. */
+const RICE_LINKS = [
+  { label: "Privacy Policy", href: "https://privacy.rice.edu/" },
+  { label: "Web Accessibility", href: "https://access.rice.edu/" },
+];
+
 export function Footer({ orgName }: { orgName: string }) {
   const links = primaryNav.flatMap((i) => i.children ?? [i]);
   return (
     <footer className="mt-auto bg-rice-blue-deep text-white">
       <Container className="grid gap-12 py-16 sm:py-20 md:grid-cols-[1.4fr_1fr]">
         <div>
-          <Link href="/" aria-label="Rice Finance home" className="inline-block">
+          <Link href="/" className="inline-block">
             <Image
               src="/images/logo-full-white.png"
               alt="Rice Finance"
@@ -18,7 +24,7 @@ export function Footer({ orgName }: { orgName: string }) {
               className="h-auto w-56 sm:w-64"
             />
           </Link>
-          <p className="mt-6 max-w-sm text-sm leading-relaxed text-white/70">
+          <p className="mt-6 max-w-sm text-sm leading-relaxed text-white/80">
             Rice University&apos;s student-run investment fund, established in 2017.
           </p>
         </div>
@@ -35,9 +41,23 @@ export function Footer({ orgName }: { orgName: string }) {
         </nav>
       </Container>
       <div className="border-t border-white/10">
-        <Container className="flex flex-col gap-2 py-6 text-xs text-white/60 sm:flex-row sm:justify-between">
-          <p>© {new Date().getFullYear()} {orgName}</p>
-          <p>Rice University · Houston, Texas</p>
+        <Container className="flex flex-col gap-3 py-6 text-xs text-white/75 sm:flex-row sm:items-center sm:justify-between">
+          <p>
+            © {new Date().getFullYear()} {orgName} ·{" "}
+            <a href="https://www.rice.edu/" className="underline-offset-4 hover:text-white hover:underline">
+              Rice University
+            </a>
+            , 6100 Main St, Houston, TX 77005
+          </p>
+          <ul className="flex gap-5">
+            {RICE_LINKS.map((l) => (
+              <li key={l.href}>
+                <a href={l.href} className="underline-offset-4 hover:text-white hover:underline">
+                  {l.label}
+                </a>
+              </li>
+            ))}
+          </ul>
         </Container>
       </div>
     </footer>

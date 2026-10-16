@@ -118,7 +118,7 @@ export default async function PortfolioPage() {
                 <span className="text-xs font-semibold tracking-[0.2em] text-rice-blue uppercase">{h.ticker}</span>
                 <span className="mt-3 font-serif text-2xl text-ink">{h.company}</span>
                 {h.highlight && <span className="mt-3 text-sm leading-relaxed text-slate">{h.highlight}</span>}
-                <span className="mt-auto pt-6 text-xs font-medium tracking-wide text-rice-gray uppercase">{h.sector}</span>
+                <span className="mt-auto pt-6 text-xs font-medium tracking-wide text-slate uppercase">{h.sector}</span>
               </li>
             ))}
           </ul>

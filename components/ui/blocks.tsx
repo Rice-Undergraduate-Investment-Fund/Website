@@ -132,7 +132,7 @@ export function PillarGrid({ pillars, stacked = false }: { pillars: Step[]; stac
           key={p.title}
           className={cx("border-r border-b border-line bg-white", stacked ? "flex flex-col justify-center p-7 sm:p-8" : "p-8 sm:p-10")}
         >
-          <span className="font-serif text-sm text-rice-gray tabular-nums">
+          <span className="font-serif text-sm text-slate tabular-nums">
             {String(i + 1).padStart(2, "0")}
           </span>
           <h3 className={cx("text-2xl text-rice-blue", stacked ? "mt-3" : "mt-6")}>{p.title}</h3>
