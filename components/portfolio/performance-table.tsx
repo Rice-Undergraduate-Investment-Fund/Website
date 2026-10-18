@@ -11,11 +11,9 @@ export const fmtPct = (n: number, signed = true) => {
 export function PerformanceTable({
   rows,
   benchmark,
-  beta,
 }: {
   rows: PerformanceRow[];
   benchmark: string;
-  beta?: number;
 }) {
   if (!rows.length) return null;
   return (
@@ -48,8 +46,7 @@ export function PerformanceTable({
         </table>
       </div>
       <figcaption className="mt-4 text-xs text-slate">
-        Cumulative returns. Benchmark: {benchmark === "VTI" ? "Vanguard Total Stock Market Index (VTI)" : benchmark}.
-        {beta != null && ` 5-year beta vs. ${benchmark}: ${beta.toFixed(2)}.`}
+        Cumulative returns.
       </figcaption>
     </figure>
   );

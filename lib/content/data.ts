@@ -93,11 +93,11 @@ export const siteSettings: SiteSettings = {
     { title: "Sector Discussion", description: "Ideas are debated within the sector." },
     { title: "Stock Pitch", description: "The strongest ideas are developed into a full pitch." },
     // 04–06 match "How We Operate" on the About page.
-    { title: "Pitch Day 1", description: "Members present stock ideas to the RUIF Board and investment professionals." },
+    { title: "Pitch Day 1", description: "Each sector presents its stock pitch to the RUIF Board and other investment professionals." },
     {
       title: "Pitch Day 2",
       description:
-        "Selected sectors present their stock analyses to a panel of Virani Business School professors and RUIF alumni working in the industry.",
+        "Select sectors present their stock pitches to a panel of Virani Business School professors and RUIF alumni working in the industry.",
     },
     {
       title: "Portfolio Decisions",

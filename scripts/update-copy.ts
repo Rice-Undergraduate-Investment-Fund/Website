@@ -48,6 +48,19 @@ const CHANGES: Change[] = [
     from: "Selected sectors present their stock analyses to a panel of Virani Business School professors and RUIF alumni working in the industry.",
     to: "Select sectors present their stock pitches to a panel of Virani Business School professors and RUIF alumni working in the industry.",
   },
+  // Portfolio page: investment process Pitch Day steps, matching the About page
+  {
+    doc: "siteSettings",
+    path: ["investmentProcess", 3, "description"],
+    from: "Members present stock ideas to the RUIF Board and investment professionals.",
+    to: "Each sector presents its stock pitch to the RUIF Board and other investment professionals.",
+  },
+  {
+    doc: "siteSettings",
+    path: ["investmentProcess", 4, "description"],
+    from: "Selected sectors present their stock analyses to a panel of Virani Business School professors and RUIF alumni working in the industry.",
+    to: "Select sectors present their stock pitches to a panel of Virani Business School professors and RUIF alumni working in the industry.",
+  },
   // Training Program: "Your path into the fund" and the curriculum
   { doc: "trainingProgram", path: ["steps", 1, "title"], from: "Training Sessions", to: "Training Program" },
   { doc: "trainingProgram", path: ["steps", 2, "title"], from: "Complete Training", to: "Complete the Training Program" },

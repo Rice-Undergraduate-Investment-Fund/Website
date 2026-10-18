@@ -25,7 +25,6 @@ export default async function PortfolioPage() {
     getLatestLetter(),
     getSiteSettings(),
   ]);
-  const holdingCount = bySector.reduce((n, g) => n + g.holdings.length, 0);
   const note = p.note || (p.isSample ? "Figures pending: placeholders until real data is published" : undefined);
 
   return (
@@ -68,7 +67,7 @@ export default async function PortfolioPage() {
                 title={`Measured against ${p.benchmarkName}`}
                 intro="The fund is benchmarked against the total U.S. stock market."
               />
-              <PerformanceTable rows={p.performance} benchmark={p.benchmarkName} beta={p.beta} />
+              <PerformanceTable rows={p.performance} benchmark={p.benchmarkName} />
             </div>
           )}
         </Container>
@@ -81,15 +80,12 @@ export default async function PortfolioPage() {
             <div className="grid gap-12 lg:grid-cols-[1fr_2fr] lg:gap-16 [&>*]:min-w-0">
               <div>
                 <SectionHeading
-                  title="Letter to members"
+                  title={`Our ${letter.semester.split(" ")[0] || "Semester"} Introductory Letter`}
                   intro={
                     letter.summary ||
                     "Each semester the Board reports on the fund: a letter from the President, the organization chart, current holdings and the portfolio review."
                   }
                 />
-                <p className="mt-6 text-sm text-slate">
-                  Use the arrows to turn pages, or open the full-size view.
-                </p>
               </div>
               <div className="bg-white p-3 sm:p-5">
                 <LetterViewer letter={letter} />
@@ -102,7 +98,7 @@ export default async function PortfolioPage() {
               title="Portfolio allocation"
             />
             <div className="bg-white p-4 sm:p-8">
-              <AllocationChart allocations={p.allocations} />
+              <AllocationChart allocations={p.allocations} holdingsBySector={bySector} />
             </div>
           </div>
         </Container>
@@ -122,31 +118,6 @@ export default async function PortfolioPage() {
               </li>
             ))}
           </ul>
-
-          {holdingCount > 0 && (
-            <div className="mt-20">
-              <div className="border-b border-line pb-5">
-                <h3 className="text-2xl text-rice-blue sm:text-3xl">All holdings</h3>
-              </div>
-              <div className="mt-10 grid gap-x-12 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-                {bySector.map((g) => (
-                  <div key={g.sector}>
-                    <p className="text-xs font-semibold tracking-[0.2em] text-rice-blue uppercase">
-                      {g.sector}
-                    </p>
-                    <ul className="mt-3 space-y-1.5 text-sm">
-                      {g.holdings.map((h) => (
-                        <li key={h.id} className="flex gap-3">
-                          <span className="w-12 shrink-0 font-semibold text-ink tabular-nums">{h.ticker}</span>
-                          <span className="text-slate">{h.company}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
         </Container>
       </Section>
 
