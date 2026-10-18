@@ -9,22 +9,22 @@ const explore = [
   {
     href: "/sectors",
     title: "Sectors",
-    body: "Sector teams cover the public markets, each led by a Sector Director.",
+    body: "Sectors cover the public markets, each led by a Sector Director.",
   },
   {
     href: "/portfolio",
     title: "Portfolio",
-    body: "A real portfolio, managed collectively as part of the University's endowment.",
+    body: "A portfolio, managed as part of the University's endowment.",
   },
   {
     href: "/training",
     title: "Training Program",
-    body: "Seven sessions on accounting, valuation and markets: the path into the fund.",
+    body: "Seven sessions that will teach you everything you need to know, from accounting to different valuation techniques.",
   },
   {
     href: "/people/board",
     title: "People",
-    body: "Meet the Board leading the fund and the alumni who came before.",
+    body: "Meet the Board and reach out if you have any questions!",
   },
 ];
 
@@ -106,7 +106,7 @@ export default async function HomePage() {
       <section className="bg-rice-blue text-white">
         <div className="grid lg:grid-cols-2">
           <div className="relative aspect-[4/3] lg:aspect-auto lg:min-h-[560px]">
-            <CoverImage image={s.photos.homeTraining} sizes="(min-width: 1024px) 50vw, 100vw" />
+            <CoverImage image={s.photos.homeTraining} sizes="(min-width: 1024px) 66vw, 120vw" />
           </div>
           <div className="flex items-center px-5 py-16 sm:px-12 sm:py-20 lg:px-16 xl:px-24">
             <div className="max-w-lg">
@@ -117,7 +117,7 @@ export default async function HomePage() {
               </h2>
               <p className="mt-6 text-lg leading-relaxed text-white/80">
                 The Training Program is how students join RUIF. No prior finance experience is
-                required, just curiosity and commitment.
+                required.
               </p>
               <div className="mt-9 flex flex-wrap gap-3">
                 {training.applicationsOpen ? (

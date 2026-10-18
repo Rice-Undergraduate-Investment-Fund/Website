@@ -16,7 +16,8 @@
     "seed:home": "tsx scripts/seed.ts --only=home,alumni,training",
     "seed:pages": "tsx scripts/seed.ts --only=home,alumni,training,about",
     "import:alumni": "tsx scripts/import-alumni.ts",
-    "members:password": "tsx scripts/set-members-password.ts"
+    "members:password": "tsx scripts/set-members-password.ts",
+    "copy:update": "tsx scripts/update-copy.ts"
   },
   "dependencies": {
     "@fontsource-variable/cormorant-garamond": "^5.3.0",

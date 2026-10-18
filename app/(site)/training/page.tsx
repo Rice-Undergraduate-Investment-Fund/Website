@@ -21,18 +21,13 @@ export default async function TrainingPage() {
       <PhotoHero
         image={s.photos.trainingHero}
         title={
-          <>
-            Learn Finance.
-            <br />
-            Apply It.
-            <br />
-            Join the Fund.
-          </>
+"Building a Foundation for a Career in Finance"
         }
       >
         <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/85">
-          Seven sessions covering accounting, finance and valuation. The Training Program is how
-          students join the Rice Undergraduate Investment Fund.
+          Through seven sessions covering accounting, finance, and valuation, our Training Program
+          equips students with the foundational skills needed to conduct investment research and
+          become members of the Rice Undergraduate Investment Fund.
         </p>
         <div className="mt-9 flex flex-wrap gap-3">
           {t.applicationsOpen ? (
@@ -65,7 +60,7 @@ export default async function TrainingPage() {
       <Section tone="mist" id="curriculum">
         <Container>
           <SectionHeading
-            title="Seven sessions, one complete foundation"
+            title="Inside the RUIF Training Program"
             intro="Upon program completion, students are given a chance to be placed in an RUIF sector for the following semester."
           />
           <div className="mt-14 space-y-4">

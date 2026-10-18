@@ -26,7 +26,7 @@ import type {
 export const siteSettings: SiteSettings = {
   orgName: "Rice Undergraduate Investment Fund",
   shortName: "Rice Finance",
-  tagline: "Rice University's Student-Run Investment Fund",
+  tagline: "Rice University's Student Run Investment Fund",
   intro:
     "RUIF gives Rice undergraduates a practical, hands-on education in finance. Members research public companies, pitch ideas and collectively manage a portion of the University's endowment.",
   stats: {
@@ -58,14 +58,14 @@ export const siteSettings: SiteSettings = {
   },
   operatingModel: [
     {
-      title: "Training",
+      title: "Training Program",
       description:
-        "Seven sessions covering accounting, finance and valuation prepare new members for the fund.",
+        "Seven sessions that will teach you everything you need to know, from accounting to valuation techniques.",
     },
     {
       title: "Sector Placement",
       description:
-        "Graduates of the Training Program join one of the fund's sector teams.",
+        "If successfully admitted into the fund, analysts join one of the sectors.",
     },
     {
       title: "Research",
@@ -75,12 +75,12 @@ export const siteSettings: SiteSettings = {
     {
       title: "Pitch Day 1",
       description:
-        "Members present stock ideas to the RUIF Board and investment professionals.",
+        "Each sector presents its stock pitch to the RUIF Board and other investment professionals.",
     },
     {
       title: "Pitch Day 2",
       description:
-        "Selected sectors present their stock analyses to a panel of Virani Business School professors and RUIF alumni working in the industry.",
+        "Select sectors present their stock pitches to a panel of Virani Business School professors and RUIF alumni working in the industry.",
     },
     {
       title: "Portfolio Decisions",
@@ -433,10 +433,10 @@ export const trainingProgram: TrainingProgram = {
   isSample: false,
   steps: [
     { title: "Apply", description: "Submit a short application at the start of the semester." },
-    { title: "Training Sessions", description: "Attend seven weekly sessions led by the Training Directors." },
-    { title: "Complete Training", description: "Build core skills in accounting, valuation and markets." },
-    { title: "Pitch Interview", description: "Present a stock pitch to demonstrate what you've learned." },
-    { title: "Join a Sector", description: "Successful candidates are admitted into the fund and placed into a sector." },
+    { title: "Training Program", description: "Attend seven weekly sessions led by the Training Directors." },
+    { title: "Complete the Training Program", description: "Build core skills in accounting, valuation and markets." },
+    { title: "Pitch Your Stock to the RUIF Board", description: "Present a stock pitch to demonstrate what you've learned." },
+    { title: "Join the Fund", description: "Successful candidates are admitted into the fund and placed into a sector." },
   ],
   sessions: [
     { number: 1, title: "Financial Statements", description: "Reading the income statement, balance sheet and cash flow statement." },
@@ -445,7 +445,7 @@ export const trainingProgram: TrainingProgram = {
     { number: 4, title: "DCF", description: "Building a discounted cash flow model from the ground up." },
     { number: 5, title: "Public Markets", description: "How markets work and how professional investors think." },
     { number: 6, title: "Stock Pitches", description: "Structuring an investment thesis and its risks." },
-    { number: 7, title: "Pitch Preparation", description: "Refining and practicing your pitch for the interview." },
+    { number: 7, title: "Pitch Preparation", description: "Refining and practicing your stock pitch." },
   ],
 };
 
