@@ -15,27 +15,23 @@ export const holding = defineType({
     defineField({ name: "ticker", type: "string", validation: (r) => r.required() }),
     defineField({ name: "sector", type: "string" }),
     defineField({
-      name: "featured",
-      title: "Feature in “Selected positions”",
-      type: "boolean",
-      description: "All holdings appear in the full list; featured ones also get a card.",
-      initialValue: false,
+      name: "memo",
+      title: "Investment memo (PDF)",
+      type: "file",
+      options: { accept: "application/pdf" },
+      description: "Holdings with a memo get a card under “Selected positions” on the Portfolio page; clicking it opens the memo.",
     }),
-    defineField({
-      name: "highlight",
-      title: "Card highlight",
-      type: "string",
-      description: "Optional one-liner on the featured card, e.g. “+4,052% since purchase”.",
-      hidden: ({ document }) => !document?.featured,
-    }),
+    // Older fields, no longer shown on the site (kept so existing data isn't lost).
+    defineField({ name: "featured", type: "boolean", hidden: true }),
+    defineField({ name: "highlight", type: "string", hidden: true }),
     defineField({ name: "order", title: "Display order", type: "number" }),
   ],
   orderings: [{ title: "Display order", name: "order", by: [{ field: "order", direction: "asc" }] }],
   preview: {
-    select: { title: "company", ticker: "ticker", featured: "featured" },
-    prepare: ({ title, ticker, featured }) => ({
+    select: { title: "company", ticker: "ticker", memo: "memo.asset" },
+    prepare: ({ title, ticker, memo }) => ({
       title,
-      subtitle: `${ticker ?? ""}${featured ? " · ★ featured" : ""}`,
+      subtitle: `${ticker ?? ""}${memo ? " · memo" : ""}`,
     }),
   },
 });

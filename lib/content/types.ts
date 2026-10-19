@@ -106,6 +106,8 @@ export type Holding = {
   featured: boolean;
   /** Short highlight shown on featured cards, e.g. "+4,052% since purchase". */
   highlight?: string;
+  /** Investment memo (PDF). Holdings with a memo appear under "Selected positions". */
+  memo?: { url: string; filename: string };
 };
 
 export type Step = { title: string; description: string };

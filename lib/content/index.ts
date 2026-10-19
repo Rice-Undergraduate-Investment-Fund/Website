@@ -231,13 +231,21 @@ export async function getPortfolio(): Promise<Portfolio> {
   };
 }
 
-const HOLDING = `{ "id": _id, company, ticker, "sector": coalesce(sector, ""), "featured": featured == true, highlight }`;
-const cleanHolding = (h: Holding): Holding => ({ ...h, highlight: h.highlight ?? undefined });
+const HOLDING = `{ "id": _id, company, ticker, "sector": coalesce(sector, ""), "featured": featured == true, highlight,
+  "memo": select(defined(memo.asset) => { "url": memo.asset->url, "filename": memo.asset->originalFilename }) }`;
+const cleanHolding = (h: Holding): Holding => ({
+  ...h,
+  highlight: h.highlight ?? undefined,
+  memo: h.memo?.url ? { url: h.memo.url, filename: h.memo.filename || `${h.ticker} memo.pdf` } : undefined,
+});
 
-export async function getFeaturedHoldings(): Promise<Holding[]> {
-  if (!(await sanityEnabled())) return mock.holdings.filter((h) => h.featured);
+/** "Selected positions": holdings with an investment memo uploaded. */
+export async function getMemoHoldings(): Promise<Holding[]> {
+  if (!(await sanityEnabled())) return mock.holdings.filter((h) => h.memo);
   return (
-    await query<Holding[]>(`*[_type == "holding" && featured == true] | order(coalesce(order, 999) asc, company asc) ${HOLDING}`)
+    await query<Holding[]>(
+      `*[_type == "holding" && defined(memo.asset)] | order(coalesce(order, 999) asc, company asc) ${HOLDING}`,
+    )
   ).map(cleanHolding);
 }
 

@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import { AllocationChart } from "@/components/portfolio/allocation-chart";
 import { LetterViewer } from "@/components/portfolio/letter-viewer";
 import { PerformanceTable, fmtPct } from "@/components/portfolio/performance-table";
+import { PositionMemos } from "@/components/portfolio/position-memos";
 import { PhotoHero, ProcessSteps, StatRow } from "@/components/ui/blocks";
 import { Container, SampleNote, Section, SectionHeading } from "@/components/ui/layout";
 import {
-  getFeaturedHoldings,
+  getMemoHoldings,
   getHoldingsBySector,
   getLatestLetter,
   getPortfolio,
@@ -20,7 +21,7 @@ const usd = (n: number) =>
 export default async function PortfolioPage() {
   const [p, featured, bySector, letter, s] = await Promise.all([
     getPortfolio(),
-    getFeaturedHoldings(),
+    getMemoHoldings(),
     getHoldingsBySector(),
     getLatestLetter(),
     getSiteSettings(),
@@ -104,22 +105,15 @@ export default async function PortfolioPage() {
         </Container>
       </Section>
 
-      {/* Selected positions */}
-      <Section>
-        <Container>
-          <SectionHeading title="Selected positions" />
-          <ul className="mt-12 grid border-t border-l border-line sm:grid-cols-2 lg:grid-cols-4">
-            {featured.map((h) => (
-              <li key={h.id} className="flex min-h-56 flex-col border-r border-b border-line bg-white p-7">
-                <span className="text-xs font-semibold tracking-[0.2em] text-rice-blue uppercase">{h.ticker}</span>
-                <span className="mt-3 font-serif text-2xl text-ink">{h.company}</span>
-                {h.highlight && <span className="mt-3 text-sm leading-relaxed text-slate">{h.highlight}</span>}
-                <span className="mt-auto pt-6 text-xs font-medium tracking-wide text-slate uppercase">{h.sector}</span>
-              </li>
-            ))}
-          </ul>
-        </Container>
-      </Section>
+      {/* Selected positions: holdings with an investment memo */}
+      {featured.length > 0 && (
+        <Section>
+          <Container>
+            <SectionHeading title="Selected positions" />
+            <PositionMemos holdings={featured} />
+          </Container>
+        </Section>
+      )}
 
       <Section tone="mist">
         <Container>
