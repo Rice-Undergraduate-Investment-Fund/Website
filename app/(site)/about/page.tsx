@@ -61,7 +61,7 @@ export default async function AboutPage() {
 
   return (
     <>
-      <PhotoHero image={s.photos.aboutHero} title="Providing a goal-oriented introduction to the world of finance">
+      <PhotoHero image={s.photos.aboutHero} title="Providing a goal oriented introduction to the world of finance">
         <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/85 text-pretty">{s.intro}</p>
       </PhotoHero>
 
