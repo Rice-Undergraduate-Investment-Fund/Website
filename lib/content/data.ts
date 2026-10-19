@@ -89,7 +89,7 @@ export const siteSettings: SiteSettings = {
     },
   ],
   investmentProcess: [
-    { title: "Research", description: "Sector teams build a thesis on a company." },
+    { title: "Research", description: "Teams analyze trends within their sectors and begin narrowing down pitch ideas." },
     { title: "Sector Discussion", description: "Ideas are debated within the sector." },
     { title: "Stock Pitch", description: "The strongest ideas are developed into a full pitch." },
     // 04–06 match "How We Operate" on the About page.
@@ -135,6 +135,7 @@ export const siteSettings: SiteSettings = {
     aboutHero: { src: "/images/president-vp-wide.jpg", alt: "RUIF President and Vice President", width: 2400, height: 1500, position: "55% 20%" },
     trainingHero: { src: "/images/training-directors-wide.jpg", alt: "RUIF Training Directors", width: 2400, height: 1500, position: "55% 20%" },
     boardGroup: { src: "/images/board-2026-wide.jpg", alt: "The 2026–27 RUIF Board", width: 2400, height: 1500, position: "50% 60%" },
+    contactHero: { src: "/images/contact-hero.jpg", alt: "Rice University campus at night, with the Houston skyline", width: 2800, height: 2100, position: "50% 52%" },
   },
 };
 
@@ -433,8 +434,7 @@ export const trainingProgram: TrainingProgram = {
   isSample: false,
   steps: [
     { title: "Apply", description: "Submit a short application at the start of the semester." },
-    { title: "Training Program", description: "Attend seven weekly sessions led by the Training Directors." },
-    { title: "Complete the Training Program", description: "Build core skills in accounting, valuation and markets." },
+    { title: "Complete the Training Program", description: "Attend seven weekly sessions, where you will build core skills in accounting, valuation and markets." },
     { title: "Pitch Your Stock to the RUIF Board", description: "Present a stock pitch to demonstrate what you've learned." },
     { title: "Join the Fund", description: "Successful candidates are admitted into the fund and placed into a sector." },
   ],

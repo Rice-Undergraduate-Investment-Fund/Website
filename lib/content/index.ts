@@ -113,7 +113,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     ..., photos {
       homeHero ${IMG}, homeFeature ${IMG}, homeTraining ${IMG},
       aboutHero ${IMG}, aboutMission ${IMG}, aboutFund ${IMG}, aboutHistory ${IMG},
-      trainingHero ${IMG}, trainingCurriculum1 ${IMG}, trainingCurriculum2 ${IMG}, trainingCurriculum3 ${IMG}, portfolioHero ${IMG}, sectorsHero ${IMG}, boardGroup ${IMG}
+      trainingHero ${IMG}, trainingCurriculum1 ${IMG}, trainingCurriculum2 ${IMG}, trainingCurriculum3 ${IMG}, portfolioHero ${IMG}, sectorsHero ${IMG}, boardGroup ${IMG}, contactHero ${IMG}
     }
   }`);
   const m = mock.siteSettings;
@@ -151,6 +151,8 @@ export async function getSiteSettings(): Promise<SiteSettings> {
       portfolioHero: toImage(s.photos?.portfolioHero),
       sectorsHero: toImage(s.photos?.sectorsHero),
       boardGroup: toImage(s.photos?.boardGroup),
+      // Falls back to the photo shipped with the site until one is set in the Studio.
+      contactHero: toImage(s.photos?.contactHero) ?? m.photos.contactHero,
     },
   };
 }

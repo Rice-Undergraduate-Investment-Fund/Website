@@ -192,6 +192,7 @@ export type PagePhotos = {
   portfolioHero?: ImageAsset;
   sectorsHero?: ImageAsset;
   boardGroup?: ImageAsset;
+  contactHero?: ImageAsset;
 };
 
 /** Industry tabs in "Where RUIF members go" (order = tab order). Keys are stored in Sanity. */

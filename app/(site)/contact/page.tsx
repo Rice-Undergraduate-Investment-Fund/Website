@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { ContactForm } from "@/components/contact/contact-form";
-import { PageHeader } from "@/components/ui/blocks";
+import { PhotoHero } from "@/components/ui/blocks";
 import { Container, Section } from "@/components/ui/layout";
 import { getSiteSettings } from "@/lib/content";
 
@@ -10,10 +10,12 @@ export default async function ContactPage() {
   const s = await getSiteSettings();
   return (
     <>
-      <PageHeader
-        title="Contact Rice Finance"
-        intro="Have a question about Rice Finance, the Training Program, the portfolio, or working with RUIF? We'd love to hear from you."
-      />
+      <PhotoHero image={s.photos.contactHero} title="Contact Rice Finance">
+        <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/85 text-pretty">
+          Have a question about Rice Finance, the Training Program, the portfolio, or working with RUIF? We&apos;d
+          love to hear from you.
+        </p>
+      </PhotoHero>
       <Section>
         <Container className="grid gap-16 lg:grid-cols-[1fr_1.6fr] lg:gap-24">
           <dl className="space-y-8">

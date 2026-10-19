@@ -1,77 +1,47 @@
 /**
- * One-off copy update (Oct 2026) for text that lives in Sanity rather than code.
+ * Copy updates for text that lives in Sanity rather than code.
  *
  *   npm run copy:update            ← apply
  *   npm run copy:update -- --dry-run
  *
  * Each change is only applied if the field still holds the old text, so running
  * it twice is harmless and edits made in the Studio since then are never overwritten.
+ * Earlier rounds (Oct 2026) have already been applied; this list is the latest round.
  * Needs SANITY_API_WRITE_TOKEN in .env.local.
  */
 import "./env";
 import { createClient } from "@sanity/client";
 import { apiVersion, dataset, projectId } from "../sanity/env";
 
-type Change = { doc: string; path: (string | number)[]; from: string; to: string };
+/** Change one field of a list item, found by its _key (stable even if items move). */
+type Change = { doc: string; list: string; key: string; field: string; from: string; to: string };
+/** Remove one list item, found by its _key, if its title still matches. */
+type Removal = { doc: string; list: string; key: string; title: string };
 
 const CHANGES: Change[] = [
-  // Home + every page title
-  {
-    doc: "siteSettings",
-    path: ["tagline"],
-    from: "Rice University's Student-Run Investment Fund",
-    to: "Rice University's Student Run Investment Fund",
-  },
-  // About: "From Training to Investment Decisions"
-  { doc: "siteSettings", path: ["operatingModel", 0, "title"], from: "Training", to: "Training Program" },
-  {
-    doc: "siteSettings",
-    path: ["operatingModel", 0, "description"],
-    from: "Seven sessions covering accounting, finance and valuation prepare new members for the fund.",
-    to: "Seven sessions that will teach you everything you need to know, from accounting to valuation techniques.",
-  },
-  {
-    doc: "siteSettings",
-    path: ["operatingModel", 1, "description"],
-    from: "Graduates of the Training Program join one of the fund's sector teams.",
-    to: "If successfully admitted into the fund, analysts join one of the sectors.",
-  },
-  {
-    doc: "siteSettings",
-    path: ["operatingModel", 3, "description"],
-    from: "Members present stock ideas to the RUIF Board and investment professionals.",
-    to: "Each sector presents its stock pitch to the RUIF Board and other investment professionals.",
-  },
-  {
-    doc: "siteSettings",
-    path: ["operatingModel", 4, "description"],
-    from: "Selected sectors present their stock analyses to a panel of Virani Business School professors and RUIF alumni working in the industry.",
-    to: "Select sectors present their stock pitches to a panel of Virani Business School professors and RUIF alumni working in the industry.",
-  },
-  // Portfolio page: investment process Pitch Day steps, matching the About page
-  {
-    doc: "siteSettings",
-    path: ["investmentProcess", 3, "description"],
-    from: "Members present stock ideas to the RUIF Board and investment professionals.",
-    to: "Each sector presents its stock pitch to the RUIF Board and other investment professionals.",
-  },
-  {
-    doc: "siteSettings",
-    path: ["investmentProcess", 4, "description"],
-    from: "Selected sectors present their stock analyses to a panel of Virani Business School professors and RUIF alumni working in the industry.",
-    to: "Select sectors present their stock pitches to a panel of Virani Business School professors and RUIF alumni working in the industry.",
-  },
-  // Training Program: "Your path into the fund" and the curriculum
-  { doc: "trainingProgram", path: ["steps", 1, "title"], from: "Training Sessions", to: "Training Program" },
-  { doc: "trainingProgram", path: ["steps", 2, "title"], from: "Complete Training", to: "Complete the Training Program" },
-  { doc: "trainingProgram", path: ["steps", 3, "title"], from: "Pitch Interview", to: "Pitch Your Stock to the RUIF Board" },
-  { doc: "trainingProgram", path: ["steps", 4, "title"], from: "Join a Sector", to: "Join the Fund" },
+  // Training Program → "Your path into the fund": merge the two training boxes
   {
     doc: "trainingProgram",
-    path: ["sessions", 6, "description"],
-    from: "Refining and practicing your pitch for the interview.",
-    to: "Refining and practicing your stock pitch.",
+    list: "steps",
+    key: "f07e54c8-3c2",
+    field: "description",
+    from: "Build core skills in accounting, valuation and markets.",
+    to: "Attend seven weekly sessions, where you will build core skills in accounting, valuation and markets.",
   },
+  // Portfolio → investment process, "Research"
+  {
+    doc: "siteSettings",
+    list: "investmentProcess",
+    key: "0ec604dd-c05",
+    field: "description",
+    from: "Sector teams build a thesis on a company.",
+    to: "Teams analyze trends within their sectors and begin narrowing down pitch ideas.",
+  },
+];
+
+const REMOVALS: Removal[] = [
+  // The separate "Training Program" box (now part of "Complete the Training Program")
+  { doc: "trainingProgram", list: "steps", key: "3412b20e-e3a", title: "Training Program" },
 ];
 
 const dryRun = process.argv.includes("--dry-run");
@@ -82,13 +52,13 @@ if (!token) {
 }
 const client = createClient({ projectId, dataset, apiVersion, token, useCdn: false });
 
-const get = (obj: unknown, path: (string | number)[]) =>
-  path.reduce<unknown>((o, k) => (o == null ? undefined : (o as Record<string | number, unknown>)[k]), obj);
-const toPath = (path: (string | number)[]) =>
-  path.map((k, i) => (typeof k === "number" ? `[${k}]` : i ? `.${k}` : k)).join("");
+type Item = { _key: string; title?: string } & Record<string, unknown>;
+const item = (d: Record<string, unknown>, list: string, key: string) =>
+  ((d[list] as Item[] | undefined) ?? []).find((i) => i._key === key);
+const path = (list: string, key: string, field?: string) => `${list}[_key=="${key}"]${field ? `.${field}` : ""}`;
 
 async function main() {
-  const ids = [...new Set(CHANGES.map((c) => c.doc))];
+  const ids = [...new Set([...CHANGES, ...REMOVALS].map((c) => c.doc))];
   // Published documents and any unpublished Studio drafts of them.
   const docs = await client.fetch<Record<string, unknown>[]>(`*[_id in $ids]`, {
     ids: [...ids, ...ids.map((id) => `drafts.${id}`)],
@@ -99,18 +69,32 @@ async function main() {
     const id = String(d._id);
     const base = id.replace(/^drafts\./, "");
     const set: Record<string, string> = {};
+    const unset: string[] = [];
     for (const c of CHANGES.filter((c) => c.doc === base)) {
-      const current = get(d, c.path);
-      const label = `${id} → ${toPath(c.path)}`;
+      const current = item(d, c.list, c.key)?.[c.field];
+      const label = `${id} → ${c.list} "${String(item(d, c.list, c.key)?.title ?? c.key)}" ${c.field}`;
       if (current === c.to) console.log(`  = ${label} (already updated)`);
       else if (current === c.from) {
-        set[toPath(c.path)] = c.to;
+        set[path(c.list, c.key, c.field)] = c.to;
         console.log(`  ✓ ${label}: "${c.to}"`);
       } else console.log(`  ! ${label}: text differs from expected, left as is ("${String(current)}")`);
     }
-    if (Object.keys(set).length) {
-      tx.patch(id, (p) => p.set(set));
-      applied += Object.keys(set).length;
+    for (const r of REMOVALS.filter((r) => r.doc === base)) {
+      const it = item(d, r.list, r.key);
+      if (!it) console.log(`  = ${id} → ${r.list} "${r.title}" (already removed)`);
+      else if (it.title === r.title) {
+        unset.push(path(r.list, r.key));
+        console.log(`  ✓ ${id} → ${r.list}: removed "${r.title}"`);
+      } else console.log(`  ! ${id} → ${r.list}: item is now "${String(it.title)}", left as is`);
+    }
+    if (Object.keys(set).length || unset.length) {
+      tx.patch(id, (p) => {
+        let q = p;
+        if (Object.keys(set).length) q = q.set(set);
+        if (unset.length) q = q.unset(unset);
+        return q;
+      });
+      applied += Object.keys(set).length + unset.length;
     }
   }
   if (dryRun) return console.log(`\nDry run: ${applied} change(s) would be made.`);
