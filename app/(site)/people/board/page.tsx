@@ -13,7 +13,7 @@ export default async function BoardPage() {
     <>
       <PhotoHero
         // Portrait group photo in a wide banner: frame on the faces.
-        image={s.photos.boardGroup && { ...s.photos.boardGroup, position: "50% 38%" }}
+        image={s.photos.boardGroup && { ...s.photos.boardGroup, position: "50% 43%" }}
         title="The Board"
       >
         <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/85 text-pretty">
