@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { PDFDocumentProxy, RenderTask } from "pdfjs-dist";
+import type { PDFDocumentProxy, RenderTask } from "pdfjs-dist/legacy/build/pdf.mjs";
 import type { Letter } from "@/lib/content/types";
 import { cx } from "@/components/ui/layout";
 
@@ -25,9 +25,11 @@ export function LetterViewer({ letter }: { letter: Letter }) {
     let task: { destroy: () => Promise<void> } | null = null;
     (async () => {
       try {
-        const pdfjs = await import("pdfjs-dist");
+        // Legacy build: transpiled + polyfilled, so it also works in older Safari/Chrome
+        // (the modern build needs very recent JS features and fails there).
+        const pdfjs = await import("pdfjs-dist/legacy/build/pdf.mjs");
         pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-          "pdfjs-dist/build/pdf.worker.min.mjs",
+          "pdfjs-dist/legacy/build/pdf.worker.min.mjs",
           import.meta.url,
         ).toString();
         const loadingTask = pdfjs.getDocument({ url: letter.url });
