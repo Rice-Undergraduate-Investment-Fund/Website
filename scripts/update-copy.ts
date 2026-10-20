@@ -26,7 +26,15 @@ const CHANGES: Change[] = [
     key: "f07e54c8-3c2",
     field: "description",
     from: "Build core skills in accounting, valuation and markets.",
-    to: "Attend seven weekly sessions, where you will build core skills in accounting, valuation and markets.",
+    to: "Attend seven weekly sessions where you will build core skills in accounting, valuation and markets.",
+  },
+  {
+    doc: "trainingProgram",
+    list: "steps",
+    key: "f07e54c8-3c2",
+    field: "title",
+    from: "Complete the Training Program",
+    to: "Successfully Complete the Training Program",
   },
   // Portfolio → investment process, "Research"
   {

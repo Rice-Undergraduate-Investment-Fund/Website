@@ -11,6 +11,9 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
+/** Set to false to reopen the directory (sign-in and listings come back as they were). */
+const UNDER_CONSTRUCTION = true;
+
 export default async function AlumniPage({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
   const [{ error }, jar, password, configured] = await Promise.all([
     searchParams,
@@ -26,7 +29,14 @@ export default async function AlumniPage({ searchParams }: { searchParams: Promi
 
       <Section>
         <Container>
-          {signedIn ? (
+          {UNDER_CONSTRUCTION ? (
+            <div className="mx-auto max-w-md border border-line bg-white p-8 text-center sm:p-10">
+              <h2 className="text-3xl leading-tight text-rice-blue">Sign in to the directory</h2>
+              <p className="mt-4 text-lg leading-relaxed text-slate">
+                Currently under construction. Check back in November.
+              </p>
+            </div>
+          ) : signedIn ? (
             <>
               <AlumniDirectory alumni={await getAlumniDirectory()} firms={await getDirectoryFirms()} />
               <form action="/api/members/logout" method="post" className="mt-16 border-t border-line pt-6 text-right">

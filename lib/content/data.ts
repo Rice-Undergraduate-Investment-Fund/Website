@@ -434,7 +434,7 @@ export const trainingProgram: TrainingProgram = {
   isSample: false,
   steps: [
     { title: "Apply", description: "Submit a short application at the start of the semester." },
-    { title: "Complete the Training Program", description: "Attend seven weekly sessions, where you will build core skills in accounting, valuation and markets." },
+    { title: "Successfully Complete the Training Program", description: "Attend seven weekly sessions where you will build core skills in accounting, valuation and markets." },
     { title: "Pitch Your Stock to the RUIF Board", description: "Present a stock pitch to demonstrate what you've learned." },
     { title: "Join the Fund", description: "Successful candidates are admitted into the fund and placed into a sector." },
   ],
